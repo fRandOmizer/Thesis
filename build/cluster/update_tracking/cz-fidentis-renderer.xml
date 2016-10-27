@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.renderer">
+    <module_version install_time="1477548021834" last="true" origin="installer" specification_version="1.0">
+        <file crc="1812041661" name="config/Modules/cz-fidentis-renderer.xml"/>
+        <file crc="1360180702" name="modules/cz-fidentis-renderer.jar"/>
+        <file crc="1469169346" name="modules/ext/vecmath-1.5.1.jar"/>
+    </module_version>
+</module>

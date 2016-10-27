@@ -1,0 +1,10 @@
+C:\Program Files\NetBeans 8.1\platform=1474394055394
+cluster.C:/Users/zanri/Desktop/Diplomovka/Thesis/build/cluster=1477548023651
+cluster.C:/Program Files/NetBeans 8.1/harness=1474393652551
+cluster.C:/Program Files/NetBeans 8.1/platform=1474394055394
+user=1477548023651
+crc=7
+locale=en_US
+branding=fidentis
+java.version=1.8.0_102
+java.vm.version=25.102-b14

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.externallibraries">
+    <module_version install_time="1477548015000" last="true" origin="installer" specification_version="1.0">
+        <file crc="3438643259" name="config/Modules/cz-fidentis-externallibraries.xml"/>
+        <file crc="2698581523" name="modules/cz-fidentis-externallibraries.jar"/>
+        <file crc="954166957" name="modules/ext/gluegen-rt-natives-linux-amd64.jar"/>
+        <file crc="682754225" name="modules/ext/gluegen-rt-natives-linux-i586.jar"/>
+        <file crc="793985484" name="modules/ext/gluegen-rt-natives-macosx-universal.jar"/>
+        <file crc="3830635231" name="modules/ext/gluegen-rt-natives-windows-amd64.jar"/>
+        <file crc="559434581" name="modules/ext/gluegen-rt-natives-windows-i586.jar"/>
+        <file crc="3080354688" name="modules/ext/gluegen-rt.jar"/>
+        <file crc="3501073016" name="modules/ext/ij.jar"/>
+        <file crc="1663211095" name="modules/ext/jogl-all-natives-linux-amd64.jar"/>
+        <file crc="135480947" name="modules/ext/jogl-all-natives-linux-i586.jar"/>
+        <file crc="3050187465" name="modules/ext/jogl-all-natives-macosx-universal.jar"/>
+        <file crc="3105628301" name="modules/ext/jogl-all-natives-windows-amd64.jar"/>
+        <file crc="3939807979" name="modules/ext/jogl-all-natives-windows-i586.jar"/>
+        <file crc="3803092597" name="modules/ext/jogl-all.jar"/>
+    </module_version>
+</module>
