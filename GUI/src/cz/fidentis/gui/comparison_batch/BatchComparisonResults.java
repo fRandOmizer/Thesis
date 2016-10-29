@@ -5,6 +5,7 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
+import LocalAreas.Area;
 import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.comparison.RegistrationMethod;
 import cz.fidentis.comparison.procrustes.DatabaseWorker;
@@ -2381,6 +2382,10 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         res = bc.getHdVisualResults();
         
         return res;
+    }
+    
+    public void SetLocalAreaRender(List<Area> area){
+        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(area);
     }
     
     public histogramPanel getHistogram() {

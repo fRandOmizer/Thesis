@@ -5,6 +5,7 @@
  */
 package cz.fidentis.renderer;
 
+import LocalAreas.Area;
 import LocalAreas.VertexArea;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.gl2.GLUT;
@@ -127,7 +128,8 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     private HDpaintingInfo hdInfo;
     private boolean paintHD = false;*/
     private ComparisonListenerInfo info;
-    private VertexArea area;
+    private LocalAreasRender localAreaRender;
+    
 
     private GLUT glut = new GLUT();
     private int[] viewport = new int[4];
@@ -255,7 +257,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         models.add(null);*/
         info.getModels().add(null);
         info.getModels().add(null);
-        area = null;
+        localAreaRender = new LocalAreasRender();
     }
 
     @Override
@@ -371,6 +373,10 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
             }
 
         }
+        
+        if(localAreaRender.IsSetUp()){
+            gl = localAreaRender.DrawLocalAreas(gl);
+        }
 
         gl.glPopMatrix();
         gl.glFlush();
@@ -379,10 +385,6 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
 
     public void setShowPlane(boolean showPlane) {
         this.showPlane = showPlane;
-    }
-    
-    public void SetLocalAreas(VertexArea tempArea){
-        area = tempArea;
     }
 
     private void paintHD() {
@@ -2685,4 +2687,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         return gl;
     }
 
+    public void SetUpLocalAreaRender(List<Area> area){
+        localAreaRender.SetUp(area);
+    }
 }

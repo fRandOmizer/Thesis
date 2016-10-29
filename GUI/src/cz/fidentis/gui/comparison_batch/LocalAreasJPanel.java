@@ -88,6 +88,17 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         RelativeComboBox.setEnabled(value);
     }
     
+    private void RenderSelectedAreas(){
+        List<Area> tempList = new ArrayList<>();
+        for (int i = 0; i < SelectedAreas.length; i++){
+            Area selectedArea = AreasList.get(SelectedAreas[i]);
+            tempList.add(selectedArea);
+        }
+        
+        pointer.SetLocalAreaRender(tempList);
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,23 +130,23 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jLabel3.text")); // NOI18N
 
         BottomTextField.setText(org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.BottomTextField.text")); // NOI18N
-        BottomTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                BottomTextFieldKeyReleased(evt);
+        BottomTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                BottomTextFieldFocusLost(evt);
             }
         });
 
         TopTextField.setText(org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.TopTextField.text")); // NOI18N
-        TopTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                TopTextFieldKeyReleased(evt);
+        TopTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TopTextFieldFocusLost(evt);
             }
         });
 
         AreaTextField.setText(org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.AreaTextField.text")); // NOI18N
-        AreaTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                AreaTextFieldKeyReleased(evt);
+        AreaTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                AreaTextFieldFocusLost(evt);
             }
         });
 
@@ -245,30 +256,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void AreaTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AreaTextFieldKeyReleased
-        try{
-           SizeOfArea = Double.valueOf(this.AreaTextField.getText());
-        }catch(Exception e){
-           AreaTextField.setText(SizeOfArea.toString());
-        }
-    }//GEN-LAST:event_AreaTextFieldKeyReleased
-
-    private void TopTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TopTextFieldKeyReleased
-        try{
-           TopTresh = Double.valueOf(this.TopTextField.getText());
-        }catch(Exception e){
-           TopTextField.setText(TopTresh.toString());
-        }
-    }//GEN-LAST:event_TopTextFieldKeyReleased
-
-    private void BottomTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BottomTextFieldKeyReleased
-        try{
-           BottomTresh = Double.valueOf(this.BottomTextField.getText());
-        }catch(Exception e){
-           BottomTextField.setText(BottomTresh.toString());
-        }
-    }//GEN-LAST:event_BottomTextFieldKeyReleased
-
     private void ApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApplyButtonActionPerformed
         init();
         
@@ -278,15 +265,18 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private void SelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectButtonActionPerformed
         SelectedAreas = new int[AreasJList.getSelectedIndices().length];
         SelectedAreas = AreasJList.getSelectedIndices();
+        
+        RenderSelectedAreas();
     }//GEN-LAST:event_SelectButtonActionPerformed
 
     private void AllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AllButtonActionPerformed
         SelectedAreas = new int[AreasList.size()];
         for(int i=0; i<AreasList.size(); i++){
             SelectedAreas[i]=i;
-            
         }
+        
         AreasJList.setSelectedIndices(SelectedAreas);
+        RenderSelectedAreas();
         
     }//GEN-LAST:event_AllButtonActionPerformed
 
@@ -301,6 +291,30 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private void ExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ExportButtonActionPerformed
+
+    private void AreaTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AreaTextFieldFocusLost
+        try{
+           SizeOfArea = Double.valueOf(this.AreaTextField.getText());
+        }catch(Exception e){
+           AreaTextField.setText(SizeOfArea.toString());
+        }
+    }//GEN-LAST:event_AreaTextFieldFocusLost
+
+    private void TopTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TopTextFieldFocusLost
+        try{
+           TopTresh = Double.valueOf(this.TopTextField.getText());
+        }catch(Exception e){
+           TopTextField.setText(TopTresh.toString());
+        }
+    }//GEN-LAST:event_TopTextFieldFocusLost
+
+    private void BottomTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_BottomTextFieldFocusLost
+        try{
+           BottomTresh = Double.valueOf(this.BottomTextField.getText());
+        }catch(Exception e){
+           BottomTextField.setText(BottomTresh.toString());
+        }
+    }//GEN-LAST:event_BottomTextFieldFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Thursday, October 27, 2016 8:00:24 AM CEST
+>Log Session: Saturday, October 29, 2016 10:40:00 PM CEST
 >System Info: 
   Product Version         = Fidentis
   Operating System        = Windows 10 version 10.0 running on amd64
@@ -8,20 +8,20 @@
   Java Home               = C:\Program Files\Java\jdk1.8.0_102\jre
   System Locale; Encoding = en_US (fidentis); Cp1252
   Home Directory          = C:\Users\zanri
-  Current Directory       = C:\Users\zanri\Desktop\Diplomovka\Thesis
-  User Directory          = C:\Users\zanri\Desktop\Diplomovka\Thesis\build\testuserdir
-  Cache Directory         = C:\Users\zanri\Desktop\Diplomovka\Thesis\build\testuserdir\var\cache
-  Installation            = C:\Users\zanri\Desktop\Diplomovka\Thesis\build\cluster
+  Current Directory       = C:\Users\zanri\Desktop\Thesis
+  User Directory          = C:\Users\zanri\Desktop\Thesis\build\testuserdir
+  Cache Directory         = C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\cache
+  Installation            = C:\Users\zanri\Desktop\Thesis\build\cluster
                             C:\Program Files\NetBeans 8.1\harness
                             C:\Program Files\NetBeans 8.1\platform
                             C:\Program Files\NetBeans 8.1\platform
   Boot & Ext. Classpath   = C:\Program Files\Java\jdk1.8.0_102\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\rt.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_102\jre\classes;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_102\jre\lib\ext\zipfs.jar
   Application Classpath   = C:\Program Files\NetBeans 8.1\platform\lib\boot.jar;C:\Program Files\NetBeans 8.1\platform\lib\org-openide-modules.jar;C:\Program Files\NetBeans 8.1\platform\lib\org-openide-util-lookup.jar;C:\Program Files\NetBeans 8.1\platform\lib\org-openide-util-ui.jar;C:\Program Files\NetBeans 8.1\platform\lib\org-openide-util.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\boot_ja.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\boot_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\boot_ru.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\boot_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-modules_ja.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-modules_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-modules_ru.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-modules_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-lookup_ja.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-lookup_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-lookup_ru.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-lookup_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-ui_ja.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-ui_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-ui_ru.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util-ui_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util_ja.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util_ru.jar;C:\Program Files\NetBeans 8.1\platform\lib\locale\org-openide-util_zh_CN.jar;C:\Program Files\Java\jdk1.8.0_102\lib\dt.jar;C:\Program Files\Java\jdk1.8.0_102\lib\tools.jar
-  Startup Classpath       = C:\Program Files\NetBeans 8.1\platform\core\asm-all-5.0.1.jar;C:\Program Files\NetBeans 8.1\platform\core\core-base.jar;C:\Program Files\NetBeans 8.1\platform\core\core.jar;C:\Program Files\NetBeans 8.1\platform\core\org-netbeans-libs-asm.jar;C:\Program Files\NetBeans 8.1\platform\core\org-openide-filesystems-compat8.jar;C:\Program Files\NetBeans 8.1\platform\core\org-openide-filesystems.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_zh_CN.jar;C:\Users\zanri\Desktop\Diplomovka\Thesis\build\cluster\core\locale\core_fidentis.jar
+  Startup Classpath       = C:\Program Files\NetBeans 8.1\platform\core\asm-all-5.0.1.jar;C:\Program Files\NetBeans 8.1\platform\core\core-base.jar;C:\Program Files\NetBeans 8.1\platform\core\core.jar;C:\Program Files\NetBeans 8.1\platform\core\org-netbeans-libs-asm.jar;C:\Program Files\NetBeans 8.1\platform\core\org-openide-filesystems-compat8.jar;C:\Program Files\NetBeans 8.1\platform\core\org-openide-filesystems.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core-base_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\core_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-netbeans-libs-asm_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems-compat8_zh_CN.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_ja.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_pt_BR.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_ru.jar;C:\Program Files\NetBeans 8.1\platform\core\locale\org-openide-filesystems_zh_CN.jar;C:\Users\zanri\Desktop\Thesis\build\cluster\core\locale\core_fidentis.jar
 -------------------------------------------------------------------------------
 WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cz.fidentis.comparison: added = [module org.netbeans.api.progress.compat8 > 1.40, module org.netbeans.api.progress.nb > 1.40] removed = []; details: [Swing dependencies split away]
 WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cz.fidentis.gui: added = [module org.netbeans.api.progress.compat8 > 1.40, module org.netbeans.api.templates > 1.0] removed = []; details: [Swing dependencies split away, Templates API has been separated into its own module.]
-WARNING [org.netbeans.core.startup.NbEvents]: The extension C:\Users\zanri\Desktop\Diplomovka\Thesis\build\cluster\modules\ext\Jama-1.0.3.jar may be multiply loaded by modules: [C:\Users\zanri\Desktop\Diplomovka\Thesis\build\cluster\modules\cz-fidentis-libraries.jar, C:\Users\zanri\Desktop\Diplomovka\Thesis\build\cluster\modules\cz-fidentis-comparison.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
+WARNING [org.netbeans.core.startup.NbEvents]: The extension C:\Users\zanri\Desktop\Thesis\build\cluster\modules\ext\Jama-1.0.3.jar may be multiply loaded by modules: [C:\Users\zanri\Desktop\Thesis\build\cluster\modules\cz-fidentis-comparison.jar, C:\Users\zanri\Desktop\Thesis\build\cluster\modules\cz-fidentis-libraries.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
 WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cz.fidentis.model: added = [module org.netbeans.api.progress.nb > 1.40, module org.netbeans.api.progress.compat8 > 1.40] removed = []; details: [Swing dependencies split away]
 WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cz.fidentis.processing: added = [module org.netbeans.api.progress.compat8 > 1.40, module org.openide.util.ui > 9.3] removed = []; details: [#243100: Separate desktop-independent utilities, Swing dependencies split away]
 WARNING [org.netbeans.core.modules]: had to upgrade dependencies for module cz.fidentis.renderer: added = [module org.netbeans.api.progress.compat8 > 1.40, module org.openide.util.ui > 9.3, module org.netbeans.api.progress.nb > 1.40] removed = []; details: [#243100: Separate desktop-independent utilities, Swing dependencies split away]
@@ -53,7 +53,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.api.io [1.2.1 201510222201]
 	org.openide.io [1.48.1 201510222201]
 	org.openide.filesystems.compat8 [9.7.1 201510222201]
-	org.opencv [1.0 161025]
+	org.opencv [1.0 161029]
 	org.netbeans.swing.plaf [1.40.1 201510222201]
 	org.netbeans.spi.quicksearch [1.26.1 201510222201]
 	org.netbeans.modules.templates/1 [1.6.1 201510222201]
@@ -96,20 +96,20 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.core.multitabs/1 [1.11.1.1 1 201510222201]
 	org.netbeans.core.io.ui/1 [1.29.1 201510222201]
 	org.netbeans.api.progress.compat8 [1.46.1 201510222201]
-	cz.fidentis.externallibraries [1.0 161025]
-	cz.fidentis.libraries [1.0 161025]
-	cz.fidentis.model [1.0 161025]
-	cz.fidentis.featurepoints [1.0 161025]
-	cz.fidentis.utils [1.0 161025]
-	cz.fidentis.comparison [1.0 161025]
-	cz.fidentis.visualisation [1.0 161025]
-	cz.fidentis.composite [1.0 161025]
-	cz.fidentis.controller [1.0 161025]
-	cz.fidentis.processing [1.0 161025]
-	cz.fidentis.renderer [1.0 161027]
-	cz.fidentis.merging [1.0 161025]
-	cz.fidentis.ageing [1.0 161025]
-	cz.fidentis.gui [1.0 161027]
+	cz.fidentis.externallibraries [1.0 161029]
+	cz.fidentis.libraries [1.0 161029]
+	cz.fidentis.model [1.0 161029]
+	cz.fidentis.featurepoints [1.0 161029]
+	cz.fidentis.utils [1.0 161029]
+	cz.fidentis.comparison [1.0 161029]
+	cz.fidentis.visualisation [1.0 161029]
+	cz.fidentis.composite [1.0 161029]
+	cz.fidentis.controller [1.0 161029]
+	cz.fidentis.processing [1.0 161029]
+	cz.fidentis.renderer [1.0 161029]
+	cz.fidentis.merging [1.0 161029]
+	cz.fidentis.ageing [1.0 161029]
+	cz.fidentis.gui [1.0 161029]
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
 INFO [org.netbeans.core.network.proxy.windows.WindowsNetworkProxy]: Windows system proxy resolver: auto detect
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy reloading succeeded.
@@ -121,27 +121,30 @@ Diagnostic information
 Input arguments:
 	-Dnetbeans.logger.console=true
 	-ea
+	-Xdebug
+	-Xrunjdwp:transport=dt_socket,suspend=y,server=n,address=127.0.0.1:37469
 	-Djdk.home=C:\Program Files\Java\jdk1.8.0_102
-	-splash:C:\Users\zanri\Desktop\Diplomovka\Thesis\build\testuserdir\var\cache\splash.png
+	-splash:C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\cache\splash.png
 	-Dnetbeans.home=C:\Program Files\NetBeans 8.1\platform
-	-Dnetbeans.user=C:\Users\zanri\Desktop\Diplomovka\Thesis\build\testuserdir
+	-Dnetbeans.user=C:\Users\zanri\Desktop\Thesis\build\testuserdir
 	-Dnetbeans.default_userdir_root=
 	-XX:+HeapDumpOnOutOfMemoryError
-	-XX:HeapDumpPath=C:\Users\zanri\Desktop\Diplomovka\Thesis\build\testuserdir\var\log\heapdump.hprof
+	-XX:HeapDumpPath=C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\log\heapdump.hprof
 	-Dsun.awt.keepWorkingSetOnMinimize=true
-	-Dnetbeans.dirs=C:\Users\zanri\Desktop\Diplomovka\Thesis\build\cluster;C:\Program Files\NetBeans 8.1\harness;C:\Program Files\NetBeans 8.1\platform
+	-Dnetbeans.dirs=C:\Users\zanri\Desktop\Thesis\build\cluster;C:\Program Files\NetBeans 8.1\harness;C:\Program Files\NetBeans 8.1\platform
 	exit
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 126.0MB maximum 1790.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
 Garbage collector: PS Scavenge (Collections=6 Total time spent=0s)
-Garbage collector: PS MarkSweep (Collections=1 Total time spent=0s)
-Classes: loaded=5007 total loaded=5007 unloaded 0
+Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
+Classes: loaded=5307 total loaded=5307 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,443,035,648
 INFO [null]: Total physical memory 8,443,035,648
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener-separatorAfter.instance and Menu/File/cz-fidentis-gui-actions-OpenProject-separatorAfter.instance
 WARNING [org.openide.filesystems.Ordering]: Found same position 75 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener.shadow and Menu/File/cz-fidentis-gui-actions-OpenProject.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Options/ marked with the position attribute: [cz-fidentis-gui-actions-Textures.shadow], but some are: [cz-fidentis-gui-actions-Background.shadow]
+INFO [org.netbeans.modules.sampler.InternalSampler]: Slowness detector disabled - running in debug mode
 java.lang.reflect.InvocationTargetException
 	at java.awt.EventQueue.invokeAndWait(EventQueue.java:1321)
 	at java.awt.EventQueue.invokeAndWait(EventQueue.java:1296)
@@ -184,13 +187,31 @@ Caused by: java.lang.ArrayIndexOutOfBoundsException
 	at org.netbeans.swing.tabcontrol.TabbedContainer.paint(TabbedContainer.java:994)
 	at javax.swing.JComponent.paintChildren(JComponent.java:889)
 	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JLayeredPane.paint(JLayeredPane.java:586)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at org.netbeans.core.windows.view.ui.MainWindow$1.paint(MainWindow.java:189)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JLayeredPane.paint(JLayeredPane.java:586)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
 	at javax.swing.JComponent.paintToOffscreen(JComponent.java:5210)
 	at javax.swing.RepaintManager$PaintManager.paintDoubleBuffered(RepaintManager.java:1579)
 	at javax.swing.RepaintManager$PaintManager.paint(RepaintManager.java:1502)
 	at javax.swing.RepaintManager.paint(RepaintManager.java:1272)
 	at javax.swing.JComponent._paintImmediately(JComponent.java:5158)
 	at javax.swing.JComponent.paintImmediately(JComponent.java:4969)
-	at javax.swing.JComponent.paintImmediately(JComponent.java:4950)
 	at javax.swing.RepaintManager$4.run(RepaintManager.java:831)
 	at javax.swing.RepaintManager$4.run(RepaintManager.java:814)
 	at java.security.AccessController.doPrivileged(Native Method)
