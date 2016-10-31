@@ -135,10 +135,14 @@ public class VertexArea {
         List<Integer> result = new ArrayList<Integer>();
         result.add(vertex);
 
-        while (tmp.size() != 0) {
+        while (tmp.size() > 0) {
             // remove double indexes
             for (int i = 0; i < result.size(); i++) {
                 tmp.remove(result.get(i));
+            }
+            
+            if(tmp.size() <= 0){
+                break;
             }
 
             if (binTreeData.findNode(tmp.get(tmp.size() - 1)) >= minThreshold && binTreeData.findNode(tmp.get(tmp.size() - 1)) <= maxThreshold) {
