@@ -2384,8 +2384,8 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         return res;
     }
     
-    public void SetLocalAreaRender(List<Area> area){
-        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(area);
+    public void SetLocalAreaRender(List<Area> area, Model model){
+        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(area, model);
     }
     
     public histogramPanel getHistogram() {

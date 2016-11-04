@@ -95,7 +95,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             tempList.add(selectedArea);
         }
         
-        pointer.SetLocalAreaRender(tempList);
+        pointer.SetLocalAreaRender(tempList, model);
     }
     
     

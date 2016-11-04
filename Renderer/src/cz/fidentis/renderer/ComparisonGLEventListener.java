@@ -2687,7 +2687,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         return gl;
     }
 
-    public void SetUpLocalAreaRender(List<Area> area){
-        localAreaRender.SetUp(area);
+    public void SetUpLocalAreaRender(List<Area> area, Model model){
+        localAreaRender.SetUp(area, model);
     }
 }
