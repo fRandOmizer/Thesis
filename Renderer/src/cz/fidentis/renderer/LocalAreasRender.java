@@ -1,6 +1,7 @@
 package cz.fidentis.renderer;
 
 import LocalAreas.Area;
+import LocalAreas.Points;
 import com.jogamp.common.nio.Buffers;
 import cz.fidentis.model.Model;
 import cz.fidentis.model.ModelLoader;
@@ -27,33 +28,20 @@ public class LocalAreasRender{
     private Boolean isSetUp;
     private List<Area> area;
     private Model model;
+    private Points points;
 
     
     public LocalAreasRender(){
         this.isSetUp = false;
         area = new ArrayList<>();
+        this.points = new Points();
     }
     
     public void SetUp(List<Area> area, Model model){
         this.area = area;
         this.isSetUp = true;
         this.model = model;
-    }
-    
-    public Boolean IsSetUp(){
-        return isSetUp;
-    }
-
-    public void HideLocalAreas(){
-        this.isSetUp = false;
-    }
-    
-    public GL2 DrawLocalAreas(GL2 gl){
-        return makeAreas(gl);
-    }
-    
-    
-    public GL2 makeAreas(GL2 gl) {
+        
         List<Integer> tmp;
         int s = 0;
         for (int j = 0; j < area.size(); j++) {
@@ -81,13 +69,33 @@ public class LocalAreasRender{
             }
         }
         
-        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        points.AddArray(vert, color);
+    }
+    
+    public Boolean IsSetUp(){
+        return isSetUp;
+    }
+
+    public void HideLocalAreas(){
+        this.isSetUp = false;
+    }
+    
+    public GL2 DrawLocalAreas(GL2 gl){
+        return makeAreas(gl);
+    }
+    
+    
+    public GL2 makeAreas(GL2 gl) {
+        float[] vert = points.GetPoints();
+        float[] color = points.GetVertexColors();
+        
+//        gl.glClear(GL_DEPTH_BUFFER_BIT);
         gl.glDisable(GL_LIGHTING);
         gl.glPointSize(5f);
         gl.glBegin(GL.GL_POINTS);
 
         
-        for (int i = 0; i < s; i++) {
+        for (int i = 0; i < points.getNumberOfVertexes(); i++) {
             int index = i*3;
 
             gl.glColor3f(color[index],color[index+1],color[index+2]);

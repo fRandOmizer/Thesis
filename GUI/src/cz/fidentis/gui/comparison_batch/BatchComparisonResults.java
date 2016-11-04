@@ -2370,18 +2370,20 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton13ActionPerformed
 
     public Model GetCurrentModel(){
-        ModelLoader ml = new ModelLoader();
-        Model m = ml.loadModel(getContext().getModel(0), false, true);
+       // ModelLoader ml = new ModelLoader();
+       // Model m = ml.loadModel(getContext().getModel(0), false, true);
         
+        Model m = getContext().getAverageFace();
+                //ml.loadModel(getContext().getAverageFace(), false, true);
         return m;
     }
     
     public ArrayList<ArrayList<Float>> GetAuxiliaryResults(){
-        BatchComparison bc = getContext();
-        ArrayList<ArrayList<Float>> res = new ArrayList<ArrayList<Float>>();
-        res = bc.getHdVisualResults();
-        
-        return res;
+        return getContext().getHdVisualResults();
+    }
+    
+    public List<Float> GetAuxiliaryAverageResults(){
+        return getContext().getHd();
     }
     
     public void SetLocalAreaRender(List<Area> area, Model model){

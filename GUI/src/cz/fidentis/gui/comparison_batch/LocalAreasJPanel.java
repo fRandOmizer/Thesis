@@ -56,9 +56,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
     
     private void init(){
+        //LocalAreas = pointer.GetAuxiliaryResults();
         LocalAreas = pointer.GetAuxiliaryResults();
         model = pointer.GetCurrentModel();
-        BinTree thres = new BinTree(LocalAreas.get(0));
+        BinTree thres = new BinTree(CalculateAverage(LocalAreas));
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
     }
@@ -79,6 +80,21 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             SetEnableComponents(false);
         }
         AreasJList.setModel(listModel);
+    }
+    
+    private static ArrayList<Float> CalculateAverage(ArrayList<ArrayList<Float>> data){
+        ArrayList<Float> result = new ArrayList<>();
+        if (data.size()>0){
+            for (int i=0; i < data.get(0).size(); i++){
+                float value = 0;
+                for(int j = 0; j < data.size(); j++){
+                    value +=data.get(j).get(i);
+                }
+                result.add(value/data.size());
+            }
+            
+        }
+        return result;
     }
     
     private void SetEnableComponents(Boolean value){
