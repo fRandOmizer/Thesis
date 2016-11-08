@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.gui">
-    <module_version install_time="1478294432307" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1478645750704" last="true" origin="installer" specification_version="1.0">
         <file crc="3687949160" name="config/Modules/cz-fidentis-gui.xml"/>
-        <file crc="2527773614" name="modules/cz-fidentis-gui.jar"/>
+        <file crc="767484683" name="modules/cz-fidentis-gui.jar"/>
     </module_version>
 </module>

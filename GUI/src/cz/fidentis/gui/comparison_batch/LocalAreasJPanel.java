@@ -11,10 +11,13 @@ import LocalAreas.VertexArea;
 
 import cz.fidentis.landmarkParser.CSVparser;
 import cz.fidentis.model.Model;
+import cz.fidentis.visualisation.surfaceComparison.HDpaintingInfo;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -22,14 +25,35 @@ import javax.swing.ListSelectionModel;
  */
 public class LocalAreasJPanel extends javax.swing.JPanel {
 
+    
+
+    private class MyWorker extends SwingWorker<String, Object>{
+        protected String doInBackground() {
+        progressBar.setVisible(true);
+        progressBar.setIndeterminate(true);
+        
+        init();
+        
+        SetList(area.getAreas());
+       
+        return "Done.";
+     }
+
+     protected void done() {
+        progressBar.setVisible(false);
+     }
+    }
+    
     private BatchComparisonResults pointer;
     private Double SizeOfArea;
     private Double BottomTresh;
     private Double TopTresh;
+    private Double min;
+    private Double max;
     private List<Area> AreasList;
     private int SelectedAreas[];
     private Boolean RelativeValues;
-    private ArrayList<ArrayList<Float>> LocalAreas;
+    private ArrayList<Float> LocalAreas;
     private VertexArea area;
     private Model model;
     
@@ -52,16 +76,27 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         AreasJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
+        progressBar.setVisible(false);
+        
         SetEnableComponents(false);
     }
     
     private void init(){
-        //LocalAreas = pointer.GetAuxiliaryResults();
-        LocalAreas = pointer.GetAuxiliaryResults();
         model = pointer.GetCurrentModel();
-        BinTree thres = new BinTree(CalculateAverage(LocalAreas));
+        BinTree thres = new BinTree(LocalAreas);
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
+    }
+    
+    void LoadValues(float min, float max) {
+        LocalAreas = new ArrayList(pointer.GetAuxiliaryAverageResults());
+        BottomTresh = (double)min;
+        TopTresh = (double)max;
+        this.max = (double)max;
+        this.min = (double)min;
+        TopTextField.setText(TopTresh.toString());
+        BottomTextField.setText(BottomTresh.toString());
+        
     }
 
     public void SetPointer(BatchComparisonResults pointer){
@@ -78,25 +113,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             SetEnableComponents(true);
         } else {
             SetEnableComponents(false);
+            listModel.addElement("No Area was found!");
         }
         AreasJList.setModel(listModel);
     }
-    
-    private static ArrayList<Float> CalculateAverage(ArrayList<ArrayList<Float>> data){
-        ArrayList<Float> result = new ArrayList<>();
-        if (data.size()>0){
-            for (int i=0; i < data.get(0).size(); i++){
-                float value = 0;
-                for(int j = 0; j < data.size(); j++){
-                    value +=data.get(j).get(i);
-                }
-                result.add(value/data.size());
-            }
-            
-        }
-        return result;
-    }
-    
+
     private void SetEnableComponents(Boolean value){
         AreasJList.setEnabled(value);
         SelectButton.setEnabled(value);
@@ -113,8 +134,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         pointer.SetLocalAreaRender(tempList, model);
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -138,6 +158,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         RelativeComboBox = new javax.swing.JComboBox<>();
         ExportButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
+
+        setMinimumSize(new java.awt.Dimension(313, 700));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jLabel1.text")); // NOI18N
 
@@ -214,28 +237,28 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(0, 43, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SelectButton, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(AllButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(RelativeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(AllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SelectButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(RelativeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(ExportButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+                        .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(TopTextField))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(AreaTextField))))
+                            .addComponent(AreaTextField)
+                            .addComponent(TopTextField)
+                            .addComponent(BottomTextField)))
                     .addComponent(ApplyButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BottomTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -255,27 +278,29 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                     .addComponent(BottomTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(ApplyButton)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(SelectButton)
                         .addGap(18, 18, 18)
-                        .addComponent(AllButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                        .addComponent(AllButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(RelativeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(ExportButton)
-                .addContainerGap(171, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void ApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApplyButtonActionPerformed
-        init();
         
-        SetList(area.getAreas());
+        new MyWorker().execute();
+        
     }//GEN-LAST:event_ApplyButtonActionPerformed
 
     private void SelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectButtonActionPerformed
@@ -318,7 +343,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
     private void TopTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TopTextFieldFocusLost
         try{
-           TopTresh = Double.valueOf(this.TopTextField.getText());
+           Double TopTreshTemp = Double.valueOf(this.TopTextField.getText());
+           if (TopTreshTemp> max || TopTreshTemp <= BottomTresh){
+               TopTextField.setText(max.toString());
+           } else {
+               TopTresh = TopTreshTemp;
+           }
         }catch(Exception e){
            TopTextField.setText(TopTresh.toString());
         }
@@ -326,7 +356,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
     private void BottomTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_BottomTextFieldFocusLost
         try{
-           BottomTresh = Double.valueOf(this.BottomTextField.getText());
+           Double BottomTreshTemp = Double.valueOf(this.BottomTextField.getText());
+           if (BottomTreshTemp < min || BottomTreshTemp >= TopTresh){
+               BottomTextField.setText(min.toString());
+           } else {
+               BottomTresh = BottomTreshTemp;
+           }
         }catch(Exception e){
            BottomTextField.setText(BottomTresh.toString());
         }
@@ -348,5 +383,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
 }

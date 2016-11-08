@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.externallibraries">
-    <module_version install_time="1478294425629" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1478645742237" last="true" origin="installer" specification_version="1.0">
         <file crc="3438643259" name="config/Modules/cz-fidentis-externallibraries.xml"/>
-        <file crc="1963759045" name="modules/cz-fidentis-externallibraries.jar"/>
+        <file crc="666041758" name="modules/cz-fidentis-externallibraries.jar"/>
         <file crc="954166957" name="modules/ext/gluegen-rt-natives-linux-amd64.jar"/>
         <file crc="682754225" name="modules/ext/gluegen-rt-natives-linux-i586.jar"/>
         <file crc="793985484" name="modules/ext/gluegen-rt-natives-macosx-universal.jar"/>

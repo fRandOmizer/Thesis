@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Friday, November 4, 2016 10:20:09 PM CET
+>Log Session: Tuesday, November 8, 2016 11:33:26 PM CET
 >System Info: 
   Product Version         = Fidentis
   Operating System        = Windows 10 version 10.0 running on amd64
@@ -8,7 +8,7 @@
   Java Home               = C:\Program Files\Java\jdk1.8.0_102\jre
   System Locale; Encoding = en_US (fidentis); Cp1252
   Home Directory          = C:\Users\zanri
-  Current Directory       = C:\Users\zanri\Desktop\Thesis\Renderer
+  Current Directory       = C:\Users\zanri\Desktop\Thesis\GUI
   User Directory          = C:\Users\zanri\Desktop\Thesis\build\testuserdir
   Cache Directory         = C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\cache
   Installation            = C:\Users\zanri\Desktop\Thesis\build\cluster
@@ -53,7 +53,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.api.io [1.2.1 201510222201]
 	org.openide.io [1.48.1 201510222201]
 	org.openide.filesystems.compat8 [9.7.1 201510222201]
-	org.opencv [1.0 161104]
+	org.opencv [1.0 161108]
 	org.netbeans.swing.plaf [1.40.1 201510222201]
 	org.netbeans.spi.quicksearch [1.26.1 201510222201]
 	org.netbeans.modules.templates/1 [1.6.1 201510222201]
@@ -96,20 +96,20 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.core.multitabs/1 [1.11.1.1 1 201510222201]
 	org.netbeans.core.io.ui/1 [1.29.1 201510222201]
 	org.netbeans.api.progress.compat8 [1.46.1 201510222201]
-	cz.fidentis.externallibraries [1.0 161104]
-	cz.fidentis.libraries [1.0 161104]
-	cz.fidentis.model [1.0 161104]
-	cz.fidentis.featurepoints [1.0 161104]
-	cz.fidentis.utils [1.0 161104]
-	cz.fidentis.comparison [1.0 161104]
-	cz.fidentis.visualisation [1.0 161104]
-	cz.fidentis.composite [1.0 161104]
-	cz.fidentis.controller [1.0 161104]
-	cz.fidentis.processing [1.0 161104]
-	cz.fidentis.renderer [1.0 161104]
-	cz.fidentis.merging [1.0 161104]
-	cz.fidentis.ageing [1.0 161104]
-	cz.fidentis.gui [1.0 161104]
+	cz.fidentis.externallibraries [1.0 161108]
+	cz.fidentis.libraries [1.0 161108]
+	cz.fidentis.model [1.0 161108]
+	cz.fidentis.featurepoints [1.0 161108]
+	cz.fidentis.utils [1.0 161108]
+	cz.fidentis.comparison [1.0 161108]
+	cz.fidentis.visualisation [1.0 161108]
+	cz.fidentis.composite [1.0 161108]
+	cz.fidentis.controller [1.0 161108]
+	cz.fidentis.processing [1.0 161108]
+	cz.fidentis.renderer [1.0 161108]
+	cz.fidentis.merging [1.0 161108]
+	cz.fidentis.ageing [1.0 161108]
+	cz.fidentis.gui [1.0 161108]
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
 INFO [org.netbeans.core.network.proxy.windows.WindowsNetworkProxy]: Windows system proxy resolver: auto detect
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy reloading succeeded.
@@ -121,6 +121,8 @@ Diagnostic information
 Input arguments:
 	-Dnetbeans.logger.console=true
 	-ea
+	-Xdebug
+	-Xrunjdwp:transport=dt_socket,suspend=y,server=n,address=127.0.0.1:61963
 	-Djdk.home=C:\Program Files\Java\jdk1.8.0_102
 	-splash:C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\cache\splash.png
 	-Dnetbeans.home=C:\Program Files\NetBeans 8.1\platform
@@ -134,103 +136,13 @@ Input arguments:
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 126.0MB maximum 1790.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
-Garbage collector: PS Scavenge (Collections=5 Total time spent=0s)
-Garbage collector: PS MarkSweep (Collections=1 Total time spent=0s)
-Classes: loaded=5002 total loaded=5002 unloaded 0
+Garbage collector: PS Scavenge (Collections=6 Total time spent=0s)
+Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
+Classes: loaded=5387 total loaded=5387 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,443,035,648
 INFO [null]: Total physical memory 8,443,035,648
-SEVERE [cz.fidentis.model.ModelLoader]
-java.io.FileNotFoundException: C:\Users\zanri\Desktop\Thesis\Renderer\models\resources\xShift.obj (The system cannot find the path specified)
-	at java.io.FileInputStream.open0(Native Method)
-	at java.io.FileInputStream.open(FileInputStream.java:195)
-	at java.io.FileInputStream.<init>(FileInputStream.java:138)
-	at java.io.FileInputStream.<init>(FileInputStream.java:93)
-	at java.io.FileReader.<init>(FileReader.java:58)
-[catch] at cz.fidentis.model.ModelLoader.loadModel(ModelLoader.java:41)
-	at cz.fidentis.gui.comparison_batch.ViewerPanel_Batch.<init>(ViewerPanel_Batch.java:74)
-	at cz.fidentis.gui.ProjectTopComponent.createProjectType(ProjectTopComponent.java:88)
-	at cz.fidentis.gui.ProjectTopComponent.showBatchViewer(ProjectTopComponent.java:239)
-	at cz.fidentis.gui.GUIController.selectBatchViewer(GUIController.java:223)
-	at cz.fidentis.gui.StartingPanel.batchComparisonPanelMouseClicked(StartingPanel.java:393)
-	at cz.fidentis.gui.StartingPanel.access$900(StartingPanel.java:27)
-	at cz.fidentis.gui.StartingPanel$4.mouseClicked(StartingPanel.java:212)
-	at java.awt.Component.processMouseEvent(Component.java:6536)
-	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
-	at java.awt.Component.processEvent(Component.java:6298)
-	at java.awt.Container.processEvent(Container.java:2236)
-	at java.awt.Component.dispatchEventImpl(Component.java:4889)
-	at java.awt.Container.dispatchEventImpl(Container.java:2294)
-	at java.awt.Component.dispatchEvent(Component.java:4711)
-	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
-	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4534)
-	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
-	at java.awt.Container.dispatchEventImpl(Container.java:2280)
-	at java.awt.Window.dispatchEventImpl(Window.java:2746)
-	at java.awt.Component.dispatchEvent(Component.java:4711)
-	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
-	at java.awt.EventQueue.access$500(EventQueue.java:97)
-	at java.awt.EventQueue$3.run(EventQueue.java:709)
-	at java.awt.EventQueue$3.run(EventQueue.java:703)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
-	at java.awt.EventQueue$4.run(EventQueue.java:731)
-	at java.awt.EventQueue$4.run(EventQueue.java:729)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
-	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
-	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
-	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
-	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
-	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
-	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
-SEVERE [global]
-java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(ArrayList.java:653)
-	at java.util.ArrayList.set(ArrayList.java:444)
-	at cz.fidentis.renderer.ComparisonGLEventListener.rotateGizmo(ComparisonGLEventListener.java:800)
-	at cz.fidentis.renderer.ComparisonGLEventListener.setGizmo(ComparisonGLEventListener.java:2525)
-	at cz.fidentis.gui.comparison_batch.ViewerPanel_Batch.<init>(ViewerPanel_Batch.java:75)
-	at cz.fidentis.gui.ProjectTopComponent.createProjectType(ProjectTopComponent.java:88)
-	at cz.fidentis.gui.ProjectTopComponent.showBatchViewer(ProjectTopComponent.java:239)
-	at cz.fidentis.gui.GUIController.selectBatchViewer(GUIController.java:223)
-	at cz.fidentis.gui.StartingPanel.batchComparisonPanelMouseClicked(StartingPanel.java:393)
-	at cz.fidentis.gui.StartingPanel.access$900(StartingPanel.java:27)
-	at cz.fidentis.gui.StartingPanel$4.mouseClicked(StartingPanel.java:212)
-	at java.awt.Component.processMouseEvent(Component.java:6536)
-	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
-	at java.awt.Component.processEvent(Component.java:6298)
-	at java.awt.Container.processEvent(Container.java:2236)
-	at java.awt.Component.dispatchEventImpl(Component.java:4889)
-	at java.awt.Container.dispatchEventImpl(Container.java:2294)
-	at java.awt.Component.dispatchEvent(Component.java:4711)
-	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
-	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4534)
-	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
-	at java.awt.Container.dispatchEventImpl(Container.java:2280)
-	at java.awt.Window.dispatchEventImpl(Window.java:2746)
-	at java.awt.Component.dispatchEvent(Component.java:4711)
-	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
-	at java.awt.EventQueue.access$500(EventQueue.java:97)
-	at java.awt.EventQueue$3.run(EventQueue.java:709)
-	at java.awt.EventQueue$3.run(EventQueue.java:703)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
-	at java.awt.EventQueue$4.run(EventQueue.java:731)
-	at java.awt.EventQueue$4.run(EventQueue.java:729)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
-	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
-	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
-[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
-	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
-	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
-	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener-separatorAfter.instance and Menu/File/cz-fidentis-gui-actions-OpenProject-separatorAfter.instance
 WARNING [org.openide.filesystems.Ordering]: Found same position 75 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener.shadow and Menu/File/cz-fidentis-gui-actions-OpenProject.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Options/ marked with the position attribute: [cz-fidentis-gui-actions-Textures.shadow], but some are: [cz-fidentis-gui-actions-Background.shadow]
+INFO [org.netbeans.modules.sampler.InternalSampler]: Slowness detector disabled - running in debug mode
+WARNING [org.netbeans.core.TimableEventQueue]: too much time in AWT thread null

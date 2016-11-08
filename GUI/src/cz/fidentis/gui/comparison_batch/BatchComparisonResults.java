@@ -63,6 +63,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     Boolean minTresholdValueChanged = false;
     private boolean valuesModified;
     private JFrame LocalAreasFrame;
+    private LocalAreasJPanel localAreasJPanel;
 
     /**
      * Creates new form BatchComparisonResults
@@ -70,14 +71,8 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     public BatchComparisonResults() {
         initComponents();
         activeColorPanel = new JPanel();
-        LocalAreasFrame = new JFrame("LocalAreas");
-        LocalAreasFrame.setVisible(false);
-        LocalAreasJPanel panel = new LocalAreasJPanel();
         
-        panel.SetPointer(this);
-        LocalAreasFrame.add(panel);
-        
-        LocalAreasFrame.pack();
+        InitLocalAreaPanel();
     }
 
     public void showProcrustesControls() {
@@ -2365,16 +2360,25 @@ public class BatchComparisonResults extends javax.swing.JPanel {
             LocalAreasFrame.setVisible(false);
         } else {
             LocalAreasFrame.setVisible(true);
-            
+            localAreasJPanel.LoadValues(histogram1.getMin(), histogram1.getMax());
         }
     }//GEN-LAST:event_jButton13ActionPerformed
 
-    public Model GetCurrentModel(){
-       // ModelLoader ml = new ModelLoader();
-       // Model m = ml.loadModel(getContext().getModel(0), false, true);
+    private void InitLocalAreaPanel(){
+        LocalAreasFrame = new JFrame("LocalAreas");
+        LocalAreasFrame.setVisible(false);
+        LocalAreasFrame.setMinimumSize(new Dimension(340, 700));
+        LocalAreasFrame.setMaximumSize(new Dimension(340, 700));
+        localAreasJPanel = new LocalAreasJPanel();
         
+        localAreasJPanel.SetPointer(this);
+        LocalAreasFrame.add(localAreasJPanel);
+        
+        LocalAreasFrame.pack();
+    }
+    
+    public Model GetCurrentModel(){
         Model m = getContext().getAverageFace();
-                //ml.loadModel(getContext().getAverageFace(), false, true);
         return m;
     }
     

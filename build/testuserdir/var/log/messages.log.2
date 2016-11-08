@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Friday, November 4, 2016 10:03:53 PM CET
+>Log Session: Tuesday, November 8, 2016 11:23:49 PM CET
 >System Info: 
   Product Version         = Fidentis
   Operating System        = Windows 10 version 10.0 running on amd64
@@ -8,7 +8,7 @@
   Java Home               = C:\Program Files\Java\jdk1.8.0_102\jre
   System Locale; Encoding = en_US (fidentis); Cp1252
   Home Directory          = C:\Users\zanri
-  Current Directory       = C:\Users\zanri\Desktop\Thesis
+  Current Directory       = C:\Users\zanri\Desktop\Thesis\GUI
   User Directory          = C:\Users\zanri\Desktop\Thesis\build\testuserdir
   Cache Directory         = C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\cache
   Installation            = C:\Users\zanri\Desktop\Thesis\build\cluster
@@ -53,7 +53,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.api.io [1.2.1 201510222201]
 	org.openide.io [1.48.1 201510222201]
 	org.openide.filesystems.compat8 [9.7.1 201510222201]
-	org.opencv [1.0 161104]
+	org.opencv [1.0 161108]
 	org.netbeans.swing.plaf [1.40.1 201510222201]
 	org.netbeans.spi.quicksearch [1.26.1 201510222201]
 	org.netbeans.modules.templates/1 [1.6.1 201510222201]
@@ -96,20 +96,20 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.core.multitabs/1 [1.11.1.1 1 201510222201]
 	org.netbeans.core.io.ui/1 [1.29.1 201510222201]
 	org.netbeans.api.progress.compat8 [1.46.1 201510222201]
-	cz.fidentis.externallibraries [1.0 161104]
-	cz.fidentis.libraries [1.0 161104]
-	cz.fidentis.model [1.0 161104]
-	cz.fidentis.featurepoints [1.0 161104]
-	cz.fidentis.utils [1.0 161104]
-	cz.fidentis.comparison [1.0 161104]
-	cz.fidentis.visualisation [1.0 161104]
-	cz.fidentis.composite [1.0 161104]
-	cz.fidentis.controller [1.0 161104]
-	cz.fidentis.processing [1.0 161104]
-	cz.fidentis.renderer [1.0 161104]
-	cz.fidentis.merging [1.0 161104]
-	cz.fidentis.ageing [1.0 161104]
-	cz.fidentis.gui [1.0 161104]
+	cz.fidentis.externallibraries [1.0 161108]
+	cz.fidentis.libraries [1.0 161108]
+	cz.fidentis.model [1.0 161108]
+	cz.fidentis.featurepoints [1.0 161108]
+	cz.fidentis.utils [1.0 161108]
+	cz.fidentis.comparison [1.0 161108]
+	cz.fidentis.visualisation [1.0 161108]
+	cz.fidentis.composite [1.0 161108]
+	cz.fidentis.controller [1.0 161108]
+	cz.fidentis.processing [1.0 161108]
+	cz.fidentis.renderer [1.0 161108]
+	cz.fidentis.merging [1.0 161108]
+	cz.fidentis.ageing [1.0 161108]
+	cz.fidentis.gui [1.0 161108]
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
 INFO [org.netbeans.core.network.proxy.windows.WindowsNetworkProxy]: Windows system proxy resolver: auto detect
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy reloading succeeded.
@@ -134,9 +134,9 @@ Input arguments:
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 126.0MB maximum 1790.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
-Garbage collector: PS Scavenge (Collections=6 Total time spent=0s)
+Garbage collector: PS Scavenge (Collections=7 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
-Classes: loaded=5296 total loaded=5296 unloaded 0
+Classes: loaded=5137 total loaded=5137 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,443,035,648
 INFO [null]: Total physical memory 8,443,035,648
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener-separatorAfter.instance and Menu/File/cz-fidentis-gui-actions-OpenProject-separatorAfter.instance
@@ -184,13 +184,31 @@ Caused by: java.lang.ArrayIndexOutOfBoundsException
 	at org.netbeans.swing.tabcontrol.TabbedContainer.paint(TabbedContainer.java:994)
 	at javax.swing.JComponent.paintChildren(JComponent.java:889)
 	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JLayeredPane.paint(JLayeredPane.java:586)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at org.netbeans.core.windows.view.ui.MainWindow$1.paint(MainWindow.java:189)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
+	at javax.swing.JLayeredPane.paint(JLayeredPane.java:586)
+	at javax.swing.JComponent.paintChildren(JComponent.java:889)
+	at javax.swing.JComponent.paint(JComponent.java:1065)
 	at javax.swing.JComponent.paintToOffscreen(JComponent.java:5210)
 	at javax.swing.RepaintManager$PaintManager.paintDoubleBuffered(RepaintManager.java:1579)
 	at javax.swing.RepaintManager$PaintManager.paint(RepaintManager.java:1502)
 	at javax.swing.RepaintManager.paint(RepaintManager.java:1272)
 	at javax.swing.JComponent._paintImmediately(JComponent.java:5158)
 	at javax.swing.JComponent.paintImmediately(JComponent.java:4969)
-	at javax.swing.JComponent.paintImmediately(JComponent.java:4950)
 	at javax.swing.RepaintManager$4.run(RepaintManager.java:831)
 	at javax.swing.RepaintManager$4.run(RepaintManager.java:814)
 	at java.security.AccessController.doPrivileged(Native Method)
@@ -213,4 +231,3 @@ Caused by: java.lang.ArrayIndexOutOfBoundsException
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
-WARNING [org.netbeans.core.TimableEventQueue]: too much time in AWT thread org.netbeans.modules.sampler.InternalSampler@31fade9a
