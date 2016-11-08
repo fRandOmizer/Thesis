@@ -12,12 +12,20 @@ import LocalAreas.VertexArea;
 import cz.fidentis.landmarkParser.CSVparser;
 import cz.fidentis.model.Model;
 import cz.fidentis.visualisation.surfaceComparison.HDpaintingInfo;
+import java.awt.Component;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -330,7 +338,44 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_RelativeComboBoxActionPerformed
 
     private void ExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportButtonActionPerformed
-        // TODO add your handling code here:
+        if(RelativeComboBox.getSelectedIndex() == 0) {
+            area.makeMatrics(true);
+        } else{
+            area.makeMatrics(false);
+        }
+        
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+        fileChooser.setFileFilter(filter);
+        Component modalToComponent = null;
+        if (fileChooser.showSaveDialog(modalToComponent) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            // save to file
+            try {
+                // creates the file
+                file.createNewFile();
+            } catch (IOException ex) {
+            }
+            // creates a FileWriter Object
+            FileWriter writer = null;
+            try {
+                writer = new FileWriter(file);
+            } catch (IOException ex) {
+            }
+            try {
+                // Writes the content to the file
+                writer.write(area.getAreas().toString());
+            } catch (IOException ex) {
+            }
+            try {
+                writer.flush();
+            } catch (IOException ex) {
+            }
+            try {
+                writer.close();
+            } catch (IOException ex) {
+            }
+        }
     }//GEN-LAST:event_ExportButtonActionPerformed
 
     private void AreaTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AreaTextFieldFocusLost
