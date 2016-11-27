@@ -7,6 +7,9 @@ package cz.fidentis.renderer;
 
 import LocalAreas.Area;
 import LocalAreas.VertexArea;
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Matrices;
+import com.hackoeur.jglm.Vec3;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
@@ -50,6 +53,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL.GL_ALWAYS;
+import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
 import static javax.media.opengl.GL.GL_BACK;
 import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_CULL_FACE;
@@ -161,6 +165,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     private int ColorMapShadersId;
     private int ColorMapMinMaxShadersId;
     private int ColorMapReductionShadersId;
+    private int VertexShadersId;
 
     /*private LinkedList<Vector3f> plane = new LinkedList<>();
     private ArrayList<LinkedList<LinkedList<Vector3f>>> lists = new ArrayList<>();
@@ -375,7 +380,31 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         }
         
         if(localAreaRender.IsSetUp()){
-            gl = localAreaRender.DrawLocalAreas(gl);
+            
+            Vec3 position = new Vec3((float)xCameraPosition, (float)yCameraPosition, (float)zCameraPosition);
+            int[] view = this.viewport;
+            Mat4 vp = Mat4.MAT4_IDENTITY;
+
+//            private double[] modelViewMatrix = new double[16];
+//    private double[] projectionMatrix = new double[16];
+            float[] projectionArray = new float[16];
+            for (int i = 0 ; i < 16; i++)
+            {
+                projectionArray [i] = (float) projectionMatrix[i];
+            }
+            Mat4 projection = new Mat4(projectionArray);
+            float[] viewArray = new float[16];
+            for (int i = 0 ; i < 16; i++)
+            {
+                viewArray[i] = (float) modelViewMatrix[i];
+            }
+            Mat4 viewMat = new Mat4(viewArray);
+            
+            vp = vp.multiply(projection);
+            vp = vp.multiply(viewMat);
+            
+
+            gl = localAreaRender.DrawLocalAreas(gl, VertexShadersId, vp, position, this.currentWidth, this.currentHeight);
         }
 
         gl.glPopMatrix();
@@ -2262,6 +2291,10 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
 
         gl.glActiveTexture(GL_TEXTURE0);
         gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        
+        gl = localAreaRender.init(gl, VertexShadersId);
+        
+         
     }
 
     private void initShaders() {
@@ -2276,6 +2309,8 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         String colorMapMinMaxFragmentShader = null;
         String colorMapfragmentShader = null;
         String colorMapShadeFragmentShader = null;
+        String vertexShader = null;
+        String vertexFrangmentShader = null;
 
         try {
             SMvertexShaderList = readFile(ComparisonGLEventListener.class.getResourceAsStream("shaders/ShadowMapVS.glsl"));
@@ -2295,6 +2330,9 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
             colorMapMinMaxFragmentShader = readFile(ComparisonGLEventListener.class.getResourceAsStream("shaders/ColormapMinMaxFS.glsl"));
 
             colorMapShadeFragmentShader = readFile(ComparisonGLEventListener.class.getResourceAsStream("shaders/ColormapShadeFS.glsl"));
+            
+            vertexShader = readFile(ComparisonGLEventListener.class.getResourceAsStream("shaders/vert.vs.glsl"));
+            vertexFrangmentShader = readFile(ComparisonGLEventListener.class.getResourceAsStream("shaders/vert.fs.glsl"));
 
         } catch (IOException ex) {
             Logger.getLogger(ComparisonGLEventListener.class.getName()).log(Level.SEVERE, null, ex);
@@ -2317,6 +2355,9 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         int colorMapMinMaxFragmentShaderID = initShader(gl, GL_FRAGMENT_SHADER, colorMapMinMaxFragmentShader);
 
         int colorMapShadeFragmentShaderID = initShader(gl, GL_FRAGMENT_SHADER, colorMapShadeFragmentShader);
+        
+        int vertexShaderShaderID = initShader(gl, GL_VERTEX_SHADER, vertexShader);
+        int vertexFragmentShaderShaderID = initShader(gl, GL_FRAGMENT_SHADER, vertexFrangmentShader);
 
         shadowMapShadersId = gl.glCreateProgram();
         listCreationShadersId = gl.glCreateProgram();
@@ -2325,6 +2366,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         ColorMapShadersId = gl.glCreateProgram();
         ColorMapReductionShadersId = gl.glCreateProgram();
         ColorMapMinMaxShadersId = gl.glCreateProgram();
+        VertexShadersId = gl.glCreateProgram();
 
         gl.glAttachShader(shadowMapShadersId, vertexShaderSMId);
         gl.glAttachShader(shadowMapShadersId, fragmentShaderSMId);
@@ -2397,6 +2439,12 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
 
         checkProgramStatus(gl, ColorMapReductionShadersId, 3);
 
+        
+        gl.glAttachShader(VertexShadersId, vertexShaderShaderID);
+        gl.glAttachShader(VertexShadersId, vertexFragmentShaderShaderID);
+        gl.glLinkProgram(VertexShadersId);
+
+        checkProgramStatus(gl, VertexShadersId, 3);
     }
 
     /**
@@ -2688,6 +2736,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     }
 
     public void SetUpLocalAreaRender(List<Area> area, Model model){
+        
         localAreaRender.SetUp(area, model);
     }
 }

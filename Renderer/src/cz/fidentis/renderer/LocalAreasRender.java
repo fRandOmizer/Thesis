@@ -2,20 +2,22 @@ package cz.fidentis.renderer;
 
 import LocalAreas.Area;
 import LocalAreas.Points;
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Matrices;
+import com.hackoeur.jglm.Vec3;
 import com.jogamp.common.nio.Buffers;
+import cz.fidentis.merging.scene.Camera;
 import cz.fidentis.model.Model;
-import cz.fidentis.model.ModelLoader;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.media.opengl.GL;
-import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
+import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
+import static javax.media.opengl.GL.GL_DYNAMIC_DRAW;
+import static javax.media.opengl.GL.GL_FLOAT;
+import static javax.media.opengl.GL.GL_STATIC_DRAW;
 import javax.media.opengl.GL2;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING;
-import javax.vecmath.Vector3f;
+import static javax.media.opengl.GL2GL3.GL_PIXEL_UNPACK_BUFFER;
+
+
 
 
 
@@ -30,6 +32,18 @@ public class LocalAreasRender{
     private Model model;
     private Points points;
 
+    // our OpenGL resources
+    private int vertexBuffer;
+    private int vertexArray;
+    
+    private int colorBuffer;
+    //private int indicesBuffer;
+    
+    // our GLSL resources
+    private int positionAttribLoc;
+    private int colorAttribLoc;
+    private int vertMvpUniformLoc;
+
     
     public LocalAreasRender(){
         this.isSetUp = false;
@@ -39,7 +53,6 @@ public class LocalAreasRender{
     
     public void SetUp(List<Area> area, Model model){
         this.area = area;
-        this.isSetUp = true;
         this.model = model;
         
         List<Integer> tmp;
@@ -70,6 +83,7 @@ public class LocalAreasRender{
         }
         
         points.AddArray(vert, color);
+        this.isSetUp = true;
     }
     
     public Boolean IsSetUp(){
@@ -80,35 +94,100 @@ public class LocalAreasRender{
         this.isSetUp = false;
     }
     
-    public GL2 DrawLocalAreas(GL2 gl){
-        return makeAreas(gl);
+    public GL2 DrawLocalAreas(GL2 gl, int vertexShaderID, Mat4 vp, Vec3 position, float width, float height){
+        return makeAreas(gl, vertexShaderID, vp, position, width, height);
     }
     
     
-    public GL2 makeAreas(GL2 gl) {
+    public GL2 makeAreas(GL2 gl, int vertexShaderID, Mat4 vp, Vec3 position, float width, float height) {
         float[] vert = points.GetPoints();
         float[] color = points.GetVertexColors();
         
-//        gl.glClear(GL_DEPTH_BUFFER_BIT);
-        gl.glDisable(GL_LIGHTING);
-        gl.glPointSize(5f);
-        gl.glBegin(GL.GL_POINTS);
-
+//        Mat4 perspective = Matrices.perspective(60.0f, (float) width / (float) height, 1.0f, 500.0f);
+//        Vec3 yAxis = new Vec3(0.0f, 1.0f, 0.0f);
+//        Mat4 view = Matrices.lookAt(position, Vec3.VEC3_ZERO, yAxis);
+//        
+//        Mat4 vp = Mat4.MAT4_IDENTITY;
+//
+//        vp = vp.multiply(perspective);
+//        vp = vp.multiply(view);
         
-        for (int i = 0; i < points.getNumberOfVertexes(); i++) {
-            int index = i*3;
+        gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glDisable(GL2.GL_LIGHTING);
 
-            gl.glColor3f(color[index],color[index+1],color[index+2]);
-            Vector3f v = new Vector3f(vert[index],vert[index+1],vert[index+2]);
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, vert.length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(vert), GL_DYNAMIC_DRAW);
 
-            gl.glVertex3d(v.x, v.y, v.z);
-           
-        }
+        gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, color.length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(color), GL_DYNAMIC_DRAW);
+
+        gl.glUseProgram(vertexShaderID);
         
-        gl.glEnable(GL_LIGHTING);
+        gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, vp.getBuffer());
+        
+        gl.glBindVertexArray(vertexArray);
 
-        gl.glEnd();
+        gl.glDrawArrays(GL2.GL_POINTS, 0, vert.length);
+
+        gl.glEnable(GL2.GL_LIGHTING);
+        
+        
+
+       // gl.glDrawArrays(GL2.GL_POINTS, 0, vert.length);
+        
         return gl;
     }
+
+    public GL2 init(GL2 gl, int vertexShaderID) {
+       
+        //gl.glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+        float[] vert = new float[30000];//points.GetPoints();
+        float[] color = new float[30000];//points.GetVertexColors();
+
+        
+
+        //gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+        //gl.glEnableClientState(GL2.GL_VERTEX_ARRAY_BINDING);
+        
+        // create buffers with geometry
+        int[] buffers = new int[2];
+        gl.glGenBuffers(2, buffers, 0);
+        vertexBuffer = buffers[0];
+        colorBuffer = buffers[1];
+        
+        // create a vertex array object for the geometry
+        int[] arrays = new int[1];
+        gl.glGenVertexArrays(1, arrays, 0);
+        vertexArray = arrays[0];
+        
+       
+        
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, vert.length * Buffers.SIZEOF_FLOAT,
+                null, GL_DYNAMIC_DRAW);
+
+        gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, color.length * Buffers.SIZEOF_FLOAT,
+                null, GL_DYNAMIC_DRAW);
+
+        positionAttribLoc = gl.glGetAttribLocation(vertexShaderID, "position");
+        colorAttribLoc = gl.glGetAttribLocation(vertexShaderID, "color");
+        vertMvpUniformLoc = gl.glGetUniformLocation(vertexShaderID, "MVP");
+        gl.glBindVertexArray(vertexArray);
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        gl.glEnableVertexAttribArray(positionAttribLoc);
+        gl.glVertexAttribPointer(positionAttribLoc, 3, GL_FLOAT, false, 0, 0);
+        gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        gl.glEnableVertexAttribArray(colorAttribLoc);
+        gl.glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, false, 0, 0);
+        //
+        
+        return gl;
+    }
+    
+
     
 }
