@@ -380,31 +380,8 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         }
         
         if(localAreaRender.IsSetUp()){
-            
-            Vec3 position = new Vec3((float)xCameraPosition, (float)yCameraPosition, (float)zCameraPosition);
-            int[] view = this.viewport;
-            Mat4 vp = Mat4.MAT4_IDENTITY;
 
-//            private double[] modelViewMatrix = new double[16];
-//    private double[] projectionMatrix = new double[16];
-            float[] projectionArray = new float[16];
-            for (int i = 0 ; i < 16; i++)
-            {
-                projectionArray [i] = (float) projectionMatrix[i];
-            }
-            Mat4 projection = new Mat4(projectionArray);
-            float[] viewArray = new float[16];
-            for (int i = 0 ; i < 16; i++)
-            {
-                viewArray[i] = (float) modelViewMatrix[i];
-            }
-            Mat4 viewMat = new Mat4(viewArray);
-            
-            vp = vp.multiply(projection);
-            vp = vp.multiply(viewMat);
-            
-
-            gl = localAreaRender.DrawLocalAreas(gl, VertexShadersId, vp, position, this.currentWidth, this.currentHeight);
+            gl = localAreaRender.DrawLocalAreas(gl, VertexShadersId, projectionMatrix,  modelViewMatrix);
         }
 
         gl.glPopMatrix();

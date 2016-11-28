@@ -3,24 +3,14 @@ package cz.fidentis.renderer;
 import LocalAreas.Area;
 import LocalAreas.Points;
 import com.hackoeur.jglm.Mat4;
-import com.hackoeur.jglm.Matrices;
-import com.hackoeur.jglm.Vec3;
 import com.jogamp.common.nio.Buffers;
-import cz.fidentis.merging.scene.Camera;
 import cz.fidentis.model.Model;
 import java.util.ArrayList;
 import java.util.List;
 import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
 import static javax.media.opengl.GL.GL_DYNAMIC_DRAW;
 import static javax.media.opengl.GL.GL_FLOAT;
-import static javax.media.opengl.GL.GL_STATIC_DRAW;
 import javax.media.opengl.GL2;
-import static javax.media.opengl.GL2GL3.GL_PIXEL_UNPACK_BUFFER;
-
-
-
-
-
 
 /**
  *
@@ -94,26 +84,37 @@ public class LocalAreasRender{
         this.isSetUp = false;
     }
     
-    public GL2 DrawLocalAreas(GL2 gl, int vertexShaderID, Mat4 vp, Vec3 position, float width, float height){
-        return makeAreas(gl, vertexShaderID, vp, position, width, height);
+    public GL2 DrawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
+        return makeAreas(gl, vertexShaderID, a, b);
     }
     
     
-    public GL2 makeAreas(GL2 gl, int vertexShaderID, Mat4 vp, Vec3 position, float width, float height) {
+    public GL2 makeAreas(GL2 gl, int vertexShaderID, double[] a, double[] b) {
         float[] vert = points.GetPoints();
         float[] color = points.GetVertexColors();
         
-//        Mat4 perspective = Matrices.perspective(60.0f, (float) width / (float) height, 1.0f, 500.0f);
-//        Vec3 yAxis = new Vec3(0.0f, 1.0f, 0.0f);
-//        Mat4 view = Matrices.lookAt(position, Vec3.VEC3_ZERO, yAxis);
-//        
-//        Mat4 vp = Mat4.MAT4_IDENTITY;
-//
-//        vp = vp.multiply(perspective);
-//        vp = vp.multiply(view);
-        
+        Mat4 vp = Mat4.MAT4_IDENTITY;
+
+
+        float[] projectionArray = new float[16];
+        for (int i = 0 ; i < 16; i++)
+        {
+            projectionArray [i] = (float) a[i];
+        }
+        Mat4 projection = new Mat4(projectionArray);
+        float[] viewArray = new float[16];
+        for (int i = 0 ; i < 16; i++)
+        {
+            viewArray[i] = (float) b[i];
+        }
+        Mat4 viewMat = new Mat4(viewArray);
+
+        vp = vp.multiply(projection);
+        vp = vp.multiply(viewMat);
+
         gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
         gl.glDisable(GL2.GL_LIGHTING);
+        gl.glPointSize(3f);
 
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glBufferData(GL_ARRAY_BUFFER, vert.length * Buffers.SIZEOF_FLOAT,
@@ -133,24 +134,14 @@ public class LocalAreasRender{
 
         gl.glEnable(GL2.GL_LIGHTING);
         
-        
-
-       // gl.glDrawArrays(GL2.GL_POINTS, 0, vert.length);
-        
         return gl;
     }
 
     public GL2 init(GL2 gl, int vertexShaderID) {
-       
-        //gl.glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
-        float[] vert = new float[30000];//points.GetPoints();
-        float[] color = new float[30000];//points.GetVertexColors();
+        float[] vert = new float[300];
+        float[] color = new float[300];
 
-        
-
-        //gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-        //gl.glEnableClientState(GL2.GL_VERTEX_ARRAY_BINDING);
         
         // create buffers with geometry
         int[] buffers = new int[2];
@@ -162,9 +153,7 @@ public class LocalAreasRender{
         int[] arrays = new int[1];
         gl.glGenVertexArrays(1, arrays, 0);
         vertexArray = arrays[0];
-        
-       
-        
+
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glBufferData(GL_ARRAY_BUFFER, vert.length * Buffers.SIZEOF_FLOAT,
                 null, GL_DYNAMIC_DRAW);
@@ -176,6 +165,7 @@ public class LocalAreasRender{
         positionAttribLoc = gl.glGetAttribLocation(vertexShaderID, "position");
         colorAttribLoc = gl.glGetAttribLocation(vertexShaderID, "color");
         vertMvpUniformLoc = gl.glGetUniformLocation(vertexShaderID, "MVP");
+        
         gl.glBindVertexArray(vertexArray);
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glEnableVertexAttribArray(positionAttribLoc);
@@ -183,7 +173,6 @@ public class LocalAreasRender{
         gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         gl.glEnableVertexAttribArray(colorAttribLoc);
         gl.glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, false, 0, 0);
-        //
         
         return gl;
     }
