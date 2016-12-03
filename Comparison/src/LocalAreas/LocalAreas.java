@@ -17,8 +17,6 @@ import javafx.geometry.Point3D;
  */
 public class LocalAreas {
     private List<Point3D> Points;
-    //private float[] vertexes;
-    //private float[] vertexColors;
     private List<float[]> vertexAreas;
     private List<float[]> vertexColorAreas;
     
@@ -28,33 +26,6 @@ public class LocalAreas {
     
     public void SetAreas(List<Area> areas, Model model){
         
-//        int s = 0;
-//        for (int j = 0; j < areas.size(); j++) {
-//            s += areas.get(j).vertices.size();
-//        }
-//
-//        vertexes = new float[s * 3];
-//        vertexColors = new float[s * 3];
-//
-//        int k = 0;
-//        for (int j = 0; j < areas.size(); j++) {
-//            tmp = areas.get(j).vertices;
-//            if (tmp.size() != 0) {
-//                for (int i = 0; i < tmp.size(); i++) {
-//                    vertexes[k] = model.getVerts().get(tmp.get(i)).x;
-//                    vertexColors[k] = areas.get(j).color.get(0);
-//                    k++;
-//                    vertexes[k] = model.getVerts().get(tmp.get(i)).y;
-//                    vertexColors[k] = areas.get(j).color.get(1);
-//                    k++;
-//                    vertexes[k] = model.getVerts().get(tmp.get(i)).z;
-//                    vertexColors[k] = areas.get(j).color.get(2);
-//                    k++;
-//                }
-//            }
-//        }
-
-
         float[] vertexes;
         float[] vertexColors;
         int k;

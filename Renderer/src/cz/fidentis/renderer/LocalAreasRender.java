@@ -63,11 +63,6 @@ public class LocalAreasRender{
     }
     
     public GL2 DrawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
-        return makeAreas(gl, vertexShaderID, a, b);
-    }
-    
-    
-    public GL2 makeAreas(GL2 gl, int vertexShaderID, double[] a, double[] b) {
         List<float[]> vertexesAreas = points.GetVertexAreas();
         List<float[]> colorAreas = points.GetVertexColorsAreas();
         
