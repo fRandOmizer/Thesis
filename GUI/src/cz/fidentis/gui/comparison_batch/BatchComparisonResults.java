@@ -71,8 +71,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     public BatchComparisonResults() {
         initComponents();
         activeColorPanel = new JPanel();
-        
-        InitLocalAreaPanel();
+
     }
 
     public void showProcrustesControls() {
@@ -2507,6 +2506,8 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         }
         
         result = c.getNumericalResults();
+        
+        InitLocalAreaPanel();
     }
 
     public void setValuesModified(boolean valuesModified) {
