@@ -17,6 +17,7 @@ import static javax.media.opengl.GL.GL_FRONT_AND_BACK;
 import static javax.media.opengl.GL.GL_LINES;
 import static javax.media.opengl.GL.GL_LINE_LOOP;
 import static javax.media.opengl.GL.GL_POINTS;
+import static javax.media.opengl.GL.GL_TRIANGLE_FAN;
 import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2GL3.GL_FILL;
 import static javax.media.opengl.GL2GL3.GL_LINE;
@@ -86,6 +87,8 @@ public class LocalAreasRender{
 
          
         gl.glClear(GL_DEPTH_BUFFER_BIT);
+        gl.glLineWidth(2);
+        gl.glPointSize(3);
         
         //gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
         //gl.glDisable(GL2.GL_LIGHTING);
@@ -104,8 +107,12 @@ public class LocalAreasRender{
             gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, vp.getBuffer());
 
             gl.glBindVertexArray(vertexArray);
-
-            gl.glDrawArrays(GL_LINE_LOOP, 0, vertexesAreas.get(i).length);
+            
+            if (vertexesAreas.get(i).length > 6){
+                gl.glDrawArrays(GL_LINE_LOOP, 0, vertexesAreas.get(i).length);
+            } else {
+                gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length);
+            }
             
             gl.glBindVertexArray(joglArray);
         }
