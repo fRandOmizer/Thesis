@@ -109,9 +109,9 @@ public class LocalAreasRender{
             gl.glBindVertexArray(vertexArray);
             
             if (vertexesAreas.get(i).length > 6){
-                gl.glDrawArrays(GL_LINE_LOOP, 0, vertexesAreas.get(i).length);
+                gl.glDrawArrays(GL_LINE_LOOP, 0, vertexesAreas.get(i).length/3);
             } else {
-                gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length);
+                gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
             }
             
             gl.glBindVertexArray(joglArray);

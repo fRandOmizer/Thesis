@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.model">
-    <module_version install_time="1480793657499" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1482693783911" last="true" origin="installer" specification_version="1.0">
         <file crc="780847076" name="config/Modules/cz-fidentis-model.xml"/>
-        <file crc="2914356324" name="modules/cz-fidentis-model.jar"/>
+        <file crc="2409866803" name="modules/cz-fidentis-model.jar"/>
     </module_version>
 </module>
