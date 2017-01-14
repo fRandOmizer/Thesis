@@ -1,4 +1,4 @@
-package LocalAreas;
+package cz.fidentis.comparison.localAreas;
 
 import java.util.ArrayList;
 import java.util.List;

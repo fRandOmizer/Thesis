@@ -5,7 +5,7 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
-import LocalAreas.VertexArea;
+import cz.fidentis.comparison.localAreas.VertexArea;
 import cz.fidentis.gui.Canvas;
 import cz.fidentis.gui.ConfigurationTopComponent;
 import cz.fidentis.gui.GUIController;
@@ -55,6 +55,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     private Canvas canvas3;
     private Canvas canvas4;
+    private LocalAreasJPanel pointer;
 
     /**
      * Creates new form ViewerPanel4
@@ -76,7 +77,6 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
         canvas1.setImportLabelVisible(true);
         
-        
     }
 
     public Canvas getCanvas1() {
@@ -89,6 +89,10 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     public void setModel(Model model) {
         listener.setModels(model);
+    }
+    
+    public void setLocalAreasJPanel(LocalAreasJPanel localAreasJPanel){
+        this.pointer = localAreasJPanel;
     }
 
     public void setResultButtonVisible(boolean b) {
@@ -147,6 +151,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
             canvas4.setPreferredSize(new java.awt.Dimension(300, 0));
             // jSplitPane2.setLeftComponent(canvas3);
             canvas4.addGLEventListener(listener);
+
             canvas3.setMinimumSize(new java.awt.Dimension(300, 0));
             canvas3.setPreferredSize(new java.awt.Dimension(300, 0));
             canvas3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -228,6 +233,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         canvas4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 canvas4MousePressed(evt);
+                
             }
 
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -300,7 +306,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void canvas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseClicked
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_canvas1MouseClicked
 
     public void setSelection(boolean selection) {
@@ -368,6 +374,8 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }
 
     private void canvas1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MousePressed
+        pointer.setMouseClickPosition((double)evt.getX(), (double)evt.getY());
+        
         mouseDraggedX = evt.getX();
         mouseDraggedY = evt.getY();
 

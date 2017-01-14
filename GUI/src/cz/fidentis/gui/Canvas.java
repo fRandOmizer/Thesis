@@ -1,6 +1,6 @@
 package cz.fidentis.gui;
 
-import LocalAreas.VertexArea;
+import cz.fidentis.comparison.localAreas.VertexArea;
 import com.jogamp.opengl.util.Animator;
 import cz.fidentis.featurepoints.FacialPoint;
 import cz.fidentis.model.Model;

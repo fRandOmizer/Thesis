@@ -4,7 +4,7 @@
  */
 package cz.fidentis.gui;
 
-import LocalAreas.VertexArea;
+import cz.fidentis.comparison.localAreas.VertexArea;
 import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.controller.Controller;
 import cz.fidentis.controller.Project;

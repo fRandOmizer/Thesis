@@ -5,14 +5,16 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
-import LocalAreas.Area;
-import LocalAreas.BinTree;
-import LocalAreas.VertexArea;
+import cz.fidentis.comparison.localAreas.Area;
+import cz.fidentis.comparison.localAreas.BinTree;
+import cz.fidentis.comparison.localAreas.VertexArea;
+import cz.fidentis.gui.GUIController;
 
 import cz.fidentis.landmarkParser.CSVparser;
 import cz.fidentis.model.Model;
 import cz.fidentis.visualisation.surfaceComparison.HDpaintingInfo;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -64,6 +67,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private ArrayList<Float> LocalAreas;
     private VertexArea area;
     private Model model;
+    private boolean isInicialized;
+    private boolean isAnyAreaDrawn;
+    private JFrame LocalAreaFrame;
+    private LocalAreasSelectedAreaJPanel LocalAreaJPanel;
     
     
     
@@ -81,6 +88,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         RelativeValues = true;
         LocalAreas = null;
         model = null;
+        isInicialized = false;
+        isAnyAreaDrawn = false;
         
         AreasJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
@@ -89,14 +98,30 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         SetEnableComponents(false);
     }
     
+    public boolean isInitialized(){
+        return this.isInicialized;
+    }
+    
     private void init(){
         model = pointer.GetCurrentModel();
         BinTree thres = new BinTree(LocalAreas);
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
+        
+        LocalAreaFrame = new JFrame("LocalAreas");
+        LocalAreaFrame.setVisible(false);
+        LocalAreaFrame.setMinimumSize(new Dimension(100, 100));
+        LocalAreaFrame.setMaximumSize(new Dimension(100, 100));
+
+        LocalAreaJPanel = new LocalAreasSelectedAreaJPanel();
+        
+        LocalAreaFrame.add(LocalAreaJPanel);
+        
+        LocalAreaFrame.pack();
+        
     }
     
-    void LoadValues(float min, float max) {
+    public void LoadValues(float min, float max) {
         LocalAreas = new ArrayList(pointer.GetAuxiliaryAverageResults());
         BottomTresh = (double)min;
         TopTresh = (double)max;
@@ -104,6 +129,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         this.min = (double)min;
         TopTextField.setText(TopTresh.toString());
         BottomTextField.setText(BottomTresh.toString());
+        isInicialized = true;
         
     }
 
@@ -124,6 +150,27 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             listModel.addElement("No Area was found!");
         }
         AreasJList.setModel(listModel);
+    }
+    
+    public void setMouseClickPosition(double x, double y){
+        if (LocalAreaFrame == null){
+            return;
+        }
+        
+        if (!isInicialized){
+            return;
+        }
+        
+        if (!isAnyAreaDrawn){
+            return;
+        }
+       
+        
+        if (!LocalAreaFrame.isVisible()){
+            LocalAreaFrame.setVisible(true);
+        }
+        LocalAreaJPanel.SetPosition(x, y, 0);
+        
     }
 
     private void SetEnableComponents(Boolean value){
@@ -316,6 +363,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         SelectedAreas = AreasJList.getSelectedIndices();
         
         RenderSelectedAreas();
+        
+        if (AreasJList.getSelectedIndices().length>0){
+             isAnyAreaDrawn = true;
+        }
     }//GEN-LAST:event_SelectButtonActionPerformed
 
     private void AllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AllButtonActionPerformed
@@ -326,6 +377,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         AreasJList.setSelectedIndices(SelectedAreas);
         RenderSelectedAreas();
+        
+        if (AreasJList.getSelectedIndices().length>0){
+             isAnyAreaDrawn = true;
+        }
         
     }//GEN-LAST:event_AllButtonActionPerformed
 

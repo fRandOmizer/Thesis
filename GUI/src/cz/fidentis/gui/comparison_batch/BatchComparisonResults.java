@@ -5,7 +5,7 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
-import LocalAreas.Area;
+import cz.fidentis.comparison.localAreas.Area;
 import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.comparison.RegistrationMethod;
 import cz.fidentis.comparison.procrustes.DatabaseWorker;
@@ -2357,9 +2357,12 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         if (LocalAreasFrame.isVisible()){
             LocalAreasFrame.setVisible(false);
+            GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
         } else {
             LocalAreasFrame.setVisible(true);
-            localAreasJPanel.LoadValues(histogram1.getMin(), histogram1.getMax());
+            if (!localAreasJPanel.isInitialized()){
+                localAreasJPanel.LoadValues(histogram1.getMin(), histogram1.getMax());
+            }
         }
     }//GEN-LAST:event_jButton13ActionPerformed
 
@@ -2368,12 +2371,21 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         LocalAreasFrame.setVisible(false);
         LocalAreasFrame.setMinimumSize(new Dimension(340, 700));
         LocalAreasFrame.setMaximumSize(new Dimension(340, 700));
+        
+        LocalAreasFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
+            }
+        });
+        
         localAreasJPanel = new LocalAreasJPanel();
         
         localAreasJPanel.SetPointer(this);
         LocalAreasFrame.add(localAreasJPanel);
         
         LocalAreasFrame.pack();
+        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().setLocalAreasJPanel(localAreasJPanel);
     }
     
     public Model GetCurrentModel(){
@@ -2392,7 +2404,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     public void SetLocalAreaRender(List<Area> area, Model model){
         GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(area, model);
     }
-    
+
     public histogramPanel getHistogram() {
         return histogram1;
     }

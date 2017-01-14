@@ -5,8 +5,8 @@
  */
 package cz.fidentis.renderer;
 
-import LocalAreas.Area;
-import LocalAreas.VertexArea;
+import cz.fidentis.comparison.localAreas.Area;
+import cz.fidentis.comparison.localAreas.VertexArea;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Matrices;
 import com.hackoeur.jglm.Vec3;
@@ -2715,5 +2715,10 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     public void SetUpLocalAreaRender(List<Area> area, Model model){
         
         localAreaRender.SetUp(area, model);
+    }
+    
+    public void HideLocalAreaRender(){
+        
+        localAreaRender.HideLocalAreas();
     }
 }

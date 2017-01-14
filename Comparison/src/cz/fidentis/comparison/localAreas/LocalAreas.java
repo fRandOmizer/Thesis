@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LocalAreas;
+package cz.fidentis.comparison.localAreas;
 
 import cz.fidentis.model.Model;
 import java.awt.geom.Line2D;

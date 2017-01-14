@@ -1,7 +1,7 @@
 package cz.fidentis.renderer;
 
-import LocalAreas.Area;
-import LocalAreas.LocalAreas;
+import cz.fidentis.comparison.localAreas.Area;
+import cz.fidentis.comparison.localAreas.LocalAreas;
 import com.hackoeur.jglm.Mat4;
 import com.jogamp.common.nio.Buffers;
 import cz.fidentis.model.Model;
@@ -43,6 +43,7 @@ public class LocalAreasRender{
     private int positionAttribLoc;
     private int colorAttribLoc;
     private int vertMvpUniformLoc;
+    private Mat4 matrix;
 
     
     public LocalAreasRender(){
@@ -63,11 +64,15 @@ public class LocalAreasRender{
         this.isSetUp = false;
     }
     
+    public Mat4 getMatrix(){
+        return this.matrix;
+    }
+    
     public GL2 DrawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
         List<float[]> vertexesAreas = points.GetVertexAreas();
         List<float[]> colorAreas = points.GetVertexColorsAreas();
         
-        Mat4 vp = Mat4.MAT4_IDENTITY;
+        matrix = Mat4.MAT4_IDENTITY;
 
         float[] projectionArray = new float[16];
         for (int i = 0 ; i < 16; i++)
@@ -82,16 +87,13 @@ public class LocalAreasRender{
         }
         Mat4 viewMat = new Mat4(viewArray);
 
-        vp = vp.multiply(projection);
-        vp = vp.multiply(viewMat);
+        matrix = matrix.multiply(projection);
+        matrix = matrix.multiply(viewMat);
 
          
         gl.glClear(GL_DEPTH_BUFFER_BIT);
         gl.glLineWidth(2);
         gl.glPointSize(3);
-        
-        //gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
-        //gl.glDisable(GL2.GL_LIGHTING);
 
         for (int i = 0; i < vertexesAreas.size(); i++){
             gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -104,7 +106,7 @@ public class LocalAreasRender{
 
             gl.glUseProgram(vertexShaderID);
 
-            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, vp.getBuffer());
+            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, matrix.getBuffer());
 
             gl.glBindVertexArray(vertexArray);
             
@@ -116,11 +118,6 @@ public class LocalAreasRender{
             
             gl.glBindVertexArray(joglArray);
         }
-        
-
-
-        //gl.glEnable(GL2.GL_LIGHTING);
-        
         return gl;
     }
 
