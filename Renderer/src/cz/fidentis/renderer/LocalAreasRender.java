@@ -22,6 +22,7 @@ import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2GL3.GL_FILL;
 import static javax.media.opengl.GL2GL3.GL_LINE;
 import static javax.media.opengl.GL2GL3.GL_VERTEX_ARRAY_BINDING;
+import javax.vecmath.Vector3f;
 
 /**
  *
@@ -44,16 +45,24 @@ public class LocalAreasRender{
     private int colorAttribLoc;
     private int vertMvpUniformLoc;
     private Mat4 matrix;
+    private boolean isDrawPoint;
+    private float[] pointToDraw;
 
     
     public LocalAreasRender(){
         this.isSetUp = false;
         this.points = new LocalAreas();
+        isDrawPoint = false;
     }
     
-    public void SetUp(List<Area> areas, Model model){
-        points.SetAreas(areas, model);
+    public void SetUp(int[] areasIndexes, List<Area> areas, Model model){
+        points.SetAreas(areasIndexes, areas, model);
         this.isSetUp = true;
+    }
+    
+    public void setPointToDraw(Vector3f pointToDraw){
+        this.pointToDraw = new float[] {pointToDraw.x, pointToDraw.y, pointToDraw.z};
+        isDrawPoint = true;
     }
     
     public Boolean IsSetUp(){
@@ -62,10 +71,15 @@ public class LocalAreasRender{
 
     public void HideLocalAreas(){
         this.isSetUp = false;
+        isDrawPoint = false;
     }
     
     public Mat4 getMatrix(){
         return this.matrix;
+    }
+    
+    public LocalAreas getLocalAreasBoundary(){
+        return points;
     }
     
     public GL2 DrawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
@@ -113,11 +127,40 @@ public class LocalAreasRender{
             if (vertexesAreas.get(i).length > 6){
                 gl.glDrawArrays(GL_LINE_LOOP, 0, vertexesAreas.get(i).length/3);
             } else {
-                gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
+                if (vertexesAreas.get(i).length > 4){
+                    gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/3);
+                } else {
+                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
+                }
             }
             
             gl.glBindVertexArray(joglArray);
         }
+        
+        if (isDrawPoint){
+            
+            gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+            gl.glBufferData(GL_ARRAY_BUFFER, 3 * Buffers.SIZEOF_FLOAT,
+                    Buffers.newDirectFloatBuffer(pointToDraw), GL_DYNAMIC_DRAW);
+
+            gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+            gl.glBufferData(GL_ARRAY_BUFFER, 3 * Buffers.SIZEOF_FLOAT,
+                    Buffers.newDirectFloatBuffer(new float[]  {1.0f, 1.0f, 1.0f}), GL_DYNAMIC_DRAW);
+
+            gl.glUseProgram(vertexShaderID);
+
+            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, matrix.getBuffer());
+
+            gl.glBindVertexArray(vertexArray);
+            
+            
+            
+            gl.glDrawArrays(GL_POINTS, 0, 1);
+            
+            
+            gl.glBindVertexArray(joglArray);
+        }
+        
         return gl;
     }
 

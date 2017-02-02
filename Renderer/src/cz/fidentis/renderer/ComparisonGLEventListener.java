@@ -15,6 +15,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import cz.fidentis.comparison.icp.ICPTransformation;
 import cz.fidentis.comparison.icp.Icp;
+import cz.fidentis.comparison.localAreas.LocalAreas;
 import cz.fidentis.comparison.procrustes.ProcrustesAnalysis;
 import cz.fidentis.composite.ModelSelector;
 import cz.fidentis.featurepoints.FacialPoint;
@@ -2712,13 +2713,33 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         return gl;
     }
 
-    public void SetUpLocalAreaRender(List<Area> area, Model model){
+    public void SetUpLocalAreaRender(int[] indexesOfAreas, List<Area> area, Model model){
         
-        localAreaRender.SetUp(area, model);
+        localAreaRender.SetUp(indexesOfAreas, area, model);
     }
     
     public void HideLocalAreaRender(){
         
         localAreaRender.HideLocalAreas();
+    }
+    
+    public LocalAreas getLocalAreas(){
+        return localAreaRender.getLocalAreasBoundary();
+    }
+    
+    public double[] getProjectionMatrix(){
+        return projectionMatrix;
+    }
+    
+    public double[] getModelViewMatrix(){
+        return modelViewMatrix;
+    }
+    
+    public int[] getViewPort(){
+        return viewport;
+    }
+    
+    public void setPointToDraw(Vector3f point){
+        localAreaRender.setPointToDraw(point);
     }
 }

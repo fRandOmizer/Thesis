@@ -65,16 +65,24 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
-                <package>cz.fidentis.comparison.localAreas</package>
                 <package>cz.fidentis.comparison</package>
                 <package>cz.fidentis.comparison.hausdorffDistance</package>
                 <package>cz.fidentis.comparison.hausdorffDistance.localDif</package>
                 <package>cz.fidentis.comparison.icp</package>
+                <package>cz.fidentis.comparison.localAreas</package>
                 <package>cz.fidentis.comparison.procrustes</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/Jama-1.0.3.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/Jama-1.0.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jglm-1.0.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jglm-1.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jglm-1.0.0-sources.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jglm-1.0.0-sources.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

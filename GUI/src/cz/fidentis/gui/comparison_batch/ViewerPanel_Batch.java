@@ -374,7 +374,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }
 
     private void canvas1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MousePressed
-        pointer.setMouseClickPosition((double)evt.getX(), (double)evt.getY());
+        pointer.setMouseClickPosition((double)evt.getX(), (double)evt.getY(), this.getWidth(), this.getHeight());
         
         mouseDraggedX = evt.getX();
         mouseDraggedY = evt.getY();

@@ -17,6 +17,7 @@ import cz.fidentis.model.Model;
 import cz.fidentis.model.ModelLoader;
 import cz.fidentis.processing.comparison.surfaceComparison.SurfaceComparisonProcessing;
 import cz.fidentis.processing.exportProcessing.ResultExports;
+import cz.fidentis.renderer.ComparisonGLEventListener;
 import cz.fidentis.undersampling.Methods;
 import cz.fidentis.undersampling.Type;
 import cz.fidentis.utils.FileUtils;
@@ -2401,10 +2402,14 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         return getContext().getHd();
     }
     
-    public void SetLocalAreaRender(List<Area> area, Model model){
-        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(area, model);
+    public void SetLocalAreaRender(int[] areasIndexes, List<Area> area, Model model){
+        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(areasIndexes, area, model);
     }
-
+    
+    public ComparisonGLEventListener getRenderer(){
+        return GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener();
+    }
+    
     public histogramPanel getHistogram() {
         return histogram1;
     }

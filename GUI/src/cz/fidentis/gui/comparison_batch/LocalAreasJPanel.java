@@ -7,6 +7,8 @@ package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.localAreas.Area;
 import cz.fidentis.comparison.localAreas.BinTree;
+import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
+import cz.fidentis.comparison.localAreas.LocalAreas;
 import cz.fidentis.comparison.localAreas.VertexArea;
 import cz.fidentis.gui.GUIController;
 
@@ -23,12 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Point3D;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.vecmath.Vector3f;
 
 /**
  *
@@ -152,7 +156,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         AreasJList.setModel(listModel);
     }
     
-    public void setMouseClickPosition(double x, double y){
+    public void setMouseClickPosition(double x, double y, double width, double height){
         if (LocalAreaFrame == null){
             return;
         }
@@ -171,6 +175,22 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
         LocalAreaJPanel.SetPosition(x, y, 0);
         
+        
+        LocalAreas localAreas = pointer.getRenderer().getLocalAreas();
+        double[] modelViewMatrix = pointer.getRenderer().getModelViewMatrix();
+        double[] projectionMatrix = pointer.getRenderer().getProjectionMatrix();
+        int[] viewPort = pointer.getRenderer().getViewPort();
+        int i = 0;
+        for (List<Point3D> points : localAreas.GetVertexAreasPoints()){
+            Vector3f point = LocalAreaLibrary.intersectionWithArea(x, y, viewPort, modelViewMatrix, projectionMatrix, points);
+            if (point != null){
+                pointer.getRenderer().setPointToDraw(point);
+                SetSelectedArea(i);
+            }
+            i++;
+        }
+        
+        
     }
 
     private void SetEnableComponents(Boolean value){
@@ -187,7 +207,21 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             tempList.add(selectedArea);
         }
         
-        pointer.SetLocalAreaRender(tempList, model);
+        pointer.SetLocalAreaRender(SelectedAreas, tempList, model);
+    }
+    
+    private void SetSelectedArea(int index){
+        SelectedAreas = new int[1];
+        
+        SelectedAreas[0]=index;
+       
+        AreasJList.clearSelection();
+        AreasJList.setSelectedIndices(new int[] {index});
+        RenderSelectedAreas();
+        
+        if (AreasJList.getSelectedIndices().length>0){
+             isAnyAreaDrawn = true;
+        }
     }
 
     /**
