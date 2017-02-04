@@ -96,4 +96,8 @@ public class LocalAreas {
     public List<List<Point3D>> GetVertexAreasPoints(){
         return vertexAreasPoints;
     }
+    
+    public int[] GetIndexes(){
+        return indexesOfAreas;
+    }
 }

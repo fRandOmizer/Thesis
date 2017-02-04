@@ -22,11 +22,14 @@ import java.awt.event.MouseWheelEvent;
 import java.io.File;
 import static java.io.File.separatorChar;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JSplitPane;
+import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.vecmath.Vector3f;
 import org.openide.awt.StatusDisplayer;
 
@@ -87,12 +90,24 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         return listener;
     }
 
+    public void setToolTip(double x, double y, String text){
+        //this.setToolTip(x, y, text);
+//        JToolTip tooltip = createToolTip();
+//        tooltip.setTipText(text);
+//        tooltip.setActionMap(this.getActionMap());
+//        this.setToolTipText(text);
+//        ToolTipManager.sharedInstance().registerComponent( this);
+//        ToolTipManager.sharedInstance().setInitialDelay(0) ;
+        
+    }
+    
     public void setModel(Model model) {
         listener.setModels(model);
     }
     
     public void setLocalAreasJPanel(LocalAreasJPanel localAreasJPanel){
         this.pointer = localAreasJPanel;
+        this.pointer.setPointerViewerPanel_Batch(this);
     }
 
     public void setResultButtonVisible(boolean b) {
@@ -270,6 +285,9 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 canvas1MouseDragged(evt);
             }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                canvas1MouseMoved(evt);
+            }
         });
         canvas1.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
@@ -279,6 +297,12 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         canvas1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 canvas1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                canvas1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                canvas1MouseExited(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 canvas1MousePressed(evt);
@@ -374,7 +398,10 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }
 
     private void canvas1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MousePressed
-        pointer.setMouseClickPosition((double)evt.getX(), (double)evt.getY(), this.getWidth(), this.getHeight());
+        if (pointer != null){
+            pointer.setMouseClickPosition((double)evt.getX(), (double)evt.getY());
+        }
+        
         
         mouseDraggedX = evt.getX();
         mouseDraggedY = evt.getY();
@@ -631,6 +658,27 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_canvas1MouseWheelMoved
+
+    private void canvas1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseMoved
+        if (pointer != null){
+            pointer.setMousePosition(evt.getX(), evt.getY(), Calendar.getInstance());
+        }
+        
+    }//GEN-LAST:event_canvas1MouseMoved
+
+    private void canvas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseEntered
+        if (pointer != null) {
+            pointer.setMouseOnCanvas(true);
+        }
+        
+    }//GEN-LAST:event_canvas1MouseEntered
+
+    private void canvas1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseExited
+        if (pointer != null) {
+            pointer.setMouseOnCanvas(false);
+        }
+        
+    }//GEN-LAST:event_canvas1MouseExited
 
     // private JSplitPane jSplitPane1;
     // private Canvas canvas2;

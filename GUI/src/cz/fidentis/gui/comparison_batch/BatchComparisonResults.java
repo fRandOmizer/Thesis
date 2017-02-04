@@ -2382,7 +2382,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         
         localAreasJPanel = new LocalAreasJPanel();
         
-        localAreasJPanel.SetPointer(this);
+        localAreasJPanel.SetPointerBatchComparisonResults(this);
         LocalAreasFrame.add(localAreasJPanel);
         
         LocalAreasFrame.pack();

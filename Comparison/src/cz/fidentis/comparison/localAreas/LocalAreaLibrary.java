@@ -53,11 +53,11 @@ public class LocalAreaLibrary {
                 v1, 0);
 
         Point3D a = areaBoundary.get(0);
-        Point3D b = areaBoundary.get(1);
 
-        for (int i = 2; i < areaBoundary.size(); i++){
+        for (int i = 1; i < areaBoundary.size()-1; i++){
             
-            Point3D c = areaBoundary.get(i);
+            Point3D b = areaBoundary.get(i);
+            Point3D c = areaBoundary.get(i+1);
 
             Point3D[] triangle = {a, b, c};
             Vector3f point = calculateIntersectionWithTriangle(v0, v1, triangle);

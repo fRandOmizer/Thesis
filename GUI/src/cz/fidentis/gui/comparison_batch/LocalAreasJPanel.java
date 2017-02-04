@@ -10,21 +10,17 @@ import cz.fidentis.comparison.localAreas.BinTree;
 import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
 import cz.fidentis.comparison.localAreas.LocalAreas;
 import cz.fidentis.comparison.localAreas.VertexArea;
-import cz.fidentis.gui.GUIController;
 
-import cz.fidentis.landmarkParser.CSVparser;
 import cz.fidentis.model.Model;
-import cz.fidentis.visualisation.surfaceComparison.HDpaintingInfo;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 import javafx.geometry.Point3D;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -32,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
 
 /**
@@ -42,24 +39,50 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
     
 
-    private class MyWorker extends SwingWorker<String, Object>{
+    private class FindAreasWorker extends SwingWorker<String, Object>{
+        @Override
         protected String doInBackground() {
-        progressBar.setVisible(true);
-        progressBar.setIndeterminate(true);
-        
-        init();
-        
-        SetList(area.getAreas());
-       
-        return "Done.";
-     }
+            progressBar.setVisible(true);
+            progressBar.setIndeterminate(true);
 
-     protected void done() {
-        progressBar.setVisible(false);
-     }
+            init();
+
+            SetList(area.getAreas());
+
+            return "Done.";
+        }
+
+        @Override
+        protected void done() {
+            progressBar.setVisible(false);
+        }
     }
     
-    private BatchComparisonResults pointer;
+    private class SelectPointWorker extends SwingWorker<String, Object>{
+        @Override
+        protected String doInBackground() {
+
+            while (isMouseOnCanvas){
+                int difference = secondsBetween(timeOfMouseMovement, Calendar.getInstance());
+                
+                if (difference >= 1){
+                    //pointerViewerPanel_Batch.setToolTip(mousePosition.x, mousePosition.y, "Hello!");
+                    LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
+                }
+                
+            }
+            LocalAreaJPanel.SetPosition(-1, -1);
+            return "Done.";
+        }
+
+        @Override
+        protected void done() {
+        
+        }
+    }
+    
+    private BatchComparisonResults pointerBatchComparisonResult;
+    private ViewerPanel_Batch pointerViewerPanel_Batch;
     private Double SizeOfArea;
     private Double BottomTresh;
     private Double TopTresh;
@@ -75,7 +98,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private boolean isAnyAreaDrawn;
     private JFrame LocalAreaFrame;
     private LocalAreasSelectedAreaJPanel LocalAreaJPanel;
-    
+    private boolean isMouseOnCanvas;
+    private Calendar timeOfMouseMovement;
+    private Vector2d mousePosition; 
+    private boolean workerIsRunning;
     
     
     /**
@@ -94,6 +120,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         model = null;
         isInicialized = false;
         isAnyAreaDrawn = false;
+        workerIsRunning = false;
         
         AreasJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
@@ -107,7 +134,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
     
     private void init(){
-        model = pointer.GetCurrentModel();
+        model = pointerBatchComparisonResult.GetCurrentModel();
         BinTree thres = new BinTree(LocalAreas);
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
@@ -126,7 +153,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
     
     public void LoadValues(float min, float max) {
-        LocalAreas = new ArrayList(pointer.GetAuxiliaryAverageResults());
+        LocalAreas = new ArrayList(pointerBatchComparisonResult.GetAuxiliaryAverageResults());
         BottomTresh = (double)min;
         TopTresh = (double)max;
         this.max = (double)max;
@@ -137,8 +164,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
     }
 
-    public void SetPointer(BatchComparisonResults pointer){
-        this.pointer = pointer;
+    public void setPointerViewerPanel_Batch(ViewerPanel_Batch pointer){
+        this.pointerViewerPanel_Batch = pointer;
+    }
+    
+    public void SetPointerBatchComparisonResults(BatchComparisonResults pointer){
+        this.pointerBatchComparisonResult = pointer;
     }
     
     public void SetList(List<Area> areasList){
@@ -156,7 +187,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         AreasJList.setModel(listModel);
     }
     
-    public void setMouseClickPosition(double x, double y, double width, double height){
+    public void setMouseClickPosition(double x, double y){
         if (LocalAreaFrame == null){
             return;
         }
@@ -173,24 +204,48 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         if (!LocalAreaFrame.isVisible()){
             LocalAreaFrame.setVisible(true);
         }
-        LocalAreaJPanel.SetPosition(x, y, 0);
         
         
-        LocalAreas localAreas = pointer.getRenderer().getLocalAreas();
-        double[] modelViewMatrix = pointer.getRenderer().getModelViewMatrix();
-        double[] projectionMatrix = pointer.getRenderer().getProjectionMatrix();
-        int[] viewPort = pointer.getRenderer().getViewPort();
+        
+        LocalAreas localAreas = pointerBatchComparisonResult.getRenderer().getLocalAreas();
+        double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
+        double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
+        int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
         int i = 0;
         for (List<Point3D> points : localAreas.GetVertexAreasPoints()){
             Vector3f point = LocalAreaLibrary.intersectionWithArea(x, y, viewPort, modelViewMatrix, projectionMatrix, points);
+
             if (point != null){
-                pointer.getRenderer().setPointToDraw(point);
-                SetSelectedArea(i);
+                pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
+                LocalAreaJPanel.SetArea(""+localAreas.GetIndexes()[i]);
+                SetSelectedArea(localAreas.GetIndexes()[i]);
             }
             i++;
         }
         
         
+    }
+    
+    public void setMouseOnCanvas(boolean value){
+        this.isMouseOnCanvas = value;
+        if (value && !workerIsRunning ){
+            new SelectPointWorker().execute();
+            this.workerIsRunning = true;
+        } else {
+            this.workerIsRunning = false;
+        }
+    }
+    
+    public void setMousePosition(double x, double y, Calendar time){
+        this.mousePosition = new Vector2d(x, y);
+        this.timeOfMouseMovement = time;
+    }
+    
+    public static int secondsBetween(Calendar startDate, Calendar endDate) {
+        long end = endDate.getTimeInMillis();
+        long start = startDate.getTimeInMillis();
+        
+        return (int)TimeUnit.MILLISECONDS.toSeconds(Math.abs(end - start));
     }
 
     private void SetEnableComponents(Boolean value){
@@ -207,7 +262,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             tempList.add(selectedArea);
         }
         
-        pointer.SetLocalAreaRender(SelectedAreas, tempList, model);
+        pointerBatchComparisonResult.SetLocalAreaRender(SelectedAreas, tempList, model);
     }
     
     private void SetSelectedArea(int index){
@@ -388,7 +443,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
     private void ApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApplyButtonActionPerformed
         
-        new MyWorker().execute();
+        new FindAreasWorker().execute();
         
     }//GEN-LAST:event_ApplyButtonActionPerformed
 

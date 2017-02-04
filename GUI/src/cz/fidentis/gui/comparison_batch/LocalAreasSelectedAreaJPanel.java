@@ -21,8 +21,12 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         text = "Point(x,y,z): [-1, -1, -1]";
     }
     
-    public void SetPosition(double x, double y, double z){
-        this.labelPositionOfPoint.setText("Point(x,y,z): ["+x+", "+y+", "+z+"]");
+    public void SetArea(String area){
+        this.labelPositionOfPoint.setText("Area "+ area+"");
+    }
+    
+    public void SetPosition(double x, double y){
+        this.labelPositionOfPoint1.setText("Point(x,y,z): ["+x+", "+y+"]");
     }
 
     /**
@@ -35,8 +39,11 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         labelPositionOfPoint = new javax.swing.JLabel();
+        labelPositionOfPoint1 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(labelPositionOfPoint, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelPositionOfPoint.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelPositionOfPoint1, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelPositionOfPoint1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -44,20 +51,25 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addComponent(labelPositionOfPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelPositionOfPoint1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelPositionOfPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(27, 27, 27)
                 .addComponent(labelPositionOfPoint)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addComponent(labelPositionOfPoint1)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel labelPositionOfPoint;
+    private javax.swing.JLabel labelPositionOfPoint1;
     // End of variables declaration//GEN-END:variables
 }
