@@ -382,7 +382,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         
         if(localAreaRender.IsSetUp()){
 
-            gl = localAreaRender.DrawLocalAreas(gl, VertexShadersId, projectionMatrix,  modelViewMatrix);
+            gl = localAreaRender.drawLocalAreas(gl, VertexShadersId, projectionMatrix,  modelViewMatrix);
         }
 
         gl.glPopMatrix();

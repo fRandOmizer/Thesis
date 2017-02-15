@@ -5,24 +5,77 @@
  */
 package cz.fidentis.comparison.localAreas;
 
-import com.hackoeur.jglm.Mat3;
 import cz.fidentis.model.Model;
-import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point3D;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Vector3f;
-import com.hackoeur.jglm.Mat4;
-import com.hackoeur.jglm.Vec4;
-import com.hackoeur.jglm.Vec3;
-import java.nio.FloatBuffer;
+
 
 /**
  *
  * @author zanri
  */
 public class LocalAreaLibrary {
+    public static Vector3f intersectionWithPoint(double mouseReleasedX, 
+                                               double mouseReleasedY, 
+                                               int[] viewport, 
+                                               double[] modelViewMatrix, 
+                                               double[] projectionMatrix,
+                                               List<Point3D> areaPoints) {
+
+        double v0[] = new double[4];
+        double v1[] = new double[4];
+        int realY = viewport[3] - (int) mouseReleasedY - 1;
+
+        GLU glu = new GLU();
+
+        glu.gluUnProject(mouseReleasedX, realY, 0.0, 
+                modelViewMatrix, 0,
+                projectionMatrix, 0,
+                viewport, 0,
+                v0, 0);
+
+        glu.gluUnProject(mouseReleasedX, realY, 1.0, 
+                modelViewMatrix, 0,
+                projectionMatrix, 0,
+                viewport, 0,
+                v1, 0);
+
+        double treshold = 1000000.0;
+        Point3D point = null;
+        
+        for (int i = 0; i < areaPoints.size(); i++){
+
+            Point3D a = areaPoints.get(i);
+
+            double distance = calculateDistanceBetweenPoints(v0, v1, a);
+            if (treshold > distance){
+                point = a;
+                treshold = distance;
+            }
+        }
+
+        return new Vector3f((float)point.getX(), (float)point.getY(), (float)point.getZ());
+    }
+    
+    private static double calculateDistanceBetweenPoints(double[] P0, double[] P1, Point3D point) {
+
+        Vector3f pp = new Vector3f((float) P1[0] - (float) P0[0], //P1-P0
+                (float) P1[1] - (float) P0[1],
+                (float) P1[2] - (float) P0[2]);
+
+        //pp.normalize();
+
+        Vector3f result = new Vector3f();
+        result.cross(pp, new Vector3f((float) point.getX() - (float) P0[0], (float) point.getY() - (float) P0[1], (float) point.getZ() - (float) P0[2]));
+        
+        return result.length();   
+    }
+    
+    
+    
     public static Vector3f intersectionWithArea(double mouseReleasedX, 
                                                double mouseReleasedY, 
                                                int[] viewport, 
@@ -137,7 +190,7 @@ public class LocalAreaLibrary {
     
     
     
-    public static float[] giftWrapping(Area area, Model model){
+    public static List<Point3D> giftWrapping(Area area, Model model){
         
         List<Point3D> points = new ArrayList();
         List<Integer> tmp = area.vertices;
@@ -148,16 +201,15 @@ public class LocalAreaLibrary {
            points.add(point);
         }
         
-        List<Float> vertexList = new ArrayList<>();
+        List<Point3D> vertexList = new ArrayList<>();
         
         int pivot = smallestX(points);
         int currentIndex = pivot;
         int previousIndex = pivot;
         
         Point3D a = points.get(currentIndex);
-        vertexList.add((float)a.getX());
-        vertexList.add((float)a.getY());
-        vertexList.add((float)a.getZ());
+        vertexList.add(a);
+        
         
         List<Integer> indexes = new ArrayList<>();
         
@@ -166,20 +218,16 @@ public class LocalAreaLibrary {
             indexes.add(nextIndex);
             if (currentIndex != previousIndex){
                 a = points.get(currentIndex);
-                vertexList.add((float)a.getX());
-                vertexList.add((float)a.getY());
-                vertexList.add((float)a.getZ());
+                vertexList.add(a);
+                
             }
             previousIndex = currentIndex;
             currentIndex = nextIndex;
             
         } while (pivot != currentIndex);
         
-        float[] vertexArray = new float[vertexList.size()];
-        for(int i=0; i < vertexList.size(); i++){
-            vertexArray[i] = vertexList.get(i);
-        }
-        return vertexArray;
+        
+        return vertexList;
     }
     
     private static Vector3f crossProduct(Vector3f u, Vector3f v){

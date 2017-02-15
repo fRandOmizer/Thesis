@@ -22,6 +22,7 @@ public class LocalAreas {
     private List<float[]> vertexAreas;
     private List<float[]> vertexColorAreas;
     private List<List<Point3D>> vertexAreasPoints;
+    private List<Point3D> allAreasPoints;
     private int[] indexesOfAreas;
 
     public LocalAreas(){
@@ -29,6 +30,18 @@ public class LocalAreas {
     }
     
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
+        
+        allAreasPoints = new ArrayList<>();
+        
+        if (areas.size()==1){
+            List<Integer> temp = areas.get(0).vertices;
+            
+            for (int i = 0; i < temp.size(); i++) {
+                allAreasPoints.add(new Point3D(model.getVerts().get(temp.get(i)).x, 
+                                              model.getVerts().get(temp.get(i)).y, 
+                                              model.getVerts().get(temp.get(i)).z));
+            }
+        }
         
         this.indexesOfAreas = indexesOfAreas;
         
@@ -46,37 +59,32 @@ public class LocalAreas {
             tmp = areas.get(j).vertices;
             if (tmp.size() > 0) {
                 if (tmp.size() > 2){
-                    vertexes = giftWrapping(areas.get(j), model);
-                    vertexColors = new float[areas.get(j).vertices.size() * 3];
-                    for (int i = 0; i < tmp.size(); i++) {
-                        vertexPoints .add(new Point3D(model.getVerts().get(tmp.get(i)).x, 
-                                                      model.getVerts().get(tmp.get(i)).y, 
-                                                      model.getVerts().get(tmp.get(i)).z));
-                        vertexColors[k] = areas.get(j).color.get(0);
-                        k++;
-                        vertexColors[k] = areas.get(j).color.get(1);
-                        k++;
-                        vertexColors[k] = areas.get(j).color.get(2);
-                        k++;
-                    }
+                    vertexPoints = giftWrapping(areas.get(j), model);
+                    
                 } else {
-                    vertexes = new float[areas.get(j).vertices.size() * 3];
-                    vertexColors = new float[areas.get(j).vertices.size() * 3];
                     for (int i = 0; i < tmp.size(); i++) {
-                        vertexPoints .add(new Point3D(model.getVerts().get(tmp.get(i)).x, 
-                                                      model.getVerts().get(tmp.get(i)).y, 
-                                                      model.getVerts().get(tmp.get(i)).z));
-                        vertexes[k] = model.getVerts().get(tmp.get(i)).x;
-                        vertexColors[k] = areas.get(j).color.get(0);
-                        k++;
-                        vertexes[k] = model.getVerts().get(tmp.get(i)).y;
-                        vertexColors[k] = areas.get(j).color.get(1);
-                        k++;
-                        vertexes[k] = model.getVerts().get(tmp.get(i)).z;
-                        vertexColors[k] = areas.get(j).color.get(2);
-                        k++;
+                        vertexPoints.add(new Point3D(model.getVerts().get(tmp.get(i)).x, 
+                                                  model.getVerts().get(tmp.get(i)).y, 
+                                                  model.getVerts().get(tmp.get(i)).z));
                     }
+                    
+                    
                 }
+                vertexes = new float[areas.get(j).vertices.size() * 3];
+                vertexColors = new float[areas.get(j).vertices.size() * 3];
+                for (int i = 0; i < tmp.size(); i++) {
+                     
+                    vertexes[k] = model.getVerts().get(tmp.get(i)).x;
+                    vertexColors[k] = areas.get(j).color.get(0);
+                    k++;
+                    vertexes[k] = model.getVerts().get(tmp.get(i)).y;
+                    vertexColors[k] = areas.get(j).color.get(1);
+                    k++;
+                    vertexes[k] = model.getVerts().get(tmp.get(i)).z;
+                    vertexColors[k] = areas.get(j).color.get(2);
+                    k++;
+                }
+                
                 
                 vertexAreas.add(vertexes);
                 vertexColorAreas.add(vertexColors);
@@ -85,19 +93,23 @@ public class LocalAreas {
         }
     }
 
-    public List<float[]> GetVertexAreas(){
+    public List<float[]> getVertexes(){
         return vertexAreas;
     }
     
-    public List<float[]> GetVertexColorsAreas(){
+    public List<float[]> getVertexesColors(){
         return vertexColorAreas;
     }
     
-    public List<List<Point3D>> GetVertexAreasPoints(){
+    public List<List<Point3D>> getBoundariesAreasPoints(){
         return vertexAreasPoints;
     }
     
-    public int[] GetIndexes(){
+    public int[] getIndexes(){
         return indexesOfAreas;
+    }
+    
+    public List<Point3D> getAllPointsFromOneArea(){
+        return allAreasPoints;
     }
 }

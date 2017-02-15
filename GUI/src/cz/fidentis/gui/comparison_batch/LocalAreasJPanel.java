@@ -63,11 +63,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         protected String doInBackground() {
 
             while (isMouseOnCanvas){
-                int difference = secondsBetween(timeOfMouseMovement, Calendar.getInstance());
+                int difference = differenceInMiliseconds(timeOfMouseMovement, Calendar.getInstance());
                 
-                if (difference >= 1){
+                if (difference >= 300){
                     //pointerViewerPanel_Batch.setToolTip(mousePosition.x, mousePosition.y, "Hello!");
                     LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
+                    drawHooveredPoint();
+                    
                 }
                 
             }
@@ -96,12 +98,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private Model model;
     private boolean isInicialized;
     private boolean isAnyAreaDrawn;
+    private boolean isAreaSelected;
     private JFrame LocalAreaFrame;
     private LocalAreasSelectedAreaJPanel LocalAreaJPanel;
     private boolean isMouseOnCanvas;
     private Calendar timeOfMouseMovement;
     private Vector2d mousePosition; 
-    private boolean workerIsRunning;
+    private boolean isWorkerRunning;
     
     
     /**
@@ -120,7 +123,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         model = null;
         isInicialized = false;
         isAnyAreaDrawn = false;
-        workerIsRunning = false;
+        isWorkerRunning = false;
+        isAreaSelected = false;
         
         AreasJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
@@ -212,13 +216,16 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
         int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
         int i = 0;
-        for (List<Point3D> points : localAreas.GetVertexAreasPoints()){
+        for (List<Point3D> points : localAreas.getBoundariesAreasPoints()){
             Vector3f point = LocalAreaLibrary.intersectionWithArea(x, y, viewPort, modelViewMatrix, projectionMatrix, points);
 
             if (point != null){
-                pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
-                LocalAreaJPanel.SetArea(""+localAreas.GetIndexes()[i]);
-                SetSelectedArea(localAreas.GetIndexes()[i]);
+                
+                LocalAreaJPanel.SetArea(""+localAreas.getIndexes()[i]);
+                SetSelectedArea(localAreas.getIndexes()[i]);
+                isAreaSelected = true;
+                setMouseOnCanvas(true);
+                return;
             }
             i++;
         }
@@ -228,11 +235,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     
     public void setMouseOnCanvas(boolean value){
         this.isMouseOnCanvas = value;
-        if (value && !workerIsRunning ){
+        if (value && (!isWorkerRunning) && isAreaSelected){
             new SelectPointWorker().execute();
-            this.workerIsRunning = true;
+            this.isWorkerRunning = true;
         } else {
-            this.workerIsRunning = false;
+            this.isWorkerRunning = false;
         }
     }
     
@@ -241,11 +248,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         this.timeOfMouseMovement = time;
     }
     
-    public static int secondsBetween(Calendar startDate, Calendar endDate) {
+    public static int differenceInMiliseconds(Calendar startDate, Calendar endDate) {
         long end = endDate.getTimeInMillis();
         long start = startDate.getTimeInMillis();
         
-        return (int)TimeUnit.MILLISECONDS.toSeconds(Math.abs(end - start));
+        return (int)TimeUnit.MILLISECONDS.toMillis(Math.abs(end - start));
     }
 
     private void SetEnableComponents(Boolean value){
@@ -253,6 +260,19 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         SelectButton.setEnabled(value);
         AllButton.setEnabled(value);
         RelativeComboBox.setEnabled(value);
+    }
+    
+    public void drawHooveredPoint(){
+        
+//        SelectedAreas = new int[AreasJList.getSelectedIndices().length];
+//        SelectedAreas = AreasJList.getSelectedIndices();
+//        Area area = AreasList.get(SelectedAreas[0]);
+        List<Point3D> points = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
+        double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
+        double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
+        int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
+        Vector3f point = LocalAreaLibrary.intersectionWithPoint(mousePosition.x, mousePosition.y, viewPort, modelViewMatrix, projectionMatrix, points);
+        pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
     }
     
     private void RenderSelectedAreas(){
@@ -441,6 +461,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // <editor-fold desc="Event handlers">
     private void ApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApplyButtonActionPerformed
         
         new FindAreasWorker().execute();
@@ -555,7 +576,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
            BottomTextField.setText(BottomTresh.toString());
         }
     }//GEN-LAST:event_BottomTextFieldFocusLost
-
+    // </editor-fold>
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AllButton;
