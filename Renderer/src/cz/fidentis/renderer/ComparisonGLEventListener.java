@@ -308,49 +308,8 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0);
 
         gl.glShadeModel(GL2.GL_SMOOTH);
-
-        if (info.isProcrustes()) {
-            gl.glPushAttrib(GL_ALL_ATTRIB_BITS);
-            info.getPaPainting().drawPointsAfterPA(gl, glut);
-            gl.glPopAttrib();
-        } else if (info.isPaintHD()) {
-            /**
-             * edited - 11.03.2015 Jakub Palenik multiple visualizations of
-             * HDpaint based on hdPaint attribute vType of ENUM
-             * VisualizationType
-             */
-            switch (info.getHdInfo().getvType()) {
-                case COLORMAP:
-                    paintHD();
-                    if (selectionCube[3] != null && !info.getHdInfo().isIsSelection()) {
-                        if (info.getHdInfo().getsType() == SelectionType.ELLIPSE) {
-                            paintSelectionEllipse();
-                        }
-                        if (info.getHdInfo().getsType() == SelectionType.RECTANGLE) {
-                            paintSelectionRectangle();
-                        }
-
-                    }
-                    break;
-                case TRANSPARENCY:
-                    trasparencyRender();
-                    break;
-                case VECTORS:
-                    info.getHdPaint().paintNormals(gl);
-                    break;
-                case CROSSSECTION:
-                    if (secondaryListener) {
-                        slicesAllRender();
-                    } else {
-                        sliceMainRender();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        } else if (info.getModels().size() == 2) {
-            trasparencyRender();
-        } else {
+        
+        if(localAreaRender.IsSetUp()){
             for (int i = 0; i < info.getModels().size(); i++) {
                 if (info.getModels().get(i) != null) {
                     gl.glPushMatrix();
@@ -363,13 +322,9 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
                     gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 10);
 
                     gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, colorKs, 0);
-                    if (drawTextures) {
-                        info.getModels().get(i).draw(gl);
-                    } else {
+                    
+                    info.getModels().get(i).drawWithoutTextures(gl);
 
-                        info.getModels().get(i).drawWithoutTextures(gl);
-
-                    }
                     if (info.getFacialPoints() != null) {
                         drawFacialPoints(info.getFacialPoints());
                     }
@@ -377,13 +332,84 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
                     gl.glPopMatrix();
                 }
             }
-
-        }
-        
-        if(localAreaRender.IsSetUp()){
-
             gl = localAreaRender.drawLocalAreas(gl, VertexShadersId, projectionMatrix,  modelViewMatrix);
+            
+        } else {
+            if (info.isProcrustes() ) {
+                gl.glPushAttrib(GL_ALL_ATTRIB_BITS);
+                info.getPaPainting().drawPointsAfterPA(gl, glut);
+                gl.glPopAttrib();
+            } else if (info.isPaintHD()) {
+                /**
+                 * edited - 11.03.2015 Jakub Palenik multiple visualizations of
+                 * HDpaint based on hdPaint attribute vType of ENUM
+                 * VisualizationType
+                 */
+                switch (info.getHdInfo().getvType()) {
+                    case COLORMAP:
+                        paintHD();
+                        if (selectionCube[3] != null && !info.getHdInfo().isIsSelection()) {
+                            if (info.getHdInfo().getsType() == SelectionType.ELLIPSE) {
+                                paintSelectionEllipse();
+                            }
+                            if (info.getHdInfo().getsType() == SelectionType.RECTANGLE) {
+                                paintSelectionRectangle();
+                            }
+
+                        }
+                        break;
+                    case TRANSPARENCY:
+                        trasparencyRender();
+                        break;
+                    case VECTORS:
+                        info.getHdPaint().paintNormals(gl);
+                        break;
+                    case CROSSSECTION:
+                        if (secondaryListener) {
+                            slicesAllRender();
+                        } else {
+                            sliceMainRender();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else if (info.getModels().size() == 2) {
+                trasparencyRender();
+            } else {
+                for (int i = 0; i < info.getModels().size(); i++) {
+                    if (info.getModels().get(i) != null) {
+                        gl.glPushMatrix();
+                        float[] color = {0.8667f, 0.7176f, 0.6275f, 1f};
+                        float[] colorKs = {0, 0, 0, 1f};
+
+                        //  float[] color = {0.868f, 0.64f, 0.548f, 1f};
+                        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, color, 0);
+                        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, color, 0);
+                        gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 10);
+
+                        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, colorKs, 0);
+                        if (drawTextures) {
+                            info.getModels().get(i).draw(gl);
+                        } else {
+
+                            info.getModels().get(i).drawWithoutTextures(gl);
+
+                        }
+                        if (info.getFacialPoints() != null) {
+                            drawFacialPoints(info.getFacialPoints());
+                        }
+                        gl.glDisable(GL.GL_BLEND);
+                        gl.glPopMatrix();
+                    }
+                }
+
+            }
         }
+
+        
+        
+        
 
         gl.glPopMatrix();
         gl.glFlush();

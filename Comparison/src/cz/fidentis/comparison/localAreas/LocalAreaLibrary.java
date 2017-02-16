@@ -43,7 +43,7 @@ public class LocalAreaLibrary {
                 viewport, 0,
                 v1, 0);
 
-        double treshold = 1000000.0;
+        double treshold = 100000.0;
         Point3D point = null;
         
         for (int i = 0; i < areaPoints.size(); i++){
@@ -57,6 +57,10 @@ public class LocalAreaLibrary {
             }
         }
 
+        if (point == null){
+            return null;
+        }
+        
         return new Vector3f((float)point.getX(), (float)point.getY(), (float)point.getZ());
     }
     

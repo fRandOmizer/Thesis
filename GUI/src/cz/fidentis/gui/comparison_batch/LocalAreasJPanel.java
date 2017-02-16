@@ -65,10 +65,15 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             while (isMouseOnCanvas){
                 int difference = differenceInMiliseconds(timeOfMouseMovement, Calendar.getInstance());
                 
-                if (difference >= 300){
+                if (difference >= 800){
                     //pointerViewerPanel_Batch.setToolTip(mousePosition.x, mousePosition.y, "Hello!");
-                    LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
-                    drawHooveredPoint();
+                    try {
+                        drawHooveredPoint();
+                    }
+                    catch(Exception e){
+                        System.out.println(e.toString());
+                    }
+                    
                     
                 }
                 
@@ -272,7 +277,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
         int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
         Vector3f point = LocalAreaLibrary.intersectionWithPoint(mousePosition.x, mousePosition.y, viewPort, modelViewMatrix, projectionMatrix, points);
-        pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
+        
+        if (point != null){
+            pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
+            LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
+        }
     }
     
     private void RenderSelectedAreas(){

@@ -104,12 +104,18 @@ public class LocalAreasRender{
         matrix = matrix.multiply(projection);
         matrix = matrix.multiply(viewMat);
 
-         
-        //gl.glClear(GL_DEPTH_BUFFER_BIT);
+        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        
         gl.glLineWidth(2);
-        gl.glPointSize(3);
+        gl.glPointSize(5);
 
         for (int i = 0; i < vertexesAreas.size(); i++){
+//            float[] colorForPoints = new float[vertexesAreas.size()];
+//            for (int j = 0; j < vertexesAreas.size(); j++){
+//                
+//            }
+            
+            
             gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
             gl.glBufferData(GL_ARRAY_BUFFER, vertexesAreas.get(i).length * Buffers.SIZEOF_FLOAT,
                     Buffers.newDirectFloatBuffer(vertexesAreas.get(i)), GL_DYNAMIC_DRAW);
@@ -125,7 +131,7 @@ public class LocalAreasRender{
             gl.glBindVertexArray(vertexArray);
             
             if (vertexesAreas.get(i).length > 6){
-                gl.glDrawArrays(GL_TRIANGLE_FAN, 0, vertexesAreas.get(i).length/3);
+                gl.glDrawArrays(GL2.GL_POLYGON, 0, vertexesAreas.get(i).length/3);
             } else {
                 if (vertexesAreas.get(i).length > 4){
                     gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/3);
@@ -134,8 +140,13 @@ public class LocalAreasRender{
                 }
             }
             
+//            gl.glBufferData(GL_ARRAY_BUFFER, colorAreas.get(i).length * Buffers.SIZEOF_FLOAT,
+//                    Buffers.newDirectFloatBuffer(new float[]  {0.0f, 1.0f, 0.0f}), GL_DYNAMIC_DRAW);
+//            gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
+            
             gl.glBindVertexArray(joglArray);
         }
+        
         
         if (isDrawPoint){
             
