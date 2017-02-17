@@ -110,6 +110,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private Calendar timeOfMouseMovement;
     private Vector2d mousePosition; 
     private boolean isWorkerRunning;
+    private boolean isPointSelected;
     
     
     /**
@@ -130,6 +131,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         isAnyAreaDrawn = false;
         isWorkerRunning = false;
         isAreaSelected = false;
+        isPointSelected = false;
         
         AreasJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
@@ -253,6 +255,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         this.timeOfMouseMovement = time;
     }
     
+    public void setPointInfo(){
+        if (isPointSelected){
+            LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
+        }
+        
+    }
+    
     public static int differenceInMiliseconds(Calendar startDate, Calendar endDate) {
         long end = endDate.getTimeInMillis();
         long start = startDate.getTimeInMillis();
@@ -280,7 +289,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         if (point != null){
             pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
-            LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
+            isPointSelected = true;
+            
         }
     }
     

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
+import static javax.media.opengl.GL.GL_BLEND;
 import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DYNAMIC_DRAW;
@@ -16,7 +17,9 @@ import static javax.media.opengl.GL.GL_FLOAT;
 import static javax.media.opengl.GL.GL_FRONT_AND_BACK;
 import static javax.media.opengl.GL.GL_LINES;
 import static javax.media.opengl.GL.GL_LINE_LOOP;
+import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
 import static javax.media.opengl.GL.GL_POINTS;
+import static javax.media.opengl.GL.GL_SRC_ALPHA;
 import static javax.media.opengl.GL.GL_TRIANGLE_FAN;
 import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2GL3.GL_FILL;
@@ -30,7 +33,7 @@ import javax.vecmath.Vector3f;
  */
 public class LocalAreasRender{
     private Boolean isSetUp;
-    private LocalAreas points;
+    private LocalAreas localAreas;
 
     // our OpenGL resources
     private int vertexBuffer;
@@ -51,12 +54,12 @@ public class LocalAreasRender{
     
     public LocalAreasRender(){
         this.isSetUp = false;
-        this.points = new LocalAreas();
+        this.localAreas = new LocalAreas();
         isDrawPoint = false;
     }
     
     public void SetUp(int[] areasIndexes, List<Area> areas, Model model){
-        points.SetAreas(areasIndexes, areas, model);
+        localAreas.SetAreas(areasIndexes, areas, model);
         this.isSetUp = true;
     }
     
@@ -79,12 +82,12 @@ public class LocalAreasRender{
     }
     
     public LocalAreas getLocalAreasBoundary(){
-        return points;
+        return localAreas;
     }
     
     public GL2 drawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
-        List<float[]> vertexesAreas = points.getVertexes();
-        List<float[]> colorAreas = points.getVertexesColors();
+        List<float[]> vertexesAreas = localAreas.getVertexes();
+        List<float[]> colorAreas = localAreas.getVertexesColors();
         
         matrix = Mat4.MAT4_IDENTITY;
 
@@ -105,6 +108,8 @@ public class LocalAreasRender{
         matrix = matrix.multiply(viewMat);
 
         gl.glClear(GL_DEPTH_BUFFER_BIT);
+        gl.glEnable (GL_BLEND); 
+        gl.glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         gl.glLineWidth(2);
         gl.glPointSize(5);
@@ -156,7 +161,7 @@ public class LocalAreasRender{
 
             gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
             gl.glBufferData(GL_ARRAY_BUFFER, 3 * Buffers.SIZEOF_FLOAT,
-                    Buffers.newDirectFloatBuffer(new float[]  {1.0f, 0.0f, 0.0f}), GL_DYNAMIC_DRAW);
+                    Buffers.newDirectFloatBuffer(new float[]  {1.0f, 0.0f, 0.0f, 1.0f}), GL_DYNAMIC_DRAW);
 
             gl.glUseProgram(vertexShaderID);
 
@@ -215,7 +220,7 @@ public class LocalAreasRender{
         gl.glVertexAttribPointer(positionAttribLoc, 3, GL_FLOAT, false, 0, 0);
         gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         gl.glEnableVertexAttribArray(colorAttribLoc);
-        gl.glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, false, 0, 0);
+        gl.glVertexAttribPointer(colorAttribLoc, 4, GL_FLOAT, false, 0, 0);
         
         gl.glBindVertexArray(joglArray);
         return gl;

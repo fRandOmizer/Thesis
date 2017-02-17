@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.featurepoints">
-    <module_version install_time="1487282410076" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1487351037823" last="true" origin="installer" specification_version="1.0">
         <file crc="769731387" name="config/Modules/cz-fidentis-featurepoints.xml"/>
-        <file crc="121082192" name="modules/cz-fidentis-featurepoints.jar"/>
+        <file crc="2676261193" name="modules/cz-fidentis-featurepoints.jar"/>
     </module_version>
 </module>

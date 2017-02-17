@@ -17,6 +17,8 @@ import cz.fidentis.utils.IntersectionUtils;
 import cz.fidentis.utils.MathUtils;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
@@ -26,6 +28,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JComponent;
 import javax.swing.JSplitPane;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
@@ -281,6 +284,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
+        canvas1.setToolTipText(org.openide.util.NbBundle.getMessage(ViewerPanel_Batch.class, "ViewerPanel_Batch.canvas1.toolTipText")); // NOI18N
         canvas1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 canvas1MouseDragged(evt);
@@ -330,6 +334,9 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void canvas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseClicked
+       if (pointer != null){
+            pointer.setPointInfo();
+        }
         
     }//GEN-LAST:event_canvas1MouseClicked
 

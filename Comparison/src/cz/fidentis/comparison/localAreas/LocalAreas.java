@@ -48,6 +48,7 @@ public class LocalAreas {
         float[] vertexes;
         float[] vertexColors;
         int k;
+        int l;
         List<Integer> tmp;
         vertexAreas = new ArrayList<>();
         vertexColorAreas = new ArrayList<>();
@@ -56,6 +57,7 @@ public class LocalAreas {
         for (int j = 0; j < areas.size(); j++) {
             List<Point3D> vertexPoints = new ArrayList<>();
             k = 0;
+            l = 0;
             tmp = areas.get(j).vertices;
             if (tmp.size() > 0) {
                 if (tmp.size() > 2){
@@ -71,18 +73,23 @@ public class LocalAreas {
                     
                 }
                 vertexes = new float[areas.get(j).vertices.size() * 3];
-                vertexColors = new float[areas.get(j).vertices.size() * 3];
+                vertexColors = new float[areas.get(j).vertices.size() * 4];
                 for (int i = 0; i < tmp.size(); i++) {
                      
                     vertexes[k] = model.getVerts().get(tmp.get(i)).x;
-                    vertexColors[k] = areas.get(j).color.get(0);
+                    vertexColors[l] = areas.get(j).color.get(0);
                     k++;
+                    l++;
                     vertexes[k] = model.getVerts().get(tmp.get(i)).y;
-                    vertexColors[k] = areas.get(j).color.get(1);
+                    vertexColors[l] = areas.get(j).color.get(1);
                     k++;
+                    l++;
                     vertexes[k] = model.getVerts().get(tmp.get(i)).z;
-                    vertexColors[k] = areas.get(j).color.get(2);
+                    vertexColors[l] = areas.get(j).color.get(2);
                     k++;
+                    l++;
+                    vertexColors[l] = 0.5f;
+                    l++;
                 }
                 
                 
