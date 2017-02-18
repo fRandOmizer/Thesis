@@ -31,6 +31,8 @@ public class LocalAreas {
     
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
         
+        
+        
         allAreasPoints = new ArrayList<>();
         
         if (areas.size()==1){
@@ -42,6 +44,7 @@ public class LocalAreas {
                                               model.getVerts().get(temp.get(i)).z));
             }
         }
+        
         
         this.indexesOfAreas = indexesOfAreas;
         
@@ -59,6 +62,7 @@ public class LocalAreas {
             k = 0;
             l = 0;
             tmp = areas.get(j).vertices;
+            tmp = selectionSort(tmp);
             if (tmp.size() > 0) {
                 if (tmp.size() > 2){
                     vertexPoints = giftWrapping(areas.get(j), model);
@@ -99,6 +103,21 @@ public class LocalAreas {
             vertexAreasPoints.add(vertexPoints);
         }
     }
+    
+  
+    private static List<Integer> selectionSort(List<Integer> array) {
+        for (int i = 0; i < array.size() - 1; i++) {
+            int maxIndex = i;
+            for (int j = i + 1; j < array.size(); j++) {
+                if (array.get(j) > array.get(maxIndex)) maxIndex = j;
+            }
+            int tmp = array.get(i);
+            array.set(i, array.get(maxIndex))  ;
+            array.set(maxIndex, tmp);
+        } 
+        return array;
+    }
+    
 
     public List<float[]> getVertexes(){
         return vertexAreas;

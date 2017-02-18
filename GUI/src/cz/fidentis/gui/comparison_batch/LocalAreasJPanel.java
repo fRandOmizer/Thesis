@@ -37,8 +37,7 @@ import javax.vecmath.Vector3f;
  */
 public class LocalAreasJPanel extends javax.swing.JPanel {
 
-    
-
+    // <editor-fold desc="Workers">
     private class FindAreasWorker extends SwingWorker<String, Object>{
         @Override
         protected String doInBackground() {
@@ -78,7 +77,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                 }
                 
             }
-            LocalAreaJPanel.SetPosition(-1, -1);
+            
             return "Done.";
         }
 
@@ -87,6 +86,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         }
     }
+    // </editor-fold>
     
     private BatchComparisonResults pointerBatchComparisonResult;
     private ViewerPanel_Batch pointerViewerPanel_Batch;

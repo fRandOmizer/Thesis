@@ -284,7 +284,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        canvas1.setToolTipText(org.openide.util.NbBundle.getMessage(ViewerPanel_Batch.class, "ViewerPanel_Batch.canvas1.toolTipText")); // NOI18N
+        
         canvas1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 canvas1MouseDragged(evt);

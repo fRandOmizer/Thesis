@@ -2747,6 +2747,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     public void HideLocalAreaRender(){
         
         localAreaRender.HideLocalAreas();
+        localAreaRender.clearSelection();
     }
     
     public LocalAreas getLocalAreas(){

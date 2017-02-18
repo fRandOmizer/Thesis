@@ -49,6 +49,7 @@ public class LocalAreasRender{
     private int vertMvpUniformLoc;
     private Mat4 matrix;
     private boolean isDrawPoint;
+    private boolean isClearSelection;
     private float[] pointToDraw;
 
     
@@ -56,11 +57,13 @@ public class LocalAreasRender{
         this.isSetUp = false;
         this.localAreas = new LocalAreas();
         isDrawPoint = false;
+        isClearSelection = false;
     }
     
     public void SetUp(int[] areasIndexes, List<Area> areas, Model model){
         localAreas.SetAreas(areasIndexes, areas, model);
         this.isSetUp = true;
+        this.isClearSelection = false;
     }
     
     public void setPointToDraw(Vector3f pointToDraw){
@@ -70,6 +73,10 @@ public class LocalAreasRender{
     
     public Boolean IsSetUp(){
         return isSetUp;
+    }
+    
+    public void clearSelection(){
+        isClearSelection = true;
     }
 
     public void HideLocalAreas(){
@@ -86,6 +93,11 @@ public class LocalAreasRender{
     }
     
     public GL2 drawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
+        
+        if (isClearSelection){
+            return gl;
+        }
+        
         List<float[]> vertexesAreas = localAreas.getVertexes();
         List<float[]> colorAreas = localAreas.getVertexesColors();
         
@@ -136,7 +148,7 @@ public class LocalAreasRender{
             gl.glBindVertexArray(vertexArray);
             
             if (vertexesAreas.get(i).length > 6){
-                gl.glDrawArrays(GL2.GL_POLYGON, 0, vertexesAreas.get(i).length/3);
+                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/3);
             } else {
                 if (vertexesAreas.get(i).length > 4){
                     gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/3);
@@ -179,6 +191,84 @@ public class LocalAreasRender{
         
         return gl;
     }
+    
+    public void renderFace(int i, boolean flipTexCoords, GL2 gl) /* Render the ith face by getting the vertex, normal, and tex
+     coord indicies for face i. Use those indicies to access the
+     actual vertex, normal, and tex coord data, and render the face.
+
+     Each face uses 3 array of indicies; one for the vertex
+     indicies, one for the normal indicies, and one for the tex
+     coord indicies.
+
+     If the model doesn't use normals or tex coords then the indicies
+     arrays will contain 0's.
+
+     If the tex coords need flipping then the t-values are changed.
+     */ {
+//        if (i >= facesVertIdxs.size()) {
+//            return;
+//        }
+//
+//        int[] vertIdxs = facesVertIdxs.get(i);
+//        // get the vertex indicies for face i
+//
+//        int polytype;
+//        if (vertIdxs.length == 3) {
+//            polytype = GL2.GL_TRIANGLES;
+//        } else if (vertIdxs.length == 4) {
+//            polytype = GL2.GL_QUADS;
+//        } else {
+//            polytype = GL2.GL_POLYGON;
+//        }
+//
+//        gl.glBegin(polytype);
+//
+//        // get the normal and tex coords indicies for face i
+//        int[] normIdxs = facesNormIdxs.get(i);
+//        int[] texIdxs = facesTexIdxs.get(i);
+//
+//        /* render the normals, tex coords, and vertices for face i
+//         by accessing them using their indicies */
+//        Vector3f vert, norm, texCoord;
+//        double yTC;
+//        for (int f = 0; f < vertIdxs.length; f++) {
+//            if (normIdxs[f] != 0) {  // if there are normals, render them
+//                norm = normals.get(normIdxs[f] - 1);
+//                gl.glNormal3d(norm.getX(), norm.getY(), norm.getZ());
+//            }
+//
+//            if (texIdxs[f] != 0) {
+//                // if there are tex coords, render them
+//                texCoord = texCoords.get(texIdxs[f] - 1);
+//                yTC = texCoord.getY();
+//                if (flipTexCoords) {
+//                    yTC = 1.0f - yTC;
+//                }
+//
+//                if (texCoord.getZ() == DUMMY_Z_TC) {
+//                    gl.glTexCoord2d(texCoord.getX(), yTC);
+//                } else {
+//                    gl.glTexCoord3d(texCoord.getX(), yTC, texCoord.getZ());
+//                }
+//                /*
+//                 System.out.print("Tex index: " + (texIdxs[f]) + ": ");
+//                 System.out.println("Tex coord: " + df.format(texCoord.getX()) + ", " +
+//                 df.format( yTC ) + ", " +
+//                 df.format( texCoord.getZ() ));
+//                 */
+//            }
+//
+//            vert = verts.get(vertIdxs[f] - 1);  // render the vertices
+//            //     System.out.println(vertIdxs[f] - 1 + " " + verts.get(vertIdxs[f] - 1).length());
+//            gl.glVertex3d(vert.getX(), vert.getY(), vert.getZ());
+//
+//        }
+//
+//        gl.glEnd();
+    } // end of renderFace()
+    
+    
+    
 
     public GL2 init(GL2 gl, int vertexShaderID) {
 

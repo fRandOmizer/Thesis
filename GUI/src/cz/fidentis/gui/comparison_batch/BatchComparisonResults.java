@@ -1705,6 +1705,11 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     
     private void comparisonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comparisonButtonActionPerformed
 
+        if (LocalAreasFrame.isVisible()){
+            LocalAreasFrame.setVisible(false);
+            GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
+        } 
+        
         final ProjectTopComponent tc = GUIController.getSelectedProjectTopComponent();
         final BatchComparison c = getContext();
         Runnable run = new Runnable() {
@@ -1757,6 +1762,8 @@ public class BatchComparisonResults extends javax.swing.JPanel {
                         GUIController.getConfigurationTopComponent().addBatchComparisonResults();
                     }
                     updateHistograms();
+                    
+                    
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }finally{
