@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.merging">
-    <module_version install_time="1487426909235" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1488060519274" last="true" origin="installer" specification_version="1.0">
         <file crc="1629694067" name="config/Modules/cz-fidentis-merging.xml"/>
         <file crc="2275632481" name="modules/cz-fidentis-merging.jar"/>
     </module_version>

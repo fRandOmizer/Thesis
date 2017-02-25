@@ -1,23 +1,20 @@
 #version 330
 
 in vec3 position;
-in vec4 color;
+in vec3 normal;
+in vec3 color;
 
-out vec4 vertColor;
+out vec3 vertColor;
+out vec3 vertNormal;
 
-
-// width/height
-uniform float aspect;
 uniform mat4 MVP;
-uniform float len;
+uniform mat3 N;
 
 void main() {
     vertColor = color;
 
-    gl_PointSize = 5.0;
-    vec4 pos = vec4(position, 1.0);
-    
-    pos = MVP * pos;
+    vertNormal = N * normal;
 
-    gl_Position = pos;
+    gl_Position = MVP * vec4(position, 1.0);
 }
+

@@ -76,24 +76,31 @@ public class LocalAreas {
                     
                     
                 }
-                vertexes = new float[areas.get(j).vertices.size() * 3];
+                vertexes = new float[areas.get(j).vertices.size() * 6];
                 vertexColors = new float[areas.get(j).vertices.size() * 4];
                 for (int i = 0; i < tmp.size(); i++) {
                      
                     vertexes[k] = model.getVerts().get(tmp.get(i)).x;
-                    vertexColors[l] = areas.get(j).color.get(0);
                     k++;
-                    l++;
                     vertexes[k] = model.getVerts().get(tmp.get(i)).y;
-                    vertexColors[l] = areas.get(j).color.get(1);
                     k++;
-                    l++;
                     vertexes[k] = model.getVerts().get(tmp.get(i)).z;
-                    vertexColors[l] = areas.get(j).color.get(2);
                     k++;
+
+                    vertexes[k] = model.getNormals().get(tmp.get(i)).x;
+                    k++;
+                    vertexes[k] = model.getNormals().get(tmp.get(i)).y;
+                    k++;
+                    vertexes[k] = model.getNormals().get(tmp.get(i)).z;
+                    k++;
+
+                    vertexColors[l] = areas.get(j).color.get(0);
                     l++;
-                    vertexColors[l] = 0.5f;
+                    vertexColors[l] = areas.get(j).color.get(1);
                     l++;
+                    vertexColors[l] = areas.get(j).color.get(2);
+                    l++;
+
                 }
                 
                 

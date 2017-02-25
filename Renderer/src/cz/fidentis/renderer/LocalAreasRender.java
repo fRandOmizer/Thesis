@@ -1,8 +1,11 @@
 package cz.fidentis.renderer;
 
+import com.hackoeur.jglm.Mat3;
 import cz.fidentis.comparison.localAreas.Area;
 import cz.fidentis.comparison.localAreas.LocalAreas;
 import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.Vec4;
 import com.jogamp.common.nio.Buffers;
 import cz.fidentis.model.Model;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2GL3.GL_FILL;
 import static javax.media.opengl.GL2GL3.GL_LINE;
 import static javax.media.opengl.GL2GL3.GL_VERTEX_ARRAY_BINDING;
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
 
 /**
@@ -46,8 +50,10 @@ public class LocalAreasRender{
     // our GLSL resources
     private int positionAttribLoc;
     private int colorAttribLoc;
+    private int normalAttribLoc;
     private int vertMvpUniformLoc;
-    private Mat4 matrix;
+    private int normMvpUniformLoc;
+    private Mat4 pointTranfMatrix;
     private boolean isDrawPoint;
     private boolean isClearSelection;
     private float[] pointToDraw;
@@ -85,7 +91,7 @@ public class LocalAreasRender{
     }
     
     public Mat4 getMatrix(){
-        return this.matrix;
+        return this.pointTranfMatrix;
     }
     
     public LocalAreas getLocalAreasBoundary(){
@@ -101,7 +107,7 @@ public class LocalAreasRender{
         List<float[]> vertexesAreas = localAreas.getVertexes();
         List<float[]> colorAreas = localAreas.getVertexesColors();
         
-        matrix = Mat4.MAT4_IDENTITY;
+        pointTranfMatrix = Mat4.MAT4_IDENTITY;
 
         float[] projectionArray = new float[16];
         for (int i = 0 ; i < 16; i++)
@@ -116,12 +122,15 @@ public class LocalAreasRender{
         }
         Mat4 viewMat = new Mat4(viewArray);
 
-        matrix = matrix.multiply(projection);
-        matrix = matrix.multiply(viewMat);
+        pointTranfMatrix = pointTranfMatrix.multiply(projection);
+        pointTranfMatrix = pointTranfMatrix.multiply(viewMat);
+        
+        Mat3 n = invertMatrix(getMat3(pointTranfMatrix));
+        n = n.transpose();
 
-        gl.glClear(GL_DEPTH_BUFFER_BIT);
-        gl.glEnable (GL_BLEND); 
-        gl.glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //gl.glClear(GL_DEPTH_BUFFER_BIT);
+        //gl.glEnable (GL_BLEND); 
+        //gl.glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         gl.glLineWidth(2);
         gl.glPointSize(5);
@@ -143,17 +152,18 @@ public class LocalAreasRender{
 
             gl.glUseProgram(vertexShaderID);
 
-            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, matrix.getBuffer());
+            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+            gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
 
             gl.glBindVertexArray(vertexArray);
             
-            if (vertexesAreas.get(i).length > 6){
-                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/3);
+            if (vertexesAreas.get(i).length > 18){
+                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
             } else {
-                if (vertexesAreas.get(i).length > 4){
-                    gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/3);
+                if (vertexesAreas.get(i).length > 12){
+                    gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/6);
                 } else {
-                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
+                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/6);
                 }
             }
             
@@ -168,7 +178,7 @@ public class LocalAreasRender{
         if (isDrawPoint){
             
             gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-            gl.glBufferData(GL_ARRAY_BUFFER, 3 * Buffers.SIZEOF_FLOAT,
+            gl.glBufferData(GL_ARRAY_BUFFER, 6 * Buffers.SIZEOF_FLOAT,
                     Buffers.newDirectFloatBuffer(pointToDraw), GL_DYNAMIC_DRAW);
 
             gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
@@ -177,7 +187,8 @@ public class LocalAreasRender{
 
             gl.glUseProgram(vertexShaderID);
 
-            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, matrix.getBuffer());
+            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+            gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
 
             gl.glBindVertexArray(vertexArray);
             
@@ -297,7 +308,9 @@ public class LocalAreasRender{
 
         positionAttribLoc = gl.glGetAttribLocation(vertexShaderID, "position");
         colorAttribLoc = gl.glGetAttribLocation(vertexShaderID, "color");
+        normalAttribLoc = gl.glGetAttribLocation(vertexShaderID, "normal");
         vertMvpUniformLoc = gl.glGetUniformLocation(vertexShaderID, "MVP");
+        normMvpUniformLoc = gl.glGetUniformLocation(vertexShaderID, "N");
         
         // set the attributes of the geometry
         int binding[] = new int[1];
@@ -307,14 +320,45 @@ public class LocalAreasRender{
         gl.glBindVertexArray(vertexArray);
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glEnableVertexAttribArray(positionAttribLoc);
-        gl.glVertexAttribPointer(positionAttribLoc, 3, GL_FLOAT, false, 0, 0);
+        gl.glVertexAttribPointer(positionAttribLoc, 3, GL_FLOAT, false, 6 * Buffers.SIZEOF_FLOAT, 0);
+         gl.glEnableVertexAttribArray(normalAttribLoc);
+        gl.glVertexAttribPointer(normalAttribLoc, 3, GL_FLOAT, false, 6 * Buffers.SIZEOF_FLOAT, 3 * Buffers.SIZEOF_FLOAT);
         gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         gl.glEnableVertexAttribArray(colorAttribLoc);
-        gl.glVertexAttribPointer(colorAttribLoc, 4, GL_FLOAT, false, 0, 0);
-        
+        gl.glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, false, 0, 0);
+
         gl.glBindVertexArray(joglArray);
         return gl;
     }
+    
+    private static Mat3 getMat3(Mat4 m) {
+        Vec4 col0 = m.getColumn(0);
+        Vec4 col1 = m.getColumn(1);
+        Vec4 col2 = m.getColumn(2);
+        Mat3 ma = new Mat3(
+                col0.getX(), col0.getY(), col0.getZ(),
+                col1.getX(), col1.getY(), col1.getZ(),
+                col2.getX(), col2.getY(), col2.getZ());
+        return ma;
+    }
+    
+    private static Mat3 invertMatrix(Mat3 m) {
+        Vec3 col0 = m.getColumn(0);
+        Vec3 col1 = m.getColumn(1);
+        Vec3 col2 = m.getColumn(2);
+
+        Matrix3f mt = new Matrix3f(
+                col0.getX(), col0.getY(), col0.getZ(),
+                col1.getX(), col1.getY(), col1.getZ(),
+                col2.getX(), col2.getY(), col2.getZ());
+
+        mt.invert();
+
+        Mat3 matrix = new Mat3(mt.m00, mt.m01, mt.m02, mt.m10, mt.m11, mt.m12, mt.m20, mt.m21, mt.m22);
+
+        return matrix;
+    }
+
     
 
     
