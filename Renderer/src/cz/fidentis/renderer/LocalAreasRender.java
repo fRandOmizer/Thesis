@@ -157,15 +157,19 @@ public class LocalAreasRender{
 
             gl.glBindVertexArray(vertexArray);
             
-            if (vertexesAreas.get(i).length > 18){
-                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
-            } else {
-                if (vertexesAreas.get(i).length > 12){
-                    gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/6);
-                } else {
-                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/6);
-                }
-            }
+            
+            gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
+            
+            
+//            if (vertexesAreas.get(i).length > 18){
+//                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
+//            } else {
+//                if (vertexesAreas.get(i).length > 12){
+//                    gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/6);
+//                } else {
+//                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/6);
+//                }
+//            }
             
 //            gl.glBufferData(GL_ARRAY_BUFFER, colorAreas.get(i).length * Buffers.SIZEOF_FLOAT,
 //                    Buffers.newDirectFloatBuffer(new float[]  {0.0f, 1.0f, 0.0f}), GL_DYNAMIC_DRAW);
