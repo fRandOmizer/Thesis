@@ -194,14 +194,13 @@ public class LocalAreaLibrary {
     
     
     
-    public static List<Point3D> giftWrapping(Area area, Model model){
+    public static List<Point3D> giftWrapping(List<Integer> verticesIndexes, Model model){
         
         List<Point3D> points = new ArrayList();
-        List<Integer> tmp = area.vertices;
-        for (int i = 0; i < area.vertices.size(); i++) {
-           Point3D point = new Point3D( model.getVerts().get(tmp.get(i)).x, 
-                                        model.getVerts().get(tmp.get(i)).y, 
-                                        model.getVerts().get(tmp.get(i)).z);
+        for (int i = 0; i < verticesIndexes.size(); i++) {
+           Point3D point = new Point3D( model.getVerts().get(verticesIndexes.get(i)).x, 
+                                        model.getVerts().get(verticesIndexes.get(i)).y, 
+                                        model.getVerts().get(verticesIndexes.get(i)).z);
            points.add(point);
         }
         

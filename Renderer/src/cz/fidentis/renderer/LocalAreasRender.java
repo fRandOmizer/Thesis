@@ -104,8 +104,8 @@ public class LocalAreasRender{
             return gl;
         }
         
-        List<float[]> vertexesAreas = localAreas.getVertexes();
-        List<float[]> colorAreas = localAreas.getVertexesColors();
+        float[] vertexesAreas = localAreas.getVertexAreas();
+        float[] colorAreas = localAreas.getVertexAreasColors();
         
         pointTranfMatrix = Mat4.MAT4_IDENTITY;
 
@@ -128,39 +128,39 @@ public class LocalAreasRender{
         Mat3 n = invertMatrix(getMat3(pointTranfMatrix));
         n = n.transpose();
 
-        //gl.glClear(GL_DEPTH_BUFFER_BIT);
-        //gl.glEnable (GL_BLEND); 
-        //gl.glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        gl.glEnable (GL_BLEND); 
+        gl.glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         gl.glLineWidth(2);
-        gl.glPointSize(5);
+        
 
-        for (int i = 0; i < vertexesAreas.size(); i++){
+        
 //            float[] colorForPoints = new float[vertexesAreas.size()];
 //            for (int j = 0; j < vertexesAreas.size(); j++){
 //                
 //            }
             
             
-            gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-            gl.glBufferData(GL_ARRAY_BUFFER, vertexesAreas.get(i).length * Buffers.SIZEOF_FLOAT,
-                    Buffers.newDirectFloatBuffer(vertexesAreas.get(i)), GL_DYNAMIC_DRAW);
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, vertexesAreas.length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(vertexesAreas), GL_DYNAMIC_DRAW);
 
-            gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-            gl.glBufferData(GL_ARRAY_BUFFER, colorAreas.get(i).length * Buffers.SIZEOF_FLOAT,
-                    Buffers.newDirectFloatBuffer(colorAreas.get(i)), GL_DYNAMIC_DRAW);
+        gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, colorAreas.length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(colorAreas), GL_DYNAMIC_DRAW);
 
-            gl.glUseProgram(vertexShaderID);
+        gl.glUseProgram(vertexShaderID);
 
-            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
-            gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
+        gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+        gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
 
-            gl.glBindVertexArray(vertexArray);
-            
-            
-            gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
-            
-            
+        gl.glBindVertexArray(vertexArray);
+
+
+        gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.length/6);
+
+
 //            if (vertexesAreas.get(i).length > 18){
 //                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
 //            } else {
@@ -170,14 +170,41 @@ public class LocalAreasRender{
 //                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/6);
 //                }
 //            }
-            
+
 //            gl.glBufferData(GL_ARRAY_BUFFER, colorAreas.get(i).length * Buffers.SIZEOF_FLOAT,
 //                    Buffers.newDirectFloatBuffer(new float[]  {0.0f, 1.0f, 0.0f}), GL_DYNAMIC_DRAW);
 //            gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
-            
-            gl.glBindVertexArray(joglArray);
-        }
+
+        gl.glBindVertexArray(joglArray);
+
         
+        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        
+        gl.glPointSize(3);
+            
+            
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getVertexes().length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(localAreas.getVertexes()), GL_DYNAMIC_DRAW);
+
+        gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getVertexColors().length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(localAreas.getVertexColors()), GL_DYNAMIC_DRAW);
+
+        gl.glUseProgram(vertexShaderID);
+
+        gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+        gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
+
+        gl.glBindVertexArray(vertexArray);
+
+
+        gl.glDrawArrays(GL2.GL_POINTS, 0, localAreas.getVertexes().length/6);
+
+        gl.glBindVertexArray(joglArray);
+        
+        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        gl.glPointSize(5);
         
         if (isDrawPoint){
             
@@ -186,7 +213,7 @@ public class LocalAreasRender{
                     Buffers.newDirectFloatBuffer(pointToDraw), GL_DYNAMIC_DRAW);
 
             gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-            gl.glBufferData(GL_ARRAY_BUFFER, 3 * Buffers.SIZEOF_FLOAT,
+            gl.glBufferData(GL_ARRAY_BUFFER, 4 * Buffers.SIZEOF_FLOAT,
                     Buffers.newDirectFloatBuffer(new float[]  {1.0f, 0.0f, 0.0f, 1.0f}), GL_DYNAMIC_DRAW);
 
             gl.glUseProgram(vertexShaderID);
@@ -329,7 +356,7 @@ public class LocalAreasRender{
         gl.glVertexAttribPointer(normalAttribLoc, 3, GL_FLOAT, false, 6 * Buffers.SIZEOF_FLOAT, 3 * Buffers.SIZEOF_FLOAT);
         gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         gl.glEnableVertexAttribArray(colorAttribLoc);
-        gl.glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, false, 0, 0);
+        gl.glVertexAttribPointer(colorAttribLoc, 4, GL_FLOAT, false, 0, 0);
 
         gl.glBindVertexArray(joglArray);
         return gl;

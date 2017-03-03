@@ -310,28 +310,28 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         gl.glShadeModel(GL2.GL_SMOOTH);
         
         if(localAreaRender.IsSetUp()){
-//            for (int i = 0; i < info.getModels().size(); i++) {
-//                if (info.getModels().get(i) != null) {
-//                    gl.glPushMatrix();
-//                    float[] color = {0.8667f, 0.7176f, 0.6275f, 1f};
-//                    float[] colorKs = {0, 0, 0, 1f};
-//
-//                    //  float[] color = {0.868f, 0.64f, 0.548f, 1f};
-//                    gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, color, 0);
-//                    gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, color, 0);
-//                    gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 10);
-//
-//                    gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, colorKs, 0);
-//                    
-//                    info.getModels().get(i).drawWithoutTextures(gl);
-//
-//                    if (info.getFacialPoints() != null) {
-//                        drawFacialPoints(info.getFacialPoints());
-//                    }
-//                    gl.glDisable(GL.GL_BLEND);
-//                    gl.glPopMatrix();
-//                }
-//            }
+            for (int i = 0; i < info.getModels().size(); i++) {
+                if (info.getModels().get(i) != null) {
+                    gl.glPushMatrix();
+                    float[] color = {0.8667f, 0.7176f, 0.6275f, 1f};
+                    float[] colorKs = {0, 0, 0, 1f};
+
+                    //  float[] color = {0.868f, 0.64f, 0.548f, 1f};
+                    gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, color, 0);
+                    gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, color, 0);
+                    gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 10);
+
+                    gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, colorKs, 0);
+                    
+                    info.getModels().get(i).drawWithoutTextures(gl);
+
+                    if (info.getFacialPoints() != null) {
+                        drawFacialPoints(info.getFacialPoints());
+                    }
+                    gl.glDisable(GL.GL_BLEND);
+                    gl.glPopMatrix();
+                }
+            }
             gl = localAreaRender.drawLocalAreas(gl, VertexShadersId, projectionMatrix,  modelViewMatrix);
             
         } else {

@@ -45,6 +45,7 @@ java.util.ArrayList
 java.lang.Float
 cz.fidentis.model.Faces
 cz.fidentis.comparison.localAreas.LocalAreas
+java.util.Iterator
 cz.fidentis.model.Model
 javax.vecmath.Vector3f
 java.lang.Object

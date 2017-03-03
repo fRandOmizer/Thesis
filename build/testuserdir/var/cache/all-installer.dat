@@ -1,4 +1,4 @@
-#Sun Feb 26 18:05:55 CET 2017
+#Fri Mar 03 15:37:33 CET 2017
 org.netbeans.core.startup.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.modules.settings.AutoUpdate-Show-In-Client=false
 cz.fidentis.controller.OpenIDE-Module-Layer=\u0000
@@ -173,8 +173,8 @@ org.netbeans.core.OpenIDE-Module-Description=\u0000
 org.netbeans.libs.jna.platform.AutoUpdate-Show-In-Client=false
 org.openide.nodes.OpenIDE-Module-Deprecated=\u0000
 cz.fidentis.processing.OpenIDE-Module-Description=\u0000
-org.netbeans.modules.uihandler.AutoUpdate-Show-In-Client=false
 org.netbeans.core.io.ui.AutoUpdate-Show-In-Client=false
+org.netbeans.modules.uihandler.AutoUpdate-Show-In-Client=false
 org.netbeans.api.templates.AutoUpdate-Show-In-Client=false
 org.netbeans.modules.settings.OpenIDE-Module-Description=\u0000
 org.openide.filesystems.OpenIDE-Module-Install=\u0000
@@ -434,9 +434,9 @@ org.netbeans.core.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.core.ui.OpenIDE-Module-Layer=org/netbeans/core/ui/resources/layer.xml
 org.netbeans.libs.javafx.AutoUpdate-Show-In-Client=false
 cz.fidentis.composite.OpenIDE-Module-Layer=\u0000
-cz.fidentis.visualisation.AutoUpdate-Show-In-Client=true
-org.netbeans.libs.testng.AutoUpdate-Show-In-Client=true
 org.netbeans.modules.templates.AutoUpdate-Show-In-Client=false
+org.netbeans.libs.testng.AutoUpdate-Show-In-Client=true
+cz.fidentis.visualisation.AutoUpdate-Show-In-Client=true
 org.netbeans.core.multitabs.AutoUpdate-Show-In-Client=false
 cz.fidentis.model.OpenIDE-Module-Description=\u0000
 org.netbeans.modules.sendopts.OpenIDE-Module-Layer=\u0000
@@ -459,8 +459,8 @@ org.netbeans.swing.tabcontrol.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.modules.options.keymap.OpenIDE-Module-Install=\u0000
 org.netbeans.modules.print.OpenIDE-Module-Description=\u0000
 net.java.html.sound.AutoUpdate-Show-In-Client=\u0000
-org.netbeans.modules.masterfs.macosx.AutoUpdate-Show-In-Client=false
 org.netbeans.libs.felix.AutoUpdate-Show-In-Client=false
+org.netbeans.modules.masterfs.macosx.AutoUpdate-Show-In-Client=false
 cz.fidentis.gui.OpenIDE-Module-Description=\u0000
 cz.fidentis.utils.OpenIDE-Module-Description=\u0000
 org.netbeans.swing.plaf.OpenIDE-Module-Install=\u0000

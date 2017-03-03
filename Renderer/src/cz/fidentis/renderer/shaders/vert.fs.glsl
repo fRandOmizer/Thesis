@@ -2,7 +2,7 @@
 
 out vec4 fragColor;
 
-in vec3 vertColor;
+in vec4 vertColor;
 in vec3 vertNormal;
 in vec3 light;
 
@@ -10,5 +10,5 @@ void main() {
     vec3 n = normalize(vertNormal);
 
     float d = dot(n, normalize(light));
-    fragColor = vec4(vertColor*d, 1);
+    fragColor = vec4(vertColor);
 }
