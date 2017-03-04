@@ -12,6 +12,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point3D;
+import javax.vecmath.Vector4f;
 
 /**
  *
@@ -25,7 +26,7 @@ public class LocalAreas {
     private float[] vertexes;
     private float[] vertexColors;
     private List<List<Point3D>> vertexAreasPoints3D;
-    private List<Point3D> allAreasPoints;
+    private List<Vector4f> allAreasPoints;
     private int[] indexesOfAreas;
 
     public LocalAreas(){
@@ -40,9 +41,10 @@ public class LocalAreas {
             List<Integer> temp = areas.get(0).vertices;
             
             for (int i = 0; i < temp.size(); i++) {
-                allAreasPoints.add(new Point3D(model.getVerts().get(temp.get(i)).x, 
-                                              model.getVerts().get(temp.get(i)).y, 
-                                              model.getVerts().get(temp.get(i)).z));
+                allAreasPoints.add(new Vector4f(model.getVerts().get(temp.get(i)).x, 
+                                                model.getVerts().get(temp.get(i)).y, 
+                                                model.getVerts().get(temp.get(i)).z,
+                                                temp.get(i)));
             }
         }
         
@@ -243,7 +245,7 @@ public class LocalAreas {
         return indexesOfAreas;
     }
     
-    public List<Point3D> getAllPointsFromOneArea(){
+    public List<Vector4f> getAllPointsFromOneArea(){
         return allAreasPoints;
     }
 

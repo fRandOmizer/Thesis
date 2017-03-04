@@ -2368,6 +2368,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
             GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
         } else {
             LocalAreasFrame.setVisible(true);
+            LocalAreasFrame.setAlwaysOnTop(true);
             if (!localAreasJPanel.isInitialized()){
                 localAreasJPanel.LoadValues(histogram1.getMin(), histogram1.getMax());
             }

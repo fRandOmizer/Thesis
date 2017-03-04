@@ -30,6 +30,7 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 /**
  *
@@ -64,7 +65,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             while (isMouseOnCanvas){
                 int difference = differenceInMiliseconds(timeOfMouseMovement, Calendar.getInstance());
                 
-                if (difference >= 800){
+                if (difference >= 100){
                     //pointerViewerPanel_Batch.setToolTip(mousePosition.x, mousePosition.y, "Hello!");
                     try {
                         drawHooveredPoint();
@@ -111,6 +112,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private Vector2d mousePosition; 
     private boolean isWorkerRunning;
     private boolean isPointSelected;
+    private Vector4f choosenPoint;
     
     
     /**
@@ -150,7 +152,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
         
-        LocalAreaFrame = new JFrame("LocalAreas");
+        LocalAreaFrame = new JFrame("Area");
         LocalAreaFrame.setVisible(false);
         LocalAreaFrame.setMinimumSize(new Dimension(100, 100));
         LocalAreaFrame.setMaximumSize(new Dimension(100, 100));
@@ -214,6 +216,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         if (!LocalAreaFrame.isVisible()){
             LocalAreaFrame.setVisible(true);
+            LocalAreaFrame.setAlwaysOnTop(true);
         }
         
         
@@ -228,7 +231,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
             if (point != null){
                 
-                LocalAreaJPanel.SetArea(""+localAreas.getIndexes()[i]);
+                LocalAreaJPanel.SetArea(AreasList.get(localAreas.getIndexes()[i]), RelativeValues);
                 SetSelectedArea(localAreas.getIndexes()[i]);
                 isAreaSelected = true;
                 setMouseOnCanvas(true);
@@ -257,7 +260,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     
     public void setPointInfo(){
         if (isPointSelected){
-            LocalAreaJPanel.SetPosition(mousePosition.x, mousePosition.y);
+            LocalAreaJPanel.SetChoosenPoint((int)this.choosenPoint.w);
         }
         
     }
@@ -281,13 +284,14 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 //        SelectedAreas = new int[AreasJList.getSelectedIndices().length];
 //        SelectedAreas = AreasJList.getSelectedIndices();
 //        Area area = AreasList.get(SelectedAreas[0]);
-        List<Point3D> points = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
+        List<Vector4f> points = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
         int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
-        Vector3f point = LocalAreaLibrary.intersectionWithPoint(mousePosition.x, mousePosition.y, viewPort, modelViewMatrix, projectionMatrix, points);
+        Vector4f point = LocalAreaLibrary.intersectionWithPoint(mousePosition.x, mousePosition.y, viewPort, modelViewMatrix, projectionMatrix, points);
         
         if (point != null){
+            choosenPoint = point;
             pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
             isPointSelected = true;
             

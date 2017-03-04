@@ -30,6 +30,7 @@ import static javax.media.opengl.GL2GL3.GL_LINE;
 import static javax.media.opengl.GL2GL3.GL_VERTEX_ARRAY_BINDING;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 /**
  *
@@ -72,7 +73,7 @@ public class LocalAreasRender{
         this.isClearSelection = false;
     }
     
-    public void setPointToDraw(Vector3f pointToDraw){
+    public void setPointToDraw(Vector4f pointToDraw){
         this.pointToDraw = new float[] {pointToDraw.x, pointToDraw.y, pointToDraw.z};
         isDrawPoint = true;
     }

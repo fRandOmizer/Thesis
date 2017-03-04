@@ -11,6 +11,7 @@ import java.util.List;
 import javafx.geometry.Point3D;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 
 /**
@@ -18,12 +19,12 @@ import javax.vecmath.Vector3f;
  * @author zanri
  */
 public class LocalAreaLibrary {
-    public static Vector3f intersectionWithPoint(double mouseReleasedX, 
+    public static Vector4f intersectionWithPoint(double mouseReleasedX, 
                                                double mouseReleasedY, 
                                                int[] viewport, 
                                                double[] modelViewMatrix, 
                                                double[] projectionMatrix,
-                                               List<Point3D> areaPoints) {
+                                               List<Vector4f> areaPoints) {
 
         double v0[] = new double[4];
         double v1[] = new double[4];
@@ -44,11 +45,11 @@ public class LocalAreaLibrary {
                 v1, 0);
 
         double treshold = 100000.0;
-        Point3D point = null;
+        Vector4f point = null;
         
         for (int i = 0; i < areaPoints.size(); i++){
 
-            Point3D a = areaPoints.get(i);
+            Vector4f a = areaPoints.get(i);
 
             double distance = calculateDistanceBetweenPoints(v0, v1, a);
             if (treshold > distance){
@@ -61,10 +62,10 @@ public class LocalAreaLibrary {
             return null;
         }
         
-        return new Vector3f((float)point.getX(), (float)point.getY(), (float)point.getZ());
+        return new Vector4f((float)point.x, (float)point.y, (float)point.z, (float)point.w);
     }
     
-    private static double calculateDistanceBetweenPoints(double[] P0, double[] P1, Point3D point) {
+    private static double calculateDistanceBetweenPoints(double[] P0, double[] P1, Vector4f point) {
 
         Vector3f pp = new Vector3f((float) P1[0] - (float) P0[0], //P1-P0
                 (float) P1[1] - (float) P0[1],

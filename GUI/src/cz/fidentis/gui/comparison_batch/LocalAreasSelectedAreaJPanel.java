@@ -5,6 +5,9 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
+import cz.fidentis.comparison.hausdorffDistance.ComparisonMetrics;
+import cz.fidentis.comparison.localAreas.Area;
+
 /**
  *
  * @author zanri
@@ -12,6 +15,8 @@ package cz.fidentis.gui.comparison_batch;
 public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
 
     private String text;
+    private Area area;
+    private ComparisonMetrics metric;
     
     /**
      * Creates new form LocalAreasSelectedPointJPanel
@@ -21,12 +26,35 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         text = "Point(x,y,z): [-1, -1, -1]";
     }
     
-    public void SetArea(String area){
-        this.labelPositionOfPoint.setText("Area "+ area+"");
+    public void SetArea(Area area, Boolean relative){
+        this.area = area;
+        this.metric = ComparisonMetrics.instance();
+        
+        area.geoMean = metric.geometricMean(area.csvValues, relative);
+        area.ariMean = metric.aritmeticMean(area.csvValues, relative);
+        area.percentileSevFiv = metric.percentileSeventyFive(area.csvValues, relative);
+        area.max = metric.findMaxDistance(area.csvValues, relative);
+        area.min = metric.findMinDistance(area.csvValues, relative);
+        area.rootMean = metric.rootMeanSqr(area.csvValues, relative);
+        area.variance = metric.variance(area.csvValues, relative);
+        
+        this.labelAreaName.setText("Area "+ area.index+"");
+        this.GeoMean.setText(""+ area.geoMean+"");
+        this.AriMean.setText(""+ area.ariMean+"");
+        this.RootMean.setText(""+ area.rootMean+"");
+        this.Max.setText(""+ area.max+"");
+        this.Min.setText(""+ area.min+"");
+        this.SeventyFive.setText(""+ area.percentileSevFiv+"");
+        this.Variance.setText(""+ area.variance+"");
     }
     
-    public void SetPosition(double x, double y){
-        this.labelPositionOfPoint1.setText("Point(x,y,z): ["+x+", "+y+"]");
+    public void SetChoosenPoint(int index){
+        try{
+            this.labelPoint.setText("Point:                           "+area.csvValues.get(area.vertices.indexOf(index))+"");
+        } catch(Exception e) {
+            
+        }
+        
     }
 
     /**
@@ -38,38 +66,163 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        labelPositionOfPoint = new javax.swing.JLabel();
-        labelPositionOfPoint1 = new javax.swing.JLabel();
+        labelAreaName = new javax.swing.JLabel();
+        labelPoint = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        labelAreaName1 = new javax.swing.JLabel();
+        labelAreaName2 = new javax.swing.JLabel();
+        labelAreaName3 = new javax.swing.JLabel();
+        labelAreaName4 = new javax.swing.JLabel();
+        labelAreaName5 = new javax.swing.JLabel();
+        labelAreaName6 = new javax.swing.JLabel();
+        labelAreaName7 = new javax.swing.JLabel();
+        GeoMean = new javax.swing.JLabel();
+        AriMean = new javax.swing.JLabel();
+        RootMean = new javax.swing.JLabel();
+        Max = new javax.swing.JLabel();
+        Min = new javax.swing.JLabel();
+        SeventyFive = new javax.swing.JLabel();
+        Variance = new javax.swing.JLabel();
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelPositionOfPoint, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelPositionOfPoint.text")); // NOI18N
+        labelAreaName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelPositionOfPoint1, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelPositionOfPoint1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(labelPoint, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelPoint.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 35, Short.MAX_VALUE)
+        );
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName1, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName2, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName3, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName3.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName4, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName4.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName5, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName5.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName6, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName6.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName7, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName7.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(GeoMean, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.GeoMean.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(AriMean, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.AriMean.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(RootMean, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.RootMean.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(Max, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.Max.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(Min, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.Min.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(SeventyFive, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.SeventyFive.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(Variance, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.Variance.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelPositionOfPoint1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPositionOfPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(49, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(labelPoint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(labelAreaName6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelAreaName5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelAreaName4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelAreaName3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelAreaName1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelAreaName2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(labelAreaName7))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(AriMean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(RootMean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Max, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Min, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(SeventyFive, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Variance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(GeoMean, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(labelAreaName, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(labelPositionOfPoint)
-                .addGap(38, 38, 38)
-                .addComponent(labelPositionOfPoint1)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(labelAreaName)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName2)
+                            .addComponent(GeoMean))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName1)
+                            .addComponent(AriMean))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName3)
+                            .addComponent(RootMean))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName4)
+                            .addComponent(Max))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName5)
+                            .addComponent(Min))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName6)
+                            .addComponent(SeventyFive))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelAreaName7)
+                            .addComponent(Variance))))
+                .addGap(24, 24, 24)
+                .addComponent(labelPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel labelPositionOfPoint;
-    private javax.swing.JLabel labelPositionOfPoint1;
+    private javax.swing.JLabel AriMean;
+    private javax.swing.JLabel GeoMean;
+    private javax.swing.JLabel Max;
+    private javax.swing.JLabel Min;
+    private javax.swing.JLabel RootMean;
+    private javax.swing.JLabel SeventyFive;
+    private javax.swing.JLabel Variance;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel labelAreaName;
+    private javax.swing.JLabel labelAreaName1;
+    private javax.swing.JLabel labelAreaName2;
+    private javax.swing.JLabel labelAreaName3;
+    private javax.swing.JLabel labelAreaName4;
+    private javax.swing.JLabel labelAreaName5;
+    private javax.swing.JLabel labelAreaName6;
+    private javax.swing.JLabel labelAreaName7;
+    private javax.swing.JLabel labelPoint;
     // End of variables declaration//GEN-END:variables
 }

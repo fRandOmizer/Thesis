@@ -2766,7 +2766,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         return viewport;
     }
     
-    public void setPointToDraw(Vector3f point){
+    public void setPointToDraw(Vector4f point){
         localAreaRender.setPointToDraw(point);
     }
 }
