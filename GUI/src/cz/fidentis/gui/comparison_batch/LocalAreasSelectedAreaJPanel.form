@@ -16,39 +16,51 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="17" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="labelPoint" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="labelAreaName6" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelAreaName5" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelAreaName4" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelAreaName3" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelAreaName1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelAreaName2" alignment="0" min="-2" pref="106" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="labelAreaName" min="-2" pref="194" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="labelAreaName6" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="labelAreaName5" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="labelAreaName4" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="labelAreaName3" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="labelAreaName1" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
+                                      <Component id="labelAreaName2" alignment="0" min="-2" pref="106" max="-2" attributes="0"/>
+                                      <Component id="labelAreaName7" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <Component id="labelAreaName7" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="AriMean" max="32767" attributes="0"/>
+                                  <Component id="RootMean" max="32767" attributes="0"/>
+                                  <Component id="Max" max="32767" attributes="0"/>
+                                  <Component id="Min" max="32767" attributes="0"/>
+                                  <Component id="SeventyFive" max="32767" attributes="0"/>
+                                  <Component id="Variance" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="GeoMean" alignment="0" pref="82" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="AriMean" max="32767" attributes="0"/>
-                              <Component id="RootMean" max="32767" attributes="0"/>
-                              <Component id="Max" max="32767" attributes="0"/>
-                              <Component id="Min" max="32767" attributes="0"/>
-                              <Component id="SeventyFive" max="32767" attributes="0"/>
-                              <Component id="Variance" alignment="0" max="32767" attributes="0"/>
-                              <Component id="GeoMean" alignment="0" min="-2" pref="82" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="jButtonExport" min="-2" pref="170" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="labelAreaName" min="-2" pref="194" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="labelPoint" min="-2" pref="198" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="point" min="-2" pref="79" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -57,53 +69,54 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                      <Component id="GeoMean" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="AriMean" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="RootMean" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="Max" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="Min" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="SeventyFive" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="Variance" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="labelAreaName" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="GeoMean" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="AriMean" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="RootMean" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="Max" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="Min" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="SeventyFive" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="labelAreaName7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="Variance" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="labelAreaName7" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-              <Component id="labelPoint" min="-2" pref="33" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
+              <Component id="jButtonExport" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelPoint" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                  <Component id="point" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -238,6 +251,24 @@
           <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.Variance.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="point">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.point.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="horizontalTextPosition" type="int" value="4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonExport">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.jButtonExport.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonExportActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

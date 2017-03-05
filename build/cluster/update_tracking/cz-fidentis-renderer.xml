@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.renderer">
-    <module_version install_time="1488658478345" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1488747030879" last="true" origin="installer" specification_version="1.0">
         <file crc="1812041661" name="config/Modules/cz-fidentis-renderer.xml"/>
         <file crc="2567224642" name="modules/cz-fidentis-renderer.jar"/>
         <file crc="3554708244" name="modules/ext/jglm-1.0.0-sources.jar"/>

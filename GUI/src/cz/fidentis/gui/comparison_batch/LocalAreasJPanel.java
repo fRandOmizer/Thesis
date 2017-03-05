@@ -260,7 +260,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     
     public void setPointInfo(){
         if (isPointSelected){
-            LocalAreaJPanel.SetChoosenPoint((int)this.choosenPoint.w);
+            LocalAreaJPanel.SetChoosenPoint(this.choosenPoint);
         }
         
     }
