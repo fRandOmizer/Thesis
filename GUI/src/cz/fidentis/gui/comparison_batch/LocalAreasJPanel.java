@@ -231,7 +231,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
             if (point != null){
                 
-                LocalAreaJPanel.SetArea(AreasList.get(localAreas.getIndexes()[i]), RelativeValues);
+                
+                
+                LocalAreaJPanel.SetArea(AreasList.get(localAreas.getIndexes()[i]), 
+                        RelativeValues, 
+                        pointerBatchComparisonResult.getContext().getHdVisualResults(), 
+                        pointerBatchComparisonResult.getContext().getModels());
                 SetSelectedArea(localAreas.getIndexes()[i]);
                 isAreaSelected = true;
                 setMouseOnCanvas(true);

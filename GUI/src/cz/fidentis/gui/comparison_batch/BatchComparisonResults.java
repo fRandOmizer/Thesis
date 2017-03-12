@@ -2399,6 +2399,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     
     public Model GetCurrentModel(){
         Model m = getContext().getAverageFace();
+        
         return m;
     }
     
@@ -2422,7 +2423,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         return histogram1;
     }
     
-    private BatchComparison getContext(){
+    public BatchComparison getContext(){
         return GUIController.getSelectedProjectTopComponent().getProject().getSelectedBatchComparison();
     }
 
