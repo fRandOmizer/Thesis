@@ -101,10 +101,10 @@ javax.media.opengl.GL
 com.jogamp.common.nio.Buffers
 javax.vecmath.Matrix3f
 [D
+javax.vecmath.Vector4f
 cz.fidentis.comparison.localAreas.LocalAreas
 com.hackoeur.jglm.Mat4
 com.hackoeur.jglm.Mat3
-javax.vecmath.Vector3f
 java.lang.Object
 javax.media.opengl.GL2GL3
 cz.fidentis.renderer.LocalAreasRender

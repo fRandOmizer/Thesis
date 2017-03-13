@@ -136,11 +136,7 @@ public class LocalAreasRender{
         gl.glLineWidth(2);
         
 
-        
-//            float[] colorForPoints = new float[vertexesAreas.size()];
-//            for (int j = 0; j < vertexesAreas.size(); j++){
-//                
-//            }
+
             
             
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -162,19 +158,7 @@ public class LocalAreasRender{
         gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.length/6);
 
 
-//            if (vertexesAreas.get(i).length > 18){
-//                gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.get(i).length/6);
-//            } else {
-//                if (vertexesAreas.get(i).length > 12){
-//                    gl.glDrawArrays(GL_LINES, 0, vertexesAreas.get(i).length/6);
-//                } else {
-//                    gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/6);
-//                }
-//            }
 
-//            gl.glBufferData(GL_ARRAY_BUFFER, colorAreas.get(i).length * Buffers.SIZEOF_FLOAT,
-//                    Buffers.newDirectFloatBuffer(new float[]  {0.0f, 1.0f, 0.0f}), GL_DYNAMIC_DRAW);
-//            gl.glDrawArrays(GL_POINTS, 0, vertexesAreas.get(i).length/3);
 
         gl.glBindVertexArray(joglArray);
 
@@ -203,6 +187,33 @@ public class LocalAreasRender{
         gl.glDrawArrays(GL2.GL_POINTS, 0, localAreas.getVertexes().length/6);
 
         gl.glBindVertexArray(joglArray);
+
+        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        
+        gl.glLineWidth(1f);
+            
+            
+        gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getBorder().length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(localAreas.getBorder()), GL_DYNAMIC_DRAW);
+
+        gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getBorderColor().length * Buffers.SIZEOF_FLOAT,
+                Buffers.newDirectFloatBuffer(localAreas.getBorderColor()), GL_DYNAMIC_DRAW);
+
+        gl.glUseProgram(vertexShaderID);
+
+        gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+        gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
+
+        gl.glBindVertexArray(vertexArray);
+
+
+        gl.glDrawArrays(GL2.GL_LINES, 0, localAreas.getBorder().length/6);
+
+        gl.glBindVertexArray(joglArray);
+        
+        
         
         gl.glClear(GL_DEPTH_BUFFER_BIT);
         gl.glPointSize(5);

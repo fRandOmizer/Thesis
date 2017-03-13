@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import static java.lang.Math.abs;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector4f;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -64,8 +68,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         this.Min.setText(""+ area.min+"");
         this.SeventyFive.setText(""+ area.percentileSevFiv+"");
         this.Variance.setText(""+ area.variance+"");
-        this.DifferentFace.setText(modelsName.get(faceComparison.get(faceComparison.size()-1))+"");
-        this.SimilarFace.setText(modelsName.get(faceComparison.get(0))+"");
+        this.DifferentFace.setText(modelsName.get(faceComparison.get(0))+"");
+        this.SimilarFace.setText(modelsName.get(faceComparison.get(faceComparison.size()-1))+"");
     }
     
     public void SetChoosenPoint(Vector4f point){
@@ -113,7 +117,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                 }
                 
             }
-            average = average / filteredArays.get(i).size();
+            average = average / (filteredArays.get(i).size()-1);
             averageDistance.add(average);
         }
         
@@ -161,15 +165,17 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return result;
     }
 
-    private static float chiSquare(List<Float> x, List<Float> y){
+    private static float chiSquare(List<Float> firstArray, List<Float> secondArray){
          
         float result = 0.0f;
         
-        for (int i = 0; i < x.size(); i++){
-            result += ((x.get(i) - y.get(i))*(x.get(i) - y.get(i)))/(x.get(i) + y.get(i));
+        for (int i = 0; i < firstArray.size(); i++){
+            float x = (firstArray.get(i));
+            float y = (secondArray.get(i));
+            result += abs(((x - y)*(x - y))/(x + y));
         }
         
-        return result/x.size();
+        return (result/firstArray.size());
     }
     
     /**

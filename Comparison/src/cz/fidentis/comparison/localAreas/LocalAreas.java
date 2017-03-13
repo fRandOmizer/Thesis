@@ -22,7 +22,8 @@ public class LocalAreas {
    
     private float[] vertexAreas;
     private float[] vertexColorAreas;
-    private float[] vertexColorBlack;
+    private float[] borderAreas;
+    private float[] borderColorAreas;
     private float[] vertexes;
     private float[] vertexColors;
     private List<List<Point3D>> vertexAreasPoints3D;
@@ -34,6 +35,7 @@ public class LocalAreas {
     }
     
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
+        // <editor-fold desc="Point positions">
 
         allAreasPoints = new ArrayList<>();
         
@@ -47,20 +49,21 @@ public class LocalAreas {
                                                 temp.get(i)));
             }
         }
+        // </editor-fold>    
         
-        
+        // <editor-fold desc="Triangular mesh">
         this.indexesOfAreas = indexesOfAreas;
         
         List<Float> vertexes = new ArrayList<>();
         List<Float> vertexColors = new ArrayList<>();
-//        float[] vertexes = new float[model.getFaces().getFacesVertIdxs().size() * 6 * 3];
-//        float[] vertexColors = new float[model.getFaces().getFacesVertIdxs().size() * 3 * 3];
-//        int k = 0;
-//        int l = 0;
+        
+        List<Float> border = new ArrayList<>();
+        List<Float> borderColors = new ArrayList<>();
 
         vertexAreasPoints3D = new ArrayList<>();
 
         int[] faceIndexes;
+        List<Integer> borderIndexes;
         
         for (int i = 0; i < model.getFaces().getFacesVertIdxs().size(); i++) {
             
@@ -87,6 +90,26 @@ public class LocalAreas {
                 }
             }
             
+            borderIndexes = getLines(faceIndexes, areas);
+            if (borderIndexes  != null){
+                for (int j = 0; j < borderIndexes.size(); j++){
+                    int borderIndex  = borderIndexes.get(j);
+
+                    border.add(model.getVerts().get(borderIndex).x);
+                    border.add(model.getVerts().get(borderIndex).y);
+                    border.add(model.getVerts().get(borderIndex).z);
+
+                    border.add(model.getNormals().get(borderIndex).x);
+                    border.add(model.getNormals().get(borderIndex).y);
+                    border.add(model.getNormals().get(borderIndex).z);
+
+                    borderColors.add(0f);
+                    borderColors.add(0f);
+                    borderColors.add(0f);
+                    borderColors.add(1f);
+
+                }
+            }
         }
         float[] vertexesArray = new float[vertexes.size()];
         int i = 0;
@@ -99,12 +122,30 @@ public class LocalAreas {
         for (Float f : vertexColors) {
             vertexColorsArray[i++] = (f != null ? f : Float.NaN); 
         }
-        
-        
+
         vertexAreas = vertexesArray;
         vertexColorAreas = vertexColorsArray;
         
-        List<Integer> tmp;
+        vertexesArray = new float[border.size()];
+        i = 0;
+        for (Float f : border) {
+            vertexesArray[i++] = (f != null ? f : Float.NaN); 
+        }
+        
+        vertexColorsArray = new float[borderColors.size()];
+        i = 0;
+        for (Float f : borderColors) {
+            vertexColorsArray[i++] = (f != null ? f : Float.NaN); 
+        }
+        
+        borderAreas = vertexesArray;
+        borderColorAreas = vertexColorsArray;
+        
+        
+        // </editor-fold>        
+        
+        // <editor-fold desc="Single Points">
+        List<Integer> tmp = null;
         vertexes = new ArrayList<>();
         vertexColors = new ArrayList<>();
         
@@ -140,7 +181,9 @@ public class LocalAreas {
         for (Float f : vertexColors) {
             this.vertexColors[i++] = (f != null ? f : Float.NaN); 
         }
-        
+        // </editor-fold>
+
+        // <editor-fold desc="Gift wrapping">
         for ( i = 0; i < areas.size(); i++){
             List<Integer> indexesOfAreasTemp = new ArrayList<>();
             
@@ -151,59 +194,10 @@ public class LocalAreas {
             }
             vertexAreasPoints3D.add(giftWrapping(indexesOfAreasTemp, model));
         }
+        // </editor-fold> 
+    
         
-//        for (int j = 0; j < areas.size(); j++) {
-//            List<Point3D> vertexPoints = new ArrayList<>();
-//            k = 0;
-//            l = 0;
-//            tmp = areas.get(j).vertices;
-//            tmp = selectionSort(tmp);
-//            if (tmp.size() > 0) {
-//                if (tmp.size() > 2){
-//                    vertexPoints = giftWrapping(areas.get(j), model);
-//                    
-//                } else {
-//                    for (int i = 0; i < tmp.size(); i++) {
-//                        vertexPoints.add(new Point3D(model.getVerts().get(tmp.get(i)).x, 
-//                                                  model.getVerts().get(tmp.get(i)).y, 
-//                                                  model.getVerts().get(tmp.get(i)).z));
-//                    }
-//                    
-//                    
-//                }
-//                vertexes = new float[areas.get(j).vertices.size() * 6];
-//                vertexColors = new float[areas.get(j).vertices.size() * 4];
-//                for (int i = 0; i < tmp.size(); i++) {
-//                     
-//                    vertexes[k] = model.getVerts().get(tmp.get(i)).x;
-//                    k++;
-//                    vertexes[k] = model.getVerts().get(tmp.get(i)).y;
-//                    k++;
-//                    vertexes[k] = model.getVerts().get(tmp.get(i)).z;
-//                    k++;
-//
-//                    vertexes[k] = model.getNormals().get(tmp.get(i)).x;
-//                    k++;
-//                    vertexes[k] = model.getNormals().get(tmp.get(i)).y;
-//                    k++;
-//                    vertexes[k] = model.getNormals().get(tmp.get(i)).z;
-//                    k++;
-//
-//                    vertexColors[l] = areas.get(j).color.get(0);
-//                    l++;
-//                    vertexColors[l] = areas.get(j).color.get(1);
-//                    l++;
-//                    vertexColors[l] = areas.get(j).color.get(2);
-//                    l++;
-//
-//                }
-//                
-//                
-//                vertexAreas.add(vertexes);
-//                vertexColorAreas.add(vertexColors);
-//            }
-//            vertexAreasPoints3D.add(vertexPoints);
-//        }
+    
     }
     
   
@@ -228,6 +222,15 @@ public class LocalAreas {
     public float[] getVertexAreasColors(){
         return vertexColorAreas;
     }
+    
+    public float[] getBorder(){
+        return borderAreas;
+    }
+    
+    public float[] getBorderColor(){
+        return borderColorAreas;
+    }
+    
     
     public float[] getVertexes(){
         return vertexes;
@@ -302,6 +305,38 @@ public class LocalAreas {
         }
         
         return alreadyAssignedIndexes;
+//        return new float[]{0.8667f, 0.7176f, 0.6275f};
+    }
+    
+    private static List<Integer> getLines(int[] indexes, List<Area> areas) {
+        
+        for (int i = 0; i < areas.size(); i++){
+            List<Integer> result = new ArrayList<>();
+            int k = 0;
+            if (areas.get(i).vertices.contains(indexes[0]-1)) {
+                k++;
+            } else {
+                result.add(indexes[0]-1);
+            }
+            if (areas.get(i).vertices.contains(indexes[1]-1)) {
+                k++;
+            } else {
+                result.add(indexes[1]-1);
+            }
+            if (areas.get(i).vertices.contains(indexes[2]-1)) {
+                k++;
+            } else {
+                result.add(indexes[2]-1);
+            }
+
+            if( k == 1){
+
+                return result;
+            }
+        }
+        
+        
+        return null;
 //        return new float[]{0.8667f, 0.7176f, 0.6275f};
     }
     
