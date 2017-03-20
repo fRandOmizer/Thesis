@@ -35,6 +35,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private ArrayList<ArrayList<Float>> HdVisualResults;
     private List<Integer> faceComparison;
     private List<String> modelsName;
+    private int metricIndex;
+    private List<String> metricName;
     
     /**
      * Creates new form LocalAreasSelectedPointJPanel
@@ -42,9 +44,17 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     public LocalAreasSelectedAreaJPanel() {
         initComponents();
         text = "Point(x,y,z): [-1, -1, -1]";
+        metricName = new ArrayList<>();
+        metricName.add("Root Mean Square");
+        metricName.add("Arithmetic Mean");
+        metricName.add("Geometric Mean");
+        metricName.add("Minimal Distance");
+        metricName.add("Maximal Distance");
+        metricName.add("Variance");
+        metricName.add("75 percentil");
     }
     
-    public void SetArea(Area area, Boolean relative, ArrayList<ArrayList<Float>> HdVisualResults, List<File> models){
+    public void SetArea(Area area, Boolean relative, ArrayList<ArrayList<Float>> HdVisualResults, List<File> models, int metricIndex){
         this.area = area;
         this.metric = ComparisonMetrics.instance();
         this.HdVisualResults = HdVisualResults;
@@ -57,8 +67,9 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         area.rootMean = metric.rootMeanSqr(area.csvValues, relative);
         area.variance = metric.variance(area.csvValues, relative);
         
-        faceComparison = calculateFaceComparison(HdVisualResults, area);
+        faceComparison = calculateFaceComparison(HdVisualResults, area, metricIndex, relative);
         modelsName = filterModelName(models);
+        this.metricIndex = metricIndex;
         
         this.labelAreaName.setText("Area "+ area.index+"");
         this.GeoMean.setText(""+ area.geoMean+"");
@@ -70,6 +81,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         this.Variance.setText(""+ area.variance+"");
         this.DifferentFace.setText(modelsName.get(faceComparison.get(0))+"");
         this.SimilarFace.setText(modelsName.get(faceComparison.get(faceComparison.size()-1))+"");
+        this.MetricName.setText(metricName.get(metricIndex));
+        
     }
     
     public void SetChoosenPoint(Vector4f point){
@@ -102,7 +115,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     }
     
     
-    private static List<Integer> calculateFaceComparison(ArrayList<ArrayList<Float>> HdVisualResults, Area area) {
+    private static List<Integer> calculateFaceComparison(ArrayList<ArrayList<Float>> HdVisualResults, Area area, int metricIndex, boolean relative) {
+        ComparisonMetrics metric = ComparisonMetrics.instance();
         List<Integer> result = new ArrayList<>();
         List<Float> averageDistance = new ArrayList<>();
         
@@ -111,13 +125,16 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         for (int i = 0; i < filteredArays.size(); i++){
             float average = 0.0f;
             
-            for (int j = 0; j < filteredArays.size(); j++){
-                if (i!=j){
-                    average += chiSquare(filteredArays.get(i), filteredArays.get(j));
-                }
-                
+            switch (metricIndex) {
+                case 0: average = metric.rootMeanSqr(filteredArays.get(i), relative); break;
+                case 1: average = metric.aritmeticMean(filteredArays.get(i), relative); break;
+                case 2: average = metric.geometricMean(filteredArays.get(i), relative); break;
+                case 3: average = metric.findMinDistance(filteredArays.get(i), relative); break;
+                case 4: average = metric.findMaxDistance(filteredArays.get(i), relative); break;
+                case 5: average = metric.variance(filteredArays.get(i), relative); break;
+                case 6: average = metric.percentileSeventyFive(filteredArays.get(i), relative); break;
             }
-            average = average / (filteredArays.get(i).size()-1);
+
             averageDistance.add(average);
         }
         
@@ -210,6 +227,9 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         DifferentFace = new javax.swing.JLabel();
         labelAreaName9 = new javax.swing.JLabel();
         SimilarFace = new javax.swing.JLabel();
+        labelAreaName10 = new javax.swing.JLabel();
+        MetricName = new javax.swing.JLabel();
+        histogram1 = new cz.fidentis.visualisation.histogram.histogramPanel();
 
         labelAreaName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(labelAreaName, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName.text")); // NOI18N
@@ -273,6 +293,27 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(SimilarFace, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.SimilarFace.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName10, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName10.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(MetricName, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.MetricName.text")); // NOI18N
+
+        histogram1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                histogram1MouseDragged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout histogram1Layout = new javax.swing.GroupLayout(histogram1);
+        histogram1.setLayout(histogram1Layout);
+        histogram1Layout.setHorizontalGroup(
+            histogram1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 324, Short.MAX_VALUE)
+        );
+        histogram1Layout.setVerticalGroup(
+            histogram1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 145, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -313,13 +354,20 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                         .addGap(12, 12, 12)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelAreaName8)
-                            .addComponent(labelAreaName9))
-                        .addGap(18, 100, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(DifferentFace, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                            .addComponent(SimilarFace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(labelAreaName9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SimilarFace, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(labelAreaName8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DifferentFace, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(labelAreaName10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(MetricName, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(histogram1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -357,15 +405,23 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                         .addComponent(SeventyFive)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Variance)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(29, 29, 29)
+                .addComponent(histogram1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelAreaName8)
-                    .addComponent(DifferentFace))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(MetricName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(DifferentFace))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(labelAreaName10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelAreaName8)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelAreaName9)
                     .addComponent(SimilarFace))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonExport)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -415,21 +471,44 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonExportActionPerformed
 
+    private void histogram1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_histogram1MouseDragged
+//        List<Float> l = getContext().getSortedHd();
+//        int count = 0;
+//        int count2 = 0;
+//        for (int i = 0; i < l.size(); i++) {
+//            if (l.get(i) <= getContext().getHDinfo().getMaxThreshValue()) {
+//                count++;
+//            }
+//            if (l.get(i) >= getContext().getHDinfo().getMinThreshValue()) {
+//                count2++;
+//            }
+//
+//        }
+//        float percent = count / (float) l.size();
+//        maxThresholdSlider.setValue((int) (percent * 100));
+//
+//        float percent2 = count2 / (float) l.size();
+//        minThreshSlider.setValue(100- (int) (percent2 * 100));
+    }//GEN-LAST:event_histogram1MouseDragged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AriMean;
     private javax.swing.JLabel DifferentFace;
     private javax.swing.JLabel GeoMean;
     private javax.swing.JLabel Max;
+    private javax.swing.JLabel MetricName;
     private javax.swing.JLabel Min;
     private javax.swing.JLabel RootMean;
     private javax.swing.JLabel SeventyFive;
     private javax.swing.JLabel SimilarFace;
     private javax.swing.JLabel Variance;
+    private cz.fidentis.visualisation.histogram.histogramPanel histogram1;
     private javax.swing.JButton jButtonExport;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelAreaName;
     private javax.swing.JLabel labelAreaName1;
+    private javax.swing.JLabel labelAreaName10;
     private javax.swing.JLabel labelAreaName2;
     private javax.swing.JLabel labelAreaName3;
     private javax.swing.JLabel labelAreaName4;

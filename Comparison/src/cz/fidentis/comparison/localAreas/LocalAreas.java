@@ -56,14 +56,10 @@ public class LocalAreas {
         
         List<Float> vertexes = new ArrayList<>();
         List<Float> vertexColors = new ArrayList<>();
-        
-        List<Float> border = new ArrayList<>();
-        List<Float> borderColors = new ArrayList<>();
 
         vertexAreasPoints3D = new ArrayList<>();
 
         int[] faceIndexes;
-        List<Integer> borderIndexes;
         
         for (int i = 0; i < model.getFaces().getFacesVertIdxs().size(); i++) {
             
@@ -89,27 +85,7 @@ public class LocalAreas {
 
                 }
             }
-            
-            borderIndexes = getLines(faceIndexes, areas);
-            if (borderIndexes  != null){
-                for (int j = 0; j < borderIndexes.size(); j++){
-                    int borderIndex  = borderIndexes.get(j);
 
-                    border.add(model.getVerts().get(borderIndex).x);
-                    border.add(model.getVerts().get(borderIndex).y);
-                    border.add(model.getVerts().get(borderIndex).z);
-
-                    border.add(model.getNormals().get(borderIndex).x);
-                    border.add(model.getNormals().get(borderIndex).y);
-                    border.add(model.getNormals().get(borderIndex).z);
-
-                    borderColors.add(0f);
-                    borderColors.add(0f);
-                    borderColors.add(0f);
-                    borderColors.add(1f);
-
-                }
-            }
         }
         float[] vertexesArray = new float[vertexes.size()];
         int i = 0;
@@ -125,7 +101,54 @@ public class LocalAreas {
 
         vertexAreas = vertexesArray;
         vertexColorAreas = vertexColorsArray;
+        // </editor-fold>      
         
+        // <editor-fold desc="Border">
+        this.indexesOfAreas = indexesOfAreas;
+
+        
+        List<Float> border = new ArrayList<>();
+        List<Float> borderColors = new ArrayList<>();
+
+        vertexAreasPoints3D = new ArrayList<>();
+        List<List<Integer>> alreadyAddedLines = new ArrayList<>();
+        
+        for (i = 0; i < model.getFaces().getFacesVertIdxs().size(); i++) {
+            
+            faceIndexes = model.getFaces().getFaceVertIdxs(i);
+            
+            List<Integer> borderIndexes = getLines(faceIndexes, areas);
+            
+            
+            if (borderIndexes  != null){
+                
+                alreadyAddedLines = deleteDuplicates(alreadyAddedLines, borderIndexes);
+
+            }
+        }
+        
+        for (i = 0; i < alreadyAddedLines.size(); i++) {
+            List<Integer> borderIndexes = alreadyAddedLines.get(i);
+
+            for (int j = 0; j < borderIndexes.size()-1; j++){
+                int borderIndex  = borderIndexes.get(j);
+
+                border.add(model.getVerts().get(borderIndex).x);
+                border.add(model.getVerts().get(borderIndex).y);
+                border.add(model.getVerts().get(borderIndex).z);
+
+                border.add(model.getNormals().get(borderIndex).x);
+                border.add(model.getNormals().get(borderIndex).y);
+                border.add(model.getNormals().get(borderIndex).z);
+
+                borderColors.add(0f);
+                borderColors.add(0f);
+                borderColors.add(0f);
+                borderColors.add(1f);
+
+            }
+        }
+
         vertexesArray = new float[border.size()];
         i = 0;
         for (Float f : border) {
@@ -140,10 +163,8 @@ public class LocalAreas {
         
         borderAreas = vertexesArray;
         borderColorAreas = vertexColorsArray;
-        
-        
-        // </editor-fold>        
-        
+        // </editor-fold>      
+
         // <editor-fold desc="Single Points">
         List<Integer> tmp = null;
         vertexes = new ArrayList<>();
@@ -195,9 +216,6 @@ public class LocalAreas {
             vertexAreasPoints3D.add(giftWrapping(indexesOfAreasTemp, model));
         }
         // </editor-fold> 
-    
-        
-    
     }
     
   
@@ -230,8 +248,7 @@ public class LocalAreas {
     public float[] getBorderColor(){
         return borderColorAreas;
     }
-    
-    
+
     public float[] getVertexes(){
         return vertexes;
     }
@@ -273,7 +290,6 @@ public class LocalAreas {
             }
         }
         return null;
-//        return new float[]{0.8667f, 0.7176f, 0.6275f};
     }
     
     private static List<Integer> getIndexes(int[] indexes, Area area, List<Integer> alreadyAssignedIndexes) {
@@ -305,7 +321,6 @@ public class LocalAreas {
         }
         
         return alreadyAssignedIndexes;
-//        return new float[]{0.8667f, 0.7176f, 0.6275f};
     }
     
     private static List<Integer> getLines(int[] indexes, List<Area> areas) {
@@ -330,14 +345,35 @@ public class LocalAreas {
             }
 
             if( k == 1){
-
+                result.add(areas.get(i).index);
+                
                 return result;
             }
         }
-        
-        
+
         return null;
-//        return new float[]{0.8667f, 0.7176f, 0.6275f};
+    }
+    
+    private static List<List<Integer>> deleteDuplicates(List<List<Integer>> alreadyAddedLines, List<Integer> borderIndexes){
+        List<Integer> borderIndexesRotated = new ArrayList<>();
+        borderIndexesRotated.add(borderIndexes.get(1));
+        borderIndexesRotated.add(borderIndexes.get(0));
+        borderIndexesRotated.add(borderIndexes.get(2));
+        int index = -1;
+        for (int i = 0; i < alreadyAddedLines.size(); i++){
+            List<Integer> line = alreadyAddedLines.get(i);
+            if ((line.get(0).equals(borderIndexes.get(0))&&line.get(1).equals(borderIndexes.get(1))&&line.get(2).equals(borderIndexes.get(2))) ||
+                (line.get(1).equals(borderIndexes.get(0))&&line.get(0).equals(borderIndexes.get(1))&&line.get(2).equals(borderIndexes.get(2)))){
+                index = i;
+            }
+        }
+        if (index != -1){
+            alreadyAddedLines.remove(index);
+        } else {
+            alreadyAddedLines.add(borderIndexes);
+        }
+        
+        return alreadyAddedLines;
     }
     
     

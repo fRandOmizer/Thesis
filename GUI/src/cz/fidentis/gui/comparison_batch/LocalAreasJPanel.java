@@ -230,13 +230,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             Vector3f point = LocalAreaLibrary.intersectionWithArea(x, y, viewPort, modelViewMatrix, projectionMatrix, points);
 
             if (point != null){
-                
-                
-                
                 LocalAreaJPanel.SetArea(AreasList.get(localAreas.getIndexes()[i]), 
                         RelativeValues, 
                         pointerBatchComparisonResult.getContext().getHdVisualResults(), 
-                        pointerBatchComparisonResult.getContext().getModels());
+                        pointerBatchComparisonResult.getContext().getModels(),
+                        pointerBatchComparisonResult.getContext().getMetricTypeIndex());
                 SetSelectedArea(localAreas.getIndexes()[i]);
                 isAreaSelected = true;
                 setMouseOnCanvas(true);
