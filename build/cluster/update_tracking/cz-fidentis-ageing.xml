@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.ageing">
-    <module_version install_time="1490022455756" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1490447980260" last="true" origin="installer" specification_version="1.0">
         <file crc="1990188089" name="config/Modules/cz-fidentis-ageing.xml"/>
-        <file crc="3027905235" name="modules/cz-fidentis-ageing.jar"/>
+        <file crc="949535280" name="modules/cz-fidentis-ageing.jar"/>
     </module_version>
 </module>

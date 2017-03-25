@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.comparison">
-    <module_version install_time="1490022452947" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1490447977713" last="true" origin="installer" specification_version="1.0">
         <file crc="3382431250" name="config/Modules/cz-fidentis-comparison.xml"/>
         <file crc="906179289" name="modules/cz-fidentis-comparison.jar"/>
         <file crc="2972908528" name="modules/ext/Jama-1.0.3.jar"/>

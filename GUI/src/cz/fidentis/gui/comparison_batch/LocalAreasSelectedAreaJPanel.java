@@ -7,6 +7,8 @@ package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.hausdorffDistance.ComparisonMetrics;
 import cz.fidentis.comparison.localAreas.Area;
+import static cz.fidentis.processing.comparison.surfaceComparison.SurfaceComparisonProcessing.computeSingleVariation;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,6 +39,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private List<String> modelsName;
     private int metricIndex;
     private List<String> metricName;
+    private HistogramJPanel histogram;
     
     /**
      * Creates new form LocalAreasSelectedPointJPanel
@@ -52,6 +55,12 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         metricName.add("Maximal Distance");
         metricName.add("Variance");
         metricName.add("75 percentil");
+        histogram = new HistogramJPanel();
+        histogram.setSize(this.histogramHolder.getPreferredSize().width, this.histogramHolder.getPreferredSize().height);
+        this.histogramHolder.setLayout(new BorderLayout());
+
+        this.histogramHolder.add(histogram, BorderLayout.CENTER);
+        
     }
     
     public void SetArea(Area area, Boolean relative, ArrayList<ArrayList<Float>> HdVisualResults, List<File> models, int metricIndex){
@@ -70,6 +79,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         faceComparison = calculateFaceComparison(HdVisualResults, area, metricIndex, relative);
         modelsName = filterModelName(models);
         this.metricIndex = metricIndex;
+        histogram.setSize(this.histogramHolder.getWidth(), this.histogramHolder.getHeight());
+        this.histogram.setValues(area.csvValues);
         
         this.labelAreaName.setText("Area "+ area.index+"");
         this.GeoMean.setText(""+ area.geoMean+"");
@@ -123,18 +134,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         List<List<Float>> filteredArays = filterArrays(HdVisualResults, area);
         
         for (int i = 0; i < filteredArays.size(); i++){
-            float average = 0.0f;
-            
-            switch (metricIndex) {
-                case 0: average = metric.rootMeanSqr(filteredArays.get(i), relative); break;
-                case 1: average = metric.aritmeticMean(filteredArays.get(i), relative); break;
-                case 2: average = metric.geometricMean(filteredArays.get(i), relative); break;
-                case 3: average = metric.findMinDistance(filteredArays.get(i), relative); break;
-                case 4: average = metric.findMaxDistance(filteredArays.get(i), relative); break;
-                case 5: average = metric.variance(filteredArays.get(i), relative); break;
-                case 6: average = metric.percentileSeventyFive(filteredArays.get(i), relative); break;
-            }
-
+            float average = computeSingleVariation(filteredArays.get(i), metricIndex, relative);
+  
             averageDistance.add(average);
         }
         
@@ -229,7 +230,16 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         SimilarFace = new javax.swing.JLabel();
         labelAreaName10 = new javax.swing.JLabel();
         MetricName = new javax.swing.JLabel();
-        histogram1 = new cz.fidentis.visualisation.histogram.histogramPanel();
+        histogramHolder = new javax.swing.JPanel();
+        labelAreaName11 = new javax.swing.JLabel();
+
+        setMinimumSize(new java.awt.Dimension(600, 600));
+        setPreferredSize(new java.awt.Dimension(600, 600));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         labelAreaName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(labelAreaName, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName.text")); // NOI18N
@@ -297,22 +307,20 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(MetricName, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.MetricName.text")); // NOI18N
 
-        histogram1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                histogram1MouseDragged(evt);
-            }
-        });
+        histogramHolder.setPreferredSize(new java.awt.Dimension(600, 200));
 
-        javax.swing.GroupLayout histogram1Layout = new javax.swing.GroupLayout(histogram1);
-        histogram1.setLayout(histogram1Layout);
-        histogram1Layout.setHorizontalGroup(
-            histogram1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 324, Short.MAX_VALUE)
+        javax.swing.GroupLayout histogramHolderLayout = new javax.swing.GroupLayout(histogramHolder);
+        histogramHolder.setLayout(histogramHolderLayout);
+        histogramHolderLayout.setHorizontalGroup(
+            histogramHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        histogram1Layout.setVerticalGroup(
-            histogram1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 145, Short.MAX_VALUE)
+        histogramHolderLayout.setVerticalGroup(
+            histogramHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 205, Short.MAX_VALUE)
         );
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelAreaName11, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName11.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -321,6 +329,18 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(labelAreaName9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SimilarFace, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(labelAreaName8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DifferentFace, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(labelAreaName10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(MetricName, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -338,7 +358,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                                         .addComponent(labelAreaName2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(labelAreaName7))
                                     .addComponent(labelPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 386, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(AriMean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -350,64 +370,60 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                                         .addComponent(GeoMean, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(3, 3, 3)
-                                        .addComponent(point, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(point, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(histogramHolder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE))
                         .addGap(12, 12, 12)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelAreaName9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(SimilarFace, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(labelAreaName8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(DifferentFace, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelAreaName10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(MetricName, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(histogram1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelAreaName11, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelAreaName)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelAreaName2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelAreaName1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelAreaName3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelAreaName4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelAreaName5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelAreaName6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelAreaName7))
+                        .addContainerGap()
+                        .addComponent(labelAreaName)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelAreaName2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelAreaName1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelAreaName3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelAreaName4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelAreaName5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelAreaName6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelAreaName7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(GeoMean)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(AriMean)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(RootMean)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Max)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Min)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SeventyFive)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Variance))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(GeoMean)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(AriMean)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(RootMean)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Max)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Min)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SeventyFive)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Variance)))
-                .addGap(29, 29, 29)
-                .addComponent(histogram1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addGap(72, 72, 72)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addComponent(labelAreaName11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(histogramHolder, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(MetricName)
@@ -427,11 +443,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(point))
-                .addGap(15, 15, 15))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -471,25 +483,13 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonExportActionPerformed
 
-    private void histogram1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_histogram1MouseDragged
-//        List<Float> l = getContext().getSortedHd();
-//        int count = 0;
-//        int count2 = 0;
-//        for (int i = 0; i < l.size(); i++) {
-//            if (l.get(i) <= getContext().getHDinfo().getMaxThreshValue()) {
-//                count++;
-//            }
-//            if (l.get(i) >= getContext().getHDinfo().getMinThreshValue()) {
-//                count2++;
-//            }
-//
-//        }
-//        float percent = count / (float) l.size();
-//        maxThresholdSlider.setValue((int) (percent * 100));
-//
-//        float percent2 = count2 / (float) l.size();
-//        minThreshSlider.setValue(100- (int) (percent2 * 100));
-    }//GEN-LAST:event_histogram1MouseDragged
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        if (this.histogram != null && area != null){
+            histogram.setSize(this.histogramHolder.getWidth(), this.histogramHolder.getHeight());
+            this.histogram.setValues(area.csvValues);
+        }
+        
+    }//GEN-LAST:event_formComponentResized
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -503,12 +503,13 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel SeventyFive;
     private javax.swing.JLabel SimilarFace;
     private javax.swing.JLabel Variance;
-    private cz.fidentis.visualisation.histogram.histogramPanel histogram1;
+    private javax.swing.JPanel histogramHolder;
     private javax.swing.JButton jButtonExport;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelAreaName;
     private javax.swing.JLabel labelAreaName1;
     private javax.swing.JLabel labelAreaName10;
+    private javax.swing.JLabel labelAreaName11;
     private javax.swing.JLabel labelAreaName2;
     private javax.swing.JLabel labelAreaName3;
     private javax.swing.JLabel labelAreaName4;
