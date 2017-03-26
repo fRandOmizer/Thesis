@@ -12,6 +12,7 @@ import cz.fidentis.comparison.localAreas.LocalAreas;
 import cz.fidentis.comparison.localAreas.VertexArea;
 
 import cz.fidentis.model.Model;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
@@ -158,6 +159,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         LocalAreaFrame.setMaximumSize(new Dimension(100, 100));
 
         LocalAreaJPanel = new LocalAreasSelectedAreaJPanel();
+        LocalAreaJPanel.setPointerLocalAreasJPanel(this);
         
         LocalAreaFrame.add(LocalAreaJPanel);
         
@@ -235,6 +237,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                         pointerBatchComparisonResult.getContext().getHdVisualResults(), 
                         pointerBatchComparisonResult.getContext().getModels(),
                         pointerBatchComparisonResult.getContext().getMetricTypeIndex());
+                
                 SetSelectedArea(localAreas.getIndexes()[i]);
                 isAreaSelected = true;
                 setMouseOnCanvas(true);
@@ -301,6 +304,21 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
     }
     
+    public void setColorForArea(Color color){
+
+        List<Float> colorArray = new ArrayList<>();
+        
+        colorArray.add(color.getRed()/255f);
+        colorArray.add(color.getGreen()/255f);
+        colorArray.add(color.getBlue()/255f);
+
+        Area tempArea = AreasList.get(SelectedAreas[0]);
+        tempArea.color = colorArray;
+        AreasList.set(SelectedAreas[0], tempArea);
+
+        RenderSelectedAreas();
+    }
+    
     private void RenderSelectedAreas(){
         List<Area> tempList = new ArrayList<>();
         for (int i = 0; i < SelectedAreas.length; i++){
@@ -309,6 +327,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
         
         pointerBatchComparisonResult.SetLocalAreaRender(SelectedAreas, tempList, model);
+
     }
     
     private void SetSelectedArea(int index){

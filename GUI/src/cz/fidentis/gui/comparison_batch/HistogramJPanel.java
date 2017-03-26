@@ -21,6 +21,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
 
     private List<Float> values;
     private int width, height;
+    private Color color;
     
     /**
      * Creates new form HistogramJPanel
@@ -29,6 +30,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
         initComponents();
         this.setBackground(Color.WHITE);
         this.values = new ArrayList<>();
+        this.color = Color.WHITE;
     }
     
     public void setSize(int width, int height){
@@ -36,6 +38,12 @@ public class HistogramJPanel extends javax.swing.JPanel {
         this.height = height+10;
         this.setPreferredSize(new Dimension(width, height));
     }
+    
+    public void setColor(Color color){
+        this.color = color;
+        this.repaint();
+    }
+            
     
     public void setValues(List<Float> values){
         this.values = selectionSort(values);
@@ -72,13 +80,13 @@ public class HistogramJPanel extends javax.swing.JPanel {
 
             int heightRec = height - 35 - y;
             int widthRec = deltaX;
-
-            g.drawRect(x,y,widthRec,heightRec);
             
+            g.setColor(color);
+            g.fillRect(x,y,widthRec,heightRec);
+            
+            g.setColor(Color.black);
+            g.drawRect(x,y,widthRec,heightRec);
         }
-
-
-        
     }
     
     

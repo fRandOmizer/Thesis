@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Saturday, March 25, 2017 2:19:44 PM CET
+>Log Session: Sunday, March 26, 2017 9:27:39 PM CEST
 >System Info: 
   Product Version         = Fidentis
   Operating System        = Windows 10 version 10.0 running on amd64
@@ -109,9 +109,9 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	cz.fidentis.controller [1.0 170323]
 	cz.fidentis.merging [1.0 170218]
 	cz.fidentis.processing [1.0 170323]
-	cz.fidentis.renderer [1.0 170323]
+	cz.fidentis.renderer [1.0 170326]
 	cz.fidentis.ageing [1.0 170323]
-	cz.fidentis.gui [1.0 170325]
+	cz.fidentis.gui [1.0 170326]
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
 INFO [org.netbeans.core.network.proxy.windows.WindowsNetworkProxy]: Windows system proxy resolver: auto detect
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy reloading succeeded.
@@ -136,11 +136,12 @@ Input arguments:
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 126.0MB maximum 1790.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
-Garbage collector: PS Scavenge (Collections=4 Total time spent=0s)
+Garbage collector: PS Scavenge (Collections=6 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=1 Total time spent=0s)
-Classes: loaded=4961 total loaded=4961 unloaded 0
+Classes: loaded=4982 total loaded=4982 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,443,035,648
 INFO [null]: Total physical memory 8,443,035,648
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener-separatorAfter.instance and Menu/File/cz-fidentis-gui-actions-OpenProject-separatorAfter.instance
 WARNING [org.openide.filesystems.Ordering]: Found same position 75 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener.shadow and Menu/File/cz-fidentis-gui-actions-OpenProject.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Options/ marked with the position attribute: [cz-fidentis-gui-actions-Textures.shadow], but some are: [cz-fidentis-gui-actions-Background.shadow]
+WARNING [org.netbeans.modules.progress.spi.InternalHandle]: Cannot switch to silent mode when not running at org.netbeans.core.ui.warmup.MenuWarmUpTask$NbWindowsAdapter$1HandleBridge.run(MenuWarmUpTask.java:269)
