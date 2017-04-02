@@ -148,7 +148,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
     
     private void init(){
-        model = pointerBatchComparisonResult.GetCurrentModel();
+        model = pointerBatchComparisonResult.GetCurrentModel(); 
         BinTree thres = new BinTree(LocalAreas);
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());

@@ -5,11 +5,13 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
     private List<Float> values;
     private int width, height;
     private Color color;
+    private int selectedIndex;
     
     /**
      * Creates new form HistogramJPanel
@@ -31,6 +34,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
         this.setBackground(Color.WHITE);
         this.values = new ArrayList<>();
         this.color = Color.WHITE;
+        this.selectedIndex = -1;
     }
     
     public void setSize(int width, int height){
@@ -53,12 +57,24 @@ public class HistogramJPanel extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);  
         
-        int textPosX = 10;
+          
+        
+        int deltaX = (int)Math.ceil((this.width-40) / values.size());
+        if (deltaX <= 3){
+            this.values = clusterData(values, (this.width-40));
+        }
+        deltaX = (int)Math.ceil((this.width-40) / values.size());
+        
+        float maximal = (float) Math.ceil(values.get(0));
+        float minimal = Math.round(values.get(values.size()-1))-1f; 
+        
+        int deltaY = (int)Math.round(Math.ceil((this.height-70) / (maximal-minimal)));
+        
+        int textPosX = 7;
         int textPosY1 = 35;
         int textPosY2 = height - 35;
 
-        float maximal = (float) Math.ceil(values.get(0));
-        float minimal = Math.round(values.get(values.size()-1))-1f;
+             
         
         if(g instanceof Graphics2D)
         {
@@ -68,24 +84,34 @@ public class HistogramJPanel extends javax.swing.JPanel {
 
             g2.drawString(""+maximal,textPosX,textPosY1); 
             g2.drawString(""+minimal,textPosX,textPosY2); 
-        }
-        
-        int deltaX = (int)Math.ceil((this.width-40) / values.size());
-        int deltaY = (int)Math.round(Math.ceil((this.height) / values.get(0)));
-        
-        for (int i = 0; i < values.size(); i++){
-            float value = values.get(values.size() - i -1);
-            int x = 30 + deltaX*i;
-            int y = 35+(int)Math.round(Math.ceil((values.get(0) - value)*deltaY));
+            
+            if (this.selectedIndex != -1){
+                g2.drawString(""+values.get(values.size() - this.selectedIndex - 1), 30 + deltaX * this.selectedIndex, textPosY1); 
+            }
+            
+            for (int i = 0; i < values.size(); i++){
+                float value = values.get(values.size() - i -1);
+                int x = 30 + deltaX*i;
+                int y = 35+(int)Math.round(Math.ceil((values.get(0) - value)*deltaY));
 
-            int heightRec = height - 35 - y;
-            int widthRec = deltaX;
-            
-            g.setColor(color);
-            g.fillRect(x,y,widthRec,heightRec);
-            
-            g.setColor(Color.black);
-            g.drawRect(x,y,widthRec,heightRec);
+                int heightRec = height - 35 - y;
+                int widthRec = deltaX;
+
+                g.setColor(color);
+                g.fillRect(x,y,widthRec,heightRec);
+                
+                if (this.selectedIndex == i){
+                    float thickness = 2;
+                    Stroke oldStroke = g2.getStroke();
+                    g2.setStroke(new BasicStroke(thickness));
+                    g.setColor(Color.black);
+                    g.drawRect(x,y,widthRec,heightRec);
+                    g2.setStroke(oldStroke);
+                } else {
+                    g.setColor(Color.black);
+                    g.drawRect(x,y,widthRec,heightRec);
+                }
+            }
         }
     }
     
@@ -102,6 +128,47 @@ public class HistogramJPanel extends javax.swing.JPanel {
         } 
         return array;
     }
+    
+    private int getChoosenIndex(int mouseX, int mouseY){
+        int result = -1;
+
+        int deltaX = (int)Math.ceil((this.width-40) / values.size());
+
+        for (int i = 0; i < values.size(); i++){
+            int x = 30 + deltaX*i;
+            int y = 35;
+
+            int heightRec = height - 35 - y;
+            int widthRec = deltaX;
+            
+            if (mouseX >= x && mouseX <= x+widthRec && mouseY >= y && mouseY <= y+heightRec){
+                result = i;
+            }
+        }
+
+        return result;
+    }
+    
+    private static List<Float> clusterData(List<Float> values, int widthForHistogram){
+        List<Float> result = new ArrayList<>();
+        
+        int clusterSize = (int)Math.ceil(values.size()/100);
+
+        int length = (int)Math.ceil(values.size() / clusterSize); 
+        
+        for (int i = 0; i < length; i++){
+            float value = 0f;
+            for (int j = 0; j < clusterSize; j++){
+                if ((i*clusterSize) + j < values.size()){
+                    value += values.get((i*clusterSize) + j);
+                }
+            }
+            value = value / clusterSize;
+            result.add(value);
+        }
+        
+        return result;
+    }
    
 
     /**
@@ -112,6 +179,12 @@ public class HistogramJPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -124,6 +197,13 @@ public class HistogramJPanel extends javax.swing.JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if (values != null){
+            this.selectedIndex = getChoosenIndex(evt.getX(), evt.getY());
+            this.repaint();
+        }
+    }//GEN-LAST:event_formMouseMoved
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

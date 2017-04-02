@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.processing">
-    <module_version install_time="1490556454079" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1491158134558" last="true" origin="installer" specification_version="1.0">
         <file crc="1170755175" name="config/Modules/cz-fidentis-processing.xml"/>
-        <file crc="1792877856" name="modules/cz-fidentis-processing.jar"/>
+        <file crc="2622825719" name="modules/cz-fidentis-processing.jar"/>
     </module_version>
 </module>

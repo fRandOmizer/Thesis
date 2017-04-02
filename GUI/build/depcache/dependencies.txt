@@ -3524,6 +3524,10 @@ java.awt.Image
 java.awt.Graphics2D
 javax.swing.JOptionPane
 cz.fidentis.gui.actions.importfromimage.ImageFpCanvas$CanvasMouseListener
+||:cz.fidentis.gui.comparison_batch.HistogramJPanel$1
+cz.fidentis.gui.comparison_batch.HistogramJPanel$1
+java.awt.event.MouseMotionAdapter
+cz.fidentis.gui.comparison_batch.HistogramJPanel
 ||:cz.fidentis.gui.actions.SaveAll
 java.lang.Object
 cz.fidentis.gui.actions.SaveAll
@@ -5844,7 +5848,9 @@ java.lang.StringBuilder
 java.awt.Color
 java.awt.Graphics
 java.util.ArrayList
+java.awt.event.MouseEvent
 java.util.List
+java.awt.BasicStroke
 javax.swing.GroupLayout$ParallelGroup
 java.awt.RenderingHints$Key
 javax.swing.JPanel
@@ -5852,6 +5858,7 @@ java.awt.RenderingHints
 java.lang.Float
 javax.swing.GroupLayout$Alignment
 javax.swing.GroupLayout
+cz.fidentis.gui.comparison_batch.HistogramJPanel$1
 java.lang.Math
 java.lang.Short
 java.awt.Dimension

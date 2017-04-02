@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Sunday, March 26, 2017 8:53:31 PM CEST
+>Log Session: Sunday, April 2, 2017 8:32:36 PM CEST
 >System Info: 
   Product Version         = Fidentis
   Operating System        = Windows 10 version 10.0 running on amd64
@@ -103,15 +103,15 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	cz.fidentis.model [1.0 170218]
 	cz.fidentis.featurepoints [1.0 170218]
 	cz.fidentis.utils [1.0 170218]
-	cz.fidentis.comparison [1.0 170320]
-	cz.fidentis.visualisation [1.0 170320]
+	cz.fidentis.comparison [1.0 170328]
+	cz.fidentis.visualisation [1.0 170328]
 	cz.fidentis.composite [1.0 170218]
-	cz.fidentis.controller [1.0 170323]
+	cz.fidentis.controller [1.0 170328]
 	cz.fidentis.merging [1.0 170218]
-	cz.fidentis.processing [1.0 170323]
-	cz.fidentis.renderer [1.0 170326]
-	cz.fidentis.ageing [1.0 170323]
-	cz.fidentis.gui [1.0 170326]
+	cz.fidentis.processing [1.0 170328]
+	cz.fidentis.renderer [1.0 170328]
+	cz.fidentis.ageing [1.0 170328]
+	cz.fidentis.gui [1.0 170402]
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
 INFO [org.netbeans.core.network.proxy.windows.WindowsNetworkProxy]: Windows system proxy resolver: auto detect
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy reloading succeeded.
@@ -123,8 +123,6 @@ Diagnostic information
 Input arguments:
 	-Dnetbeans.logger.console=true
 	-ea
-	-Xdebug
-	-Xrunjdwp:transport=dt_socket,suspend=y,server=n,address=127.0.0.1:36267
 	-Djdk.home=C:\Program Files\Java\jdk1.8.0_102
 	-splash:C:\Users\zanri\Desktop\Thesis\build\testuserdir\var\cache\splash.png
 	-Dnetbeans.home=C:\Program Files\NetBeans 8.1\platform
@@ -138,15 +136,14 @@ Input arguments:
 Compiler: HotSpot 64-Bit Tiered Compilers
 Heap memory usage: initial 126.0MB maximum 1790.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
-Garbage collector: PS Scavenge (Collections=5 Total time spent=0s)
-Garbage collector: PS MarkSweep (Collections=1 Total time spent=0s)
-Classes: loaded=4981 total loaded=4981 unloaded 0
+Garbage collector: PS Scavenge (Collections=7 Total time spent=0s)
+Garbage collector: PS MarkSweep (Collections=2 Total time spent=0s)
+Classes: loaded=5260 total loaded=5260 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,443,035,648
 INFO [null]: Total physical memory 8,443,035,648
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener-separatorAfter.instance and Menu/File/cz-fidentis-gui-actions-OpenProject-separatorAfter.instance
 WARNING [org.openide.filesystems.Ordering]: Found same position 75 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener.shadow and Menu/File/cz-fidentis-gui-actions-OpenProject.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Options/ marked with the position attribute: [cz-fidentis-gui-actions-Textures.shadow], but some are: [cz-fidentis-gui-actions-Background.shadow]
-INFO [org.netbeans.modules.sampler.InternalSampler]: Slowness detector disabled - running in debug mode
 java.lang.reflect.InvocationTargetException
 	at java.awt.EventQueue.invokeAndWait(EventQueue.java:1321)
 	at java.awt.EventQueue.invokeAndWait(EventQueue.java:1296)
@@ -260,31 +257,13 @@ Caused by: java.lang.ArrayIndexOutOfBoundsException
 	at org.netbeans.swing.tabcontrol.TabbedContainer.paint(TabbedContainer.java:994)
 	at javax.swing.JComponent.paintChildren(JComponent.java:889)
 	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JLayeredPane.paint(JLayeredPane.java:586)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at org.netbeans.core.windows.view.ui.MainWindow$1.paint(MainWindow.java:189)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
-	at javax.swing.JLayeredPane.paint(JLayeredPane.java:586)
-	at javax.swing.JComponent.paintChildren(JComponent.java:889)
-	at javax.swing.JComponent.paint(JComponent.java:1065)
 	at javax.swing.JComponent.paintToOffscreen(JComponent.java:5210)
 	at javax.swing.RepaintManager$PaintManager.paintDoubleBuffered(RepaintManager.java:1579)
 	at javax.swing.RepaintManager$PaintManager.paint(RepaintManager.java:1502)
 	at javax.swing.RepaintManager.paint(RepaintManager.java:1272)
 	at javax.swing.JComponent._paintImmediately(JComponent.java:5158)
 	at javax.swing.JComponent.paintImmediately(JComponent.java:4969)
+	at javax.swing.JComponent.paintImmediately(JComponent.java:4950)
 	at javax.swing.RepaintManager$4.run(RepaintManager.java:831)
 	at javax.swing.RepaintManager$4.run(RepaintManager.java:814)
 	at java.security.AccessController.doPrivileged(Native Method)
@@ -307,5 +286,3 @@ Caused by: java.lang.ArrayIndexOutOfBoundsException
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
-WARNING [org.netbeans.core.TimableEventQueue]: too much time in AWT thread null
-WARNING [null]: Last record repeated again.

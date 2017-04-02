@@ -53,7 +53,7 @@
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="labelAreaName6" alignment="0" max="32767" attributes="0"/>
                                       <Component id="labelAreaName5" alignment="0" max="32767" attributes="0"/>
                                       <Component id="labelAreaName4" alignment="0" max="32767" attributes="0"/>
@@ -62,9 +62,9 @@
                                       <Component id="labelAreaName2" alignment="0" min="-2" pref="106" max="-2" attributes="0"/>
                                       <Component id="labelAreaName7" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="labelPoint" alignment="0" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <Component id="labelPoint" min="-2" pref="289" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="130" max="32767" attributes="0"/>
+                              <EmptySpace pref="39" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="point" alignment="1" min="-2" pref="225" max="-2" attributes="0"/>
                                   <Group type="103" alignment="1" groupAlignment="0" attributes="0">

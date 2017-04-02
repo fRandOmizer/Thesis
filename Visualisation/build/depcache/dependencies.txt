@@ -94,10 +94,6 @@ javax.swing.GroupLayout$ParallelGroup
 java.awt.Font
 java.awt.Color
 java.awt.Point
-||:cz.fidentis.visualisation.surfaceComparison.VisualizationType
-[Lcz.fidentis.visualisation.surfaceComparison.VisualizationType;
-java.lang.Enum
-cz.fidentis.visualisation.surfaceComparison.VisualizationType
 ||:cz.fidentis.visualisation.ComparisonListenerInfo
 cz.fidentis.featurepoints.FacialPoint
 java.util.List
@@ -110,6 +106,10 @@ javax.vecmath.Vector3f
 java.lang.Object
 java.lang.Integer
 cz.fidentis.featurepoints.FeaturePointsUniverse
+||:cz.fidentis.visualisation.surfaceComparison.VisualizationType
+[Lcz.fidentis.visualisation.surfaceComparison.VisualizationType;
+java.lang.Enum
+cz.fidentis.visualisation.surfaceComparison.VisualizationType
 ||:cz.fidentis.visualisation.procrustes.PApaintingInfo
 java.lang.Object
 cz.fidentis.visualisation.procrustes.PApaintingInfo

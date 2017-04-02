@@ -325,6 +325,10 @@ public class LocalAreasRender{
         return matrix;
     }
 
+    void changeModel(Model model) {
+        localAreas.updateModel(model);
+    }
+
     
 
     

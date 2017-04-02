@@ -29,14 +29,21 @@ public class LocalAreas {
     private List<List<Point3D>> vertexAreasPoints3D;
     private List<Vector4f> allAreasPoints;
     private int[] indexesOfAreas;
+    private List<Area> areas;
 
     public LocalAreas(){
         
     }
     
+    public void updateModel(Model model){
+        SetAreas(indexesOfAreas, areas, model);
+    }
+    
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
+        
+        
         // <editor-fold desc="Point positions">
-
+        this.areas = areas;
         allAreasPoints = new ArrayList<>();
         
         if (areas.size()==1){

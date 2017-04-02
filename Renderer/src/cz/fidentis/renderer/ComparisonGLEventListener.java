@@ -1662,6 +1662,9 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         if (info.getModels().size() == 2) {
             sampleModels(info.getModels());
         }
+        if (localAreaRender.IsSetUp()){
+            localAreaRender.changeModel(model);
+        }
 
     }
 
