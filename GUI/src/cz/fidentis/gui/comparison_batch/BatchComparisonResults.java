@@ -2415,6 +2415,10 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(areasIndexes, area, model);
     }
     
+    public LocalAreasJPanel getLocalAreasJPanel(){
+        return this.localAreasJPanel;
+    }
+    
     public ComparisonGLEventListener getRenderer(){
         return GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener();
     }

@@ -135,7 +135,6 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     private ComparisonListenerInfo info;
     private LocalAreasRender localAreaRender;
     
-
     private GLUT glut = new GLUT();
     private int[] viewport = new int[4];
     private double[] modelViewMatrix = new double[16];
@@ -1662,10 +1661,6 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         if (info.getModels().size() == 2) {
             sampleModels(info.getModels());
         }
-        if (localAreaRender.IsSetUp()){
-            localAreaRender.changeModel(model);
-        }
-
     }
 
     public void addModel(Model model) {

@@ -34,11 +34,7 @@ public class LocalAreas {
     public LocalAreas(){
         
     }
-    
-    public void updateModel(Model model){
-        SetAreas(indexesOfAreas, areas, model);
-    }
-    
+
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
         
         

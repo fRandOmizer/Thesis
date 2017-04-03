@@ -385,17 +385,36 @@ public final class NavigatorTopComponent extends TopComponent {
                         ModelLoader loader = new ModelLoader();
                         Model model = loader.loadModel(file, true, true);
                         listener.setModels(model);
+                        
+                        if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel() != null){
+                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isAreasSet()){
+                                GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(model);
+                            }
+                            
+                        }
                     }
                     if(previousNodeText.equals(strings.getString("tree.node.registeredModels"))) {
                         File file = batchComparison.getRegistrationResults().get(lastNodeIndex);
                         ModelLoader loader = new ModelLoader();
                         Model model = loader.loadModel(file, true, true);
                         listener.setModels(model);
+                        
                         listener.setFacialPoints(batchComparison.getFacialPoints(model.getName()));
+                        
+                        if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel()!= null){
+                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isAreasSet()){
+                                GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(model);
+                            }
+                        }
                     }
                     if(previousNodeText.equals(strings.getString("tree.node.averageModel"))) {
                         if(batchComparison.getAverageFace() == null) listener.setModels(batchComparison.getAverageFace());
                         else listener.setModels(batchComparison.getAverageFace());
+                        if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel()!= null){
+                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isAreasSet()){
+                                GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(batchComparison.getAverageFace());
+                            }
+                        }
                     }
                     if(path.getLastPathComponent().toString().equals(strings.getString("tree.node.results"))) {
                         if(batchComparison.getComparisonMethod() == ComparisonMethod.PROCRUSTES) {
@@ -405,6 +424,7 @@ public final class NavigatorTopComponent extends TopComponent {
                             listener.drawHD(true);
                         }
                     }
+                    
                     break;
                 case "2 faces comparison":
                     project.setSelectedPart(2);

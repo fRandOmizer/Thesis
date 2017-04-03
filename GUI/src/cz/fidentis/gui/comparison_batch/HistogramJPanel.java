@@ -57,62 +57,64 @@ public class HistogramJPanel extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);  
         
-          
-        
-        int deltaX = (int)Math.ceil((this.width-40) / values.size());
-        if (deltaX <= 3){
-            this.values = clusterData(values, (this.width-40));
-        }
-        deltaX = (int)Math.ceil((this.width-40) / values.size());
-        
-        float maximal = (float) Math.ceil(values.get(0));
-        float minimal = Math.round(values.get(values.size()-1))-1f; 
-        
-        int deltaY = (int)Math.round(Math.ceil((this.height-70) / (maximal-minimal)));
-        
-        int textPosX = 7;
-        int textPosY1 = 35;
-        int textPosY2 = height - 35;
-
-             
-        
-        if(g instanceof Graphics2D)
-        {
-            Graphics2D g2 = (Graphics2D)g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                RenderingHints.VALUE_ANTIALIAS_ON);
-
-            g2.drawString(""+maximal,textPosX,textPosY1); 
-            g2.drawString(""+minimal,textPosX,textPosY2); 
-            
-            if (this.selectedIndex != -1){
-                g2.drawString(""+values.get(values.size() - this.selectedIndex - 1), 30 + deltaX * this.selectedIndex, textPosY1); 
+        if (values.size() > 0)  {
+            int deltaX = (int)Math.ceil((this.width-40) / values.size());
+            if (deltaX <= 3){
+                this.values = clusterData(values, (this.width-40));
             }
-            
-            for (int i = 0; i < values.size(); i++){
-                float value = values.get(values.size() - i -1);
-                int x = 30 + deltaX*i;
-                int y = 35+(int)Math.round(Math.ceil((values.get(0) - value)*deltaY));
+            deltaX = (int)Math.ceil((this.width-40) / values.size());
 
-                int heightRec = height - 35 - y;
-                int widthRec = deltaX;
+            float maximal = (float) Math.ceil(values.get(0));
+            float minimal = Math.round(values.get(values.size()-1))-1f; 
 
-                g.setColor(color);
-                g.fillRect(x,y,widthRec,heightRec);
-                
-                if (this.selectedIndex == i){
-                    float thickness = 2;
-                    Stroke oldStroke = g2.getStroke();
-                    g2.setStroke(new BasicStroke(thickness));
-                    g.setColor(Color.black);
-                    g.drawRect(x,y,widthRec,heightRec);
-                    g2.setStroke(oldStroke);
-                } else {
-                    g.setColor(Color.black);
-                    g.drawRect(x,y,widthRec,heightRec);
+            int deltaY = (int)Math.round(Math.ceil((this.height-70) / (maximal-minimal)));
+
+            int textPosX = 7;
+            int textPosY1 = 35;
+            int textPosY2 = height - 35;
+
+
+
+            if(g instanceof Graphics2D)
+            {
+                Graphics2D g2 = (Graphics2D)g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.drawString(""+maximal,textPosX,textPosY1); 
+                g2.drawString(""+minimal,textPosX,textPosY2); 
+
+                if (this.selectedIndex != -1){
+                    g2.drawString(""+values.get(values.size() - this.selectedIndex - 1), 30 + deltaX * this.selectedIndex, textPosY1); 
+                }
+
+                for (int i = 0; i < values.size(); i++){
+                    float value = values.get(values.size() - i -1);
+                    int x = 30 + deltaX*i;
+                    int y = 35+(int)Math.round(Math.ceil((values.get(0) - value)*deltaY));
+
+                    int heightRec = height - 35 - y;
+                    int widthRec = deltaX;
+
+                    g.setColor(color);
+                    g.fillRect(x,y,widthRec,heightRec);
+
+                    if (this.selectedIndex == i){
+                        float thickness = 2;
+                        Stroke oldStroke = g2.getStroke();
+                        g2.setStroke(new BasicStroke(thickness));
+                        g.setColor(Color.black);
+                        g.drawRect(x,y,widthRec,heightRec);
+                        g2.setStroke(oldStroke);
+                    } else {
+                        g.setColor(Color.black);
+                        g.drawRect(x,y,widthRec,heightRec);
+                    }
                 }
             }
         }
+        
+        
     }
     
     

@@ -5,6 +5,7 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
+import cz.fidentis.comparison.icp.KdTreeIndexed;
 import cz.fidentis.comparison.localAreas.Area;
 import cz.fidentis.comparison.localAreas.BinTree;
 import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
@@ -98,11 +99,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private Double min;
     private Double max;
     private List<Area> AreasList;
+    private List<Area> OriginalAreasList;
     private int SelectedAreas[];
     private Boolean RelativeValues;
     private ArrayList<Float> LocalAreas;
     private VertexArea area;
     private Model model;
+    private Model initialModel;
     private boolean isInicialized;
     private boolean isAnyAreaDrawn;
     private boolean isAreaSelected;
@@ -113,6 +116,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private Vector2d mousePosition; 
     private boolean isWorkerRunning;
     private boolean isPointSelected;
+    private boolean isAreasSet;
     private Vector4f choosenPoint;
     
     
@@ -126,6 +130,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         BottomTresh = 0.0;
         TopTresh = 0.0;
         AreasList = new ArrayList<>();
+        OriginalAreasList = new ArrayList<>();
         SelectedAreas = new int[10];
         RelativeValues = true;
         LocalAreas = null;
@@ -149,6 +154,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     
     private void init(){
         model = pointerBatchComparisonResult.GetCurrentModel(); 
+        initialModel = pointerBatchComparisonResult.GetCurrentModel(); 
         BinTree thres = new BinTree(LocalAreas);
         area = new VertexArea(model, thres);
         area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
@@ -164,7 +170,34 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         LocalAreaFrame.add(LocalAreaJPanel);
         
         LocalAreaFrame.pack();
+        isAreasSet = false;
         
+    }
+    
+    public void updateModel(Model model){
+        if (!this.isVisible()){
+            return;
+        }
+        
+        KdTreeIndexed indexer = new KdTreeIndexed(model.getVerts());
+        List<Area> tempAreaList = new ArrayList<>();
+        for (int i = 0; i < OriginalAreasList.size(); i++){
+            
+            Area tempArea = OriginalAreasList.get(i);
+            List<Integer> tempVertices = new ArrayList<>();
+            for (int j = 0; j < tempArea.vertices.size(); j++){
+                int areaVertexIndex = tempArea.vertices.get(j);
+                int index = indexer.nearestIndex(this.initialModel.getVerts().get(areaVertexIndex));
+                tempVertices.add(index);
+            }
+            Area deepCopyArea = deepCopy(tempArea);
+            deepCopyArea.vertices = tempVertices;
+            tempAreaList.add(deepCopyArea);
+        }  
+        this.model = model;
+        this.AreasList = tempAreaList;
+        
+        RenderSelectedAreas();
     }
     
     public void LoadValues(float min, float max) {
@@ -178,6 +211,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         isInicialized = true;
         
     }
+    
+    public boolean isAreasSet(){
+        return isAreasSet;
+    }
 
     public void setPointerViewerPanel_Batch(ViewerPanel_Batch pointer){
         this.pointerViewerPanel_Batch = pointer;
@@ -189,6 +226,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     
     public void SetList(List<Area> areasList){
         AreasList = areasList;
+        OriginalAreasList = areasList;
         DefaultListModel listModel = new DefaultListModel();
         if (areasList.size()>0){
             for (Area item : areasList){
@@ -200,8 +238,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             listModel.addElement("No Area was found!");
         }
         AreasJList.setModel(listModel);
+        this.isAreasSet = true;
     }
-    
+
     public void setMouseClickPosition(double x, double y){
         if (LocalAreaFrame == null){
             return;
@@ -286,10 +325,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
     
     public void drawHooveredPoint(){
-        
-//        SelectedAreas = new int[AreasJList.getSelectedIndices().length];
-//        SelectedAreas = AreasJList.getSelectedIndices();
-//        Area area = AreasList.get(SelectedAreas[0]);
         List<Vector4f> points = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
@@ -342,6 +377,24 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         if (AreasJList.getSelectedIndices().length>0){
              isAnyAreaDrawn = true;
         }
+    }
+    
+    private static Area deepCopy(Area area){
+        Area result = new Area();
+        
+        result.ariMean = area.ariMean;
+        result.color = area.color;
+        result.csvValues = area.csvValues;
+        result.geoMean = area.geoMean;
+        result.index = area.index;
+        result.max = area.max;
+        result.min = area.min;
+        result.percentileSevFiv = area.percentileSevFiv;
+        result.rootMean = area.rootMean;
+        result.variance = area.variance;
+        result.vertices = area.vertices;
+
+        return result;
     }
 
     /**
