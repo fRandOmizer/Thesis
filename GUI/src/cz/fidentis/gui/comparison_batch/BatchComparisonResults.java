@@ -2419,6 +2419,10 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         return this.localAreasJPanel;
     }
     
+    public boolean isVisibleLocalArea(){
+        return this.LocalAreasFrame.isVisible();
+    }
+    
     public ComparisonGLEventListener getRenderer(){
         return GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener();
     }
