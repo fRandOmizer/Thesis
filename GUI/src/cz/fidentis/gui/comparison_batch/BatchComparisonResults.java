@@ -2366,12 +2366,16 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         if (LocalAreasFrame.isVisible()){
             LocalAreasFrame.setVisible(false);
             GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
+           
+            localAreasJPanel.isVisible(false);
+            
         } else {
             LocalAreasFrame.setVisible(true);
             LocalAreasFrame.setAlwaysOnTop(true);
             if (!localAreasJPanel.isInitialized()){
                 localAreasJPanel.LoadValues(histogram1.getMin(), histogram1.getMax());
             }
+            localAreasJPanel.isVisible(true);
         }
     }//GEN-LAST:event_jButton13ActionPerformed
 

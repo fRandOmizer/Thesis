@@ -110,7 +110,6 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     
     public void setLocalAreasJPanel(LocalAreasJPanel localAreasJPanel){
         this.pointer = localAreasJPanel;
-        this.pointer.setPointerViewerPanel_Batch(this);
     }
 
     public void setResultButtonVisible(boolean b) {

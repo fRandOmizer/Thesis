@@ -49,3 +49,10 @@ Temporary Items
 /Utils/build/
 /Ageing/build/
 /Processing/build/
+/Libraries/build/
+/opencv/build/
+/Comparison/build/
+/Visualisation/build/
+/Controller/build/
+/Renderer/build/
+/GUI/build/

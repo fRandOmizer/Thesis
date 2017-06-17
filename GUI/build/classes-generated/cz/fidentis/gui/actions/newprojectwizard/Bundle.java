@@ -9,5 +9,5 @@ class Bundle {
     static String Open_NewProject_Wizard() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "Open NewProject Wizard");
     }
-    private void Bundle() {}
+    private Bundle() {}
 }

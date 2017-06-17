@@ -9,5 +9,5 @@ class Bundle {
     static String CTL_LandmarkDescriptionAction() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_LandmarkDescriptionAction");
     }
-    private void Bundle() {}
+    private Bundle() {}
 }

@@ -65,5 +65,5 @@ class Bundle {
     static String HINT_ProjectsTopComponent() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "HINT_ProjectsTopComponent");
     }
-    private void Bundle() {}
+    private Bundle() {}
 }

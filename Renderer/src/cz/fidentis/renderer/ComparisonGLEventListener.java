@@ -347,7 +347,8 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
                 switch (info.getHdInfo().getvType()) {
                     case COLORMAP:
                         paintHD();
-                        if (selectionCube[3] != null && !info.getHdInfo().isIsSelection()) {
+                        if (selectionCube[3] != null && !info.getHdInfo().isIsSelection()) 
+                        {
                             if (info.getHdInfo().getsType() == SelectionType.ELLIPSE) {
                                 paintSelectionEllipse();
                             }

@@ -72,5 +72,5 @@ class Bundle {
     static String CTL_Textures() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_Textures");
     }
-    private void Bundle() {}
+    private Bundle() {}
 }

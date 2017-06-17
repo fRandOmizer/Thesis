@@ -9,5 +9,5 @@ class Bundle {
     static String CTL_ImportFromImage() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_ImportFromImage");
     }
-    private void Bundle() {}
+    private Bundle() {}
 }

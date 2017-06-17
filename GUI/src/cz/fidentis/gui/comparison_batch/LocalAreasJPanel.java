@@ -24,9 +24,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javafx.geometry.Point3D;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -92,7 +94,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     // </editor-fold>
     
     private BatchComparisonResults pointerBatchComparisonResult;
-    private ViewerPanel_Batch pointerViewerPanel_Batch;
     private Double SizeOfArea;
     private Double BottomTresh;
     private Double TopTresh;
@@ -118,6 +119,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private boolean isPointSelected;
     private boolean isAreasSet;
     private Vector4f choosenPoint;
+    private boolean isVisible;
     
     
     /**
@@ -212,13 +214,18 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
     }
     
+    public void isVisible(boolean value){
+        this.isVisible = value;
+        if (!value){
+            LocalAreaFrame.setVisible(false);
+        }
+    }
+    
     public boolean isAreasSet(){
         return isAreasSet;
     }
 
-    public void setPointerViewerPanel_Batch(ViewerPanel_Batch pointer){
-        this.pointerViewerPanel_Batch = pointer;
-    }
+    
     
     public void SetPointerBatchComparisonResults(BatchComparisonResults pointer){
         this.pointerBatchComparisonResult = pointer;
@@ -238,6 +245,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             listModel.addElement("No Area was found!");
         }
         AreasJList.setModel(listModel);
+        AreasJListRenderer renderer = new AreasJListRenderer();
+        renderer.setAreas(areasList);
+        AreasJList.setCellRenderer(renderer);
         this.isAreasSet = true;
     }
 
@@ -251,6 +261,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
         
         if (!isAnyAreaDrawn){
+            return;
+        }
+        
+        if (!isVisible){
             return;
         }
        
