@@ -15,7 +15,7 @@
    centered-vertically="false"
    maximize-if-width-below="0"
    maximize-if-height-below="0"
-   frame-state="6"
+   frame-state="0"
 />
   <separated-properties
    x="154"
@@ -41,6 +41,6 @@
   <bounds x="506" y="197" width="645" height="362" />
     </editor-area>
     <screen width="1536" height="864"/>
-    <active-mode name="editor"/>
+    <active-mode name="properties"/>
     <toolbar configuration="Standard" preferred-icon-size="24"/>
 </windowmanager>

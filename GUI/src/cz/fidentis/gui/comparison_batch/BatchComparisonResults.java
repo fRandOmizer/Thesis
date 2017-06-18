@@ -65,6 +65,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     private boolean valuesModified;
     private JFrame LocalAreasFrame;
     private LocalAreasJPanel localAreasJPanel;
+    private Model useModel;
 
     /**
      * Creates new form BatchComparisonResults
@@ -72,7 +73,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     public BatchComparisonResults() {
         initComponents();
         activeColorPanel = new JPanel();
-
+        useModel = getContext().getAverageFace();
     }
 
     public void showProcrustesControls() {
@@ -2375,6 +2376,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
             if (!localAreasJPanel.isInitialized()){
                 localAreasJPanel.LoadValues(histogram1.getMin(), histogram1.getMax());
             }
+            
             localAreasJPanel.isVisible(true);
         }
     }//GEN-LAST:event_jButton13ActionPerformed
@@ -2401,8 +2403,17 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().setLocalAreasJPanel(localAreasJPanel);
     }
     
-    public Model GetCurrentModel(){
+    public void setCurrentModel(Model model){
+        useModel = model;
+    }
+    
+    public Model getCurrentModel(){
+        return useModel;
+    }
+    
+    public Model GetAverageModel(){
         Model m = getContext().getAverageFace();
+                
         
         return m;
     }
@@ -2421,6 +2432,10 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     
     public LocalAreasJPanel getLocalAreasJPanel(){
         return this.localAreasJPanel;
+    }
+    
+    public void setModelForCalculation(Model model){
+        useModel = model;
     }
     
     public boolean isVisibleLocalArea(){

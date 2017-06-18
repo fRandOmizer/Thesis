@@ -133,7 +133,9 @@ public class HistogramJPanel extends javax.swing.JPanel {
     
     private int getChoosenIndex(int mouseX, int mouseY){
         int result = -1;
-
+        if (values.size()==0){
+            return result;
+        }
         int deltaX = (int)Math.ceil((this.width-40) / values.size());
 
         for (int i = 0; i < values.size(); i++){
