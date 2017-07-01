@@ -64,6 +64,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         metricName.add("Variance");
         metricName.add("75 percentil");
         histogram = new HistogramJPanel();
+        histogram.setPointer(this);
         histogram.setSize(this.histogramHolder.getPreferredSize().width, this.histogramHolder.getPreferredSize().height);
         this.histogramHolder.setLayout(new BorderLayout());
 
@@ -557,6 +558,16 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labelPoint;
     private javax.swing.JLabel point;
     // End of variables declaration//GEN-END:variables
+
+    void updateSelectedPoints(List<Integer> get) {
+        
+    }
+
+    void setColors(List<List<Integer>> distribution, List<Color> distributionColor) {
+        
+    }
+
+
 
     
 }

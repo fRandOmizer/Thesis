@@ -148,6 +148,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         progressBar.setVisible(false);
         
         SetEnableComponents(false);
+        
     }
     
     public boolean isInitialized(){
@@ -164,8 +165,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         LocalAreaFrame = new JFrame("Area");
         LocalAreaFrame.setVisible(false);
-        LocalAreaFrame.setMinimumSize(new Dimension(100, 100));
-        LocalAreaFrame.setMaximumSize(new Dimension(100, 100));
+        LocalAreaFrame.setMinimumSize(new Dimension(630, 730));
 
         LocalAreaJPanel = new LocalAreasSelectedAreaJPanel();
         LocalAreaJPanel.setPointerLocalAreasJPanel(this);
