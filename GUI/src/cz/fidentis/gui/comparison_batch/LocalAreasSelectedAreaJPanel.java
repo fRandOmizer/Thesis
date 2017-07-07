@@ -88,9 +88,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         faceComparison = calculateFaceComparison(HdVisualResults, area, metricIndex, relative);
         modelsName = filterModelName(models);
         this.metricIndex = metricIndex;
-        histogram.setSize(this.histogramHolder.getWidth(), this.histogramHolder.getHeight());
-        this.histogram.setValues(area.csvValues);
-        
+                
         this.labelAreaName.setText("Area "+ area.index+"");
         this.GeoMean.setText(""+ area.geoMean+"");
         this.AriMean.setText(""+ area.ariMean+"");
@@ -104,6 +102,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         this.MetricName.setText(metricName.get(metricIndex));
         
         this.areaColor = new Color(area.color.get(0), area.color.get(1), area.color.get(2));
+        this.histogram.setSize(this.histogramHolder.getWidth(), this.histogramHolder.getHeight());
         this.histogram.setValues(area.csvValues);
         this.histogram.setColor(areaColor);
         
@@ -127,6 +126,14 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         } catch(Exception e) {
             
         }
+        
+    }
+    
+    void updateSelectedPoints(List<Integer> get) {
+        
+    }
+
+    void setColors(List<List<Integer>> distribution, List<Color> distributionColor) {
         
     }
 
@@ -200,19 +207,6 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return result;
     }
 
-    private static float chiSquare(List<Float> firstArray, List<Float> secondArray){
-         
-        float result = 0.0f;
-        
-        for (int i = 0; i < firstArray.size(); i++){
-            float x = (firstArray.get(i));
-            float y = (secondArray.get(i));
-            result += abs(((x - y)*(x - y))/(x + y));
-        }
-        
-        return (result/firstArray.size());
-    }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -250,6 +244,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         histogramHolder = new javax.swing.JPanel();
         labelAreaName11 = new javax.swing.JLabel();
         jButtonChangeColor = new javax.swing.JButton();
+        jButtonAreaColorChange = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(600, 700));
         setPreferredSize(new java.awt.Dimension(600, 700));
@@ -341,9 +336,17 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(labelAreaName11, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.labelAreaName11.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonChangeColor, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.jButtonChangeColor.text")); // NOI18N
+        jButtonChangeColor.setEnabled(false);
         jButtonChangeColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonChangeColorActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButtonAreaColorChange, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.jButtonAreaColorChange.text")); // NOI18N
+        jButtonAreaColorChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAreaColorChangeActionPerformed(evt);
             }
         });
 
@@ -357,7 +360,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(labelAreaName, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(histogramHolder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
+                    .addComponent(histogramHolder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelAreaName10)
@@ -382,7 +385,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                                         .addComponent(labelAreaName2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(labelAreaName7))
                                     .addComponent(labelPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(point, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,7 +399,9 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                                             .addComponent(AriMean, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButtonChangeColor, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonAreaColorChange, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonChangeColor, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(23, 23, 23)))
                 .addGap(12, 12, 12)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -448,8 +453,10 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jButtonChangeColor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(labelAreaName11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelAreaName11)
+                    .addComponent(jButtonAreaColorChange))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(histogramHolder, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -527,6 +534,10 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         pointerLocalAreasJPanel.setColorForArea(areaColor);
     }//GEN-LAST:event_jButtonChangeColorActionPerformed
 
+    private void jButtonAreaColorChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAreaColorChangeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonAreaColorChangeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AriMean;
@@ -540,6 +551,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel SimilarFace;
     private javax.swing.JLabel Variance;
     private javax.swing.JPanel histogramHolder;
+    private javax.swing.JButton jButtonAreaColorChange;
     private javax.swing.JButton jButtonChangeColor;
     private javax.swing.JButton jButtonExport;
     private javax.swing.JPanel jPanel1;
@@ -559,13 +571,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel point;
     // End of variables declaration//GEN-END:variables
 
-    void updateSelectedPoints(List<Integer> get) {
-        
-    }
-
-    void setColors(List<List<Integer>> distribution, List<Color> distributionColor) {
-        
-    }
+    
 
 
 

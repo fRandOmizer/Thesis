@@ -29,6 +29,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
     private int width, height;
     private Color color;
     private int selectedIndex;
+    private int highlightedIndex;
     LocalAreasSelectedAreaJPanel pointer;
     
     
@@ -41,6 +42,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
         this.points = new PointsValues();
         this.color = Color.WHITE;
         this.selectedIndex = -1;
+        this.highlightedIndex = -1;
     }
     
     public void setPointer(LocalAreasSelectedAreaJPanel pointer){
@@ -52,14 +54,14 @@ public class HistogramJPanel extends javax.swing.JPanel {
         this.height = height+10;
         this.setPreferredSize(new Dimension(width, height));
         
-        if (points == null){
-            return;
-        }
-        if (points.distribution.size() == 0){
-            return;
-        }
-
-        this.pointer.setColors(points.distribution, points.distributionColor );
+//        if (points == null){
+//            return;
+//        }
+//        if (points.distribution.size() == 0){
+//            return;
+//        }
+//
+//        this.pointer.setColors(points.distribution, points.distributionColor );
         
         
     }
@@ -156,6 +158,15 @@ public class HistogramJPanel extends javax.swing.JPanel {
                         g.drawRect(x,y,widthRec,heightRec);
                         g2.setStroke(oldStroke);
                     } 
+                    
+                    if (this.highlightedIndex == i){
+                        float thickness = 3;
+                        Stroke oldStroke = g2.getStroke();
+                        g2.setStroke(new BasicStroke(thickness));
+                        g.setColor(Color.red);
+                        g.drawRect(x,y,widthRec,heightRec);
+                        g2.setStroke(oldStroke);
+                    } 
                 }
 
                 if (this.selectedIndex != -1){
@@ -165,6 +176,15 @@ public class HistogramJPanel extends javax.swing.JPanel {
                     
                     g2.drawString(points.distributionBoundaries.get(points.distribution.size() - this.selectedIndex - 1), 
                             10 + 5 * this.selectedIndex, Ymin - 5); 
+                }
+                
+                if (this.highlightedIndex != -1){
+                    g.setColor(Color.red);
+                    g2.drawString("Count: "+points.distribution.get(points.distribution.size() - this.highlightedIndex - 1).size(), 
+                            30 + 5 * this.highlightedIndex, Ymin - 22); 
+                    
+                    g2.drawString(points.distributionBoundaries.get(points.distribution.size() - this.highlightedIndex - 1), 
+                            10 + 5 * this.highlightedIndex, Ymin - 5); 
                 }
 
             }
@@ -216,6 +236,11 @@ public class HistogramJPanel extends javax.swing.JPanel {
                 formMouseMoved(evt);
             }
         });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -232,12 +257,19 @@ public class HistogramJPanel extends javax.swing.JPanel {
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
         if (points != null){
             this.selectedIndex = getChoosenIndex(evt.getX(), evt.getY());
-            if (this.selectedIndex != -1){
+            this.repaint();
+        }
+    }//GEN-LAST:event_formMouseMoved
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        if (points != null){
+            this.highlightedIndex = getChoosenIndex(evt.getX(), evt.getY());
+            if (this.highlightedIndex != -1){
                 this.pointer.updateSelectedPoints(points.distribution.get(points.distribution.size() - this.selectedIndex - 1));
             }
             this.repaint();
         }
-    }//GEN-LAST:event_formMouseMoved
+    }//GEN-LAST:event_formMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

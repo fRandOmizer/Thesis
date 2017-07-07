@@ -39,7 +39,7 @@ public class PointsValues {
     }
 
     public void setValues(List<Float> values){
-        this.values = values;
+        this.values = deepCopy(values);
         indexes = new ArrayList<>();
         for (int i = 0; i < values.size(); i++ ){
             indexes.add(i);
@@ -74,27 +74,27 @@ public class PointsValues {
         
         int len1 = distribution.size()/2;
         int len2 = distribution.size() - len1;
-        int step1 = 255 / len1;
-        int step2 = 255 / len2;
+        int step1 = 230 / len1;
+        int step2 = 230 / len2;
 
-        r = (len1)*step1;
+        r = 0;
         g = 255;
-        b = (len1)*step1;
+        b = 0;
         
         for (int i = 0; i < len1; i++){
-            r = r - step1;
-            b = b - step1;
+            r = r + step1;
+            b = b + step1;
             Color color = new Color(r, g, b);
             distributionColor.add(color);
         }
         
-        r = 0;
-        g = 0;
+        r = (len2)*step2;
+        g = (len2)*step2;
         b = 255;
         
         for (int i = 0; i < len2; i++){
-            r = r + step2;
-            g = g + step2;
+            r = r - step2;
+            g = g - step2;
             Color color = new Color(r, g, b);
             distributionColor.add(color);
         }
@@ -104,7 +104,7 @@ public class PointsValues {
     public void calculateDistribution(float range, int size){
         distribution = new ArrayList<>();
         distributionBoundaries = new ArrayList<>();
-        clusterIndex = range / ((float)size/5f);
+        clusterIndex = range / ((float)size/5.0f);
 
         int numberOfCollumns = (size/5);
         int index = 0;
@@ -137,11 +137,14 @@ public class PointsValues {
                     condition = false;
                 }
             }
-            if (i+1 == indexes.size()){
+            if (i+1 == numberOfCollumns){
                 for (; index < indexes.size(); index++){
                     Items.add(indexes.get(index));
+                    downValue = min;
                 }
             }
+
+            
 
             if (maxClusteredPoints<=Items.size()){
                 maxClusteredPoints = Items.size();
@@ -152,7 +155,17 @@ public class PointsValues {
 
             distributionBoundaries.add("<"+df.format(downValue)+";"+df.format(upValue)+")");
         }
-        
+
         this.setColors();
+    }
+    
+    private static List<Float> deepCopy(List<Float> values){
+        List<Float> result = new ArrayList<>();
+        
+        for (int i = 0; i < values.size(); i++){
+            result.add(values.get(i));
+        }
+        
+        return result;
     }
 }
