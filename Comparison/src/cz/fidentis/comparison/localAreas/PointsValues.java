@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.fidentis.comparison.localAreas;
 
 import java.awt.Color;
@@ -28,6 +23,9 @@ public class PointsValues {
 
     public float min;
     public float max;
+    
+    public Color colorMin;
+    public Color colorMax;
 
     public PointsValues(){
         indexes = new ArrayList<>();
@@ -36,8 +34,15 @@ public class PointsValues {
         distributionBoundaries = new ArrayList<>();
         clusterMark = new ArrayList<>();
         distributionColor = new ArrayList<>();
+        
+        colorMin = new Color(0, 0, 255);
+        colorMax = new Color(0, 255, 0);
     }
 
+    /**
+     * Copy CSV values and indexes
+     * @param values 
+     */
     public void setValues(List<Float> values){
         this.values = deepCopy(values);
         indexes = new ArrayList<>();
@@ -46,6 +51,9 @@ public class PointsValues {
         }
     }
 
+    /**
+     * order indexes and CSV values max first
+     */
     public void selectionSort() {
         for (int i = 0; i < values.size() - 1; i++) {
             int maxIndex = i;
@@ -66,41 +74,28 @@ public class PointsValues {
         min = values.get(values.size()-1);    
     }
 
+    /**
+     * set color of each CSV value
+     */
     public void setColors(){
         distributionColor = new ArrayList<>();
-        int r = 0;
-        int g = 0;
-        int b = 255;
         
-        int len1 = distribution.size()/2;
-        int len2 = distribution.size() - len1;
-        int step1 = 230 / len1;
-        int step2 = 230 / len2;
+        float step = 1.0f / (distribution.size());
 
-        r = 0;
-        g = 255;
-        b = 0;
-        
-        for (int i = 0; i < len1; i++){
-            r = r + step1;
-            b = b + step1;
-            Color color = new Color(r, g, b);
-            distributionColor.add(color);
+        float steps = 0.0f;
+        for (int i = 0; i < distribution.size(); i++){
+            steps += step;
+            
+            distributionColor.add(LerpRGB(colorMax, colorMin, steps));
         }
-        
-        r = (len2)*step2;
-        g = (len2)*step2;
-        b = 255;
-        
-        for (int i = 0; i < len2; i++){
-            r = r - step2;
-            g = g - step2;
-            Color color = new Color(r, g, b);
-            distributionColor.add(color);
-        }
-        
+
     }
 
+    /**
+     * Recalculate distribution of CSV values
+     * @param range number of columns
+     * @param size width of Canvas
+     */
     public void calculateDistribution(float range, int size){
         distribution = new ArrayList<>();
         distributionBoundaries = new ArrayList<>();
@@ -109,7 +104,7 @@ public class PointsValues {
         int numberOfCollumns = (size/5);
         int index = 0;
         maxClusteredPoints = 0;
-        
+
         for (int i = 0; i < numberOfCollumns; i++){
             float upValue = values.get(0)-(i)*clusterIndex;
             if (i>0){
@@ -144,8 +139,6 @@ public class PointsValues {
                 }
             }
 
-            
-
             if (maxClusteredPoints<=Items.size()){
                 maxClusteredPoints = Items.size();
             }
@@ -155,10 +148,20 @@ public class PointsValues {
 
             distributionBoundaries.add("<"+df.format(downValue)+";"+df.format(upValue)+")");
         }
+        
+        if (values.size() == 1){
+            distribution.set(distribution.size()/2, distribution.get(distribution.size()-1));
+            distribution.set(distribution.size()-1, new ArrayList<Integer>());
+        }
 
         this.setColors();
     }
     
+    /**
+     * Deep copy for CSV values
+     * @param values
+     * @return 
+     */
     private static List<Float> deepCopy(List<Float> values){
         List<Float> result = new ArrayList<>();
         
@@ -167,5 +170,29 @@ public class PointsValues {
         }
         
         return result;
+    }
+    
+    /**
+     * Nice color distribution
+     * @param a minimal color 
+     * @param b maximal color 
+     * @param t step <0, 1>
+     * @return 
+     */
+    private static Color LerpRGB (Color a, Color b, float t){
+        float r1 = (float)a.getRed()/255f;
+        float r2 = (float)b.getRed()/255f;
+        float g1 = (float)a.getGreen()/255f;
+        float g2 = (float)b.getGreen()/255f;
+        float b1 = (float)a.getBlue()/255f;
+        float b2 = (float)b.getBlue()/255f;
+        
+	return new Color
+	(
+		r1 + (r2 - r1) * t,
+		g1 + (g2 - g1) * t,
+		b1 + (b2 - b1) * t,
+		1.0f
+	);
     }
 }

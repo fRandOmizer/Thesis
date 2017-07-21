@@ -334,7 +334,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     private void canvas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseClicked
        if (pointer != null){
-            pointer.setPointInfo();
+            pointer.showPointCSVvalue();
         }
         
     }//GEN-LAST:event_canvas1MouseClicked
@@ -405,7 +405,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     private void canvas1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MousePressed
         if (pointer != null){
-            pointer.setMouseClickPosition((double)evt.getX(), (double)evt.getY());
+            pointer.setMousePositionToSelectArea((double)evt.getX(), (double)evt.getY());
         }
         
         
@@ -674,14 +674,14 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     private void canvas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseEntered
         if (pointer != null) {
-            pointer.setMouseOnCanvas(true);
+            pointer.startMousePositionDetectionOnCanvas(true);
         }
         
     }//GEN-LAST:event_canvas1MouseEntered
 
     private void canvas1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseExited
         if (pointer != null) {
-            pointer.setMouseOnCanvas(false);
+            pointer.startMousePositionDetectionOnCanvas(false);
         }
         
     }//GEN-LAST:event_canvas1MouseExited

@@ -30,19 +30,15 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="labelAreaName" min="-2" pref="194" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jLabel1" max="32767" attributes="0"/>
                   <Component id="histogramHolder" alignment="0" pref="564" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="labelAreaName10" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="labelAreaName8" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="labelAreaName9" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="labelAreaName11" alignment="0" min="-2" pref="194" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="173" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="SimilarFace" max="32767" attributes="0"/>
                           <Component id="DifferentFace" alignment="1" max="32767" attributes="0"/>
@@ -50,55 +46,54 @@
                       </Group>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="labelAreaName6" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="labelAreaName5" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="labelAreaName4" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="labelAreaName3" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="labelAreaName1" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
-                                      <Component id="labelAreaName2" alignment="0" min="-2" pref="106" max="-2" attributes="0"/>
-                                      <Component id="labelAreaName7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="labelPoint" min="-2" pref="289" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace pref="27" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="point" alignment="1" min="-2" pref="225" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                      <Component id="GeoMean" alignment="0" min="-2" pref="223" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="Variance" alignment="1" pref="223" max="32767" attributes="0"/>
-                                          <Component id="SeventyFive" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="Min" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="Max" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="RootMean" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="AriMean" alignment="1" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="labelAreaName6" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelAreaName5" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelAreaName4" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelAreaName3" alignment="0" max="32767" attributes="0"/>
+                              <Component id="labelAreaName1" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
+                              <Component id="labelAreaName2" alignment="0" min="-2" pref="106" max="-2" attributes="0"/>
+                              <Component id="labelAreaName7" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jButtonAreaColorChange" min="-2" pref="171" max="-2" attributes="0"/>
-                                  <Component id="jButtonChangeColor" min="-2" pref="188" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="labelAreaName11" alignment="0" min="-2" pref="194" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace pref="124" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="GeoMean" alignment="0" min="-2" pref="223" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="Variance" alignment="1" pref="223" max="32767" attributes="0"/>
+                                      <Component id="SeventyFive" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="Min" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="Max" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="RootMean" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="AriMean" alignment="1" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jButtonAreaColorChange" alignment="1" min="-2" pref="180" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="labelAreaName" min="-2" pref="194" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="jButtonExport" min="-2" pref="180" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jButtonChangeColorMin" min="-2" pref="180" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jButtonChangeColorMax" min="-2" pref="180" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButtonExport" min="-2" pref="170" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -149,38 +144,39 @@
                   </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jButtonChangeColor" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelAreaName11" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonAreaColorChange" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelAreaName11" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
               <Component id="histogramHolder" min="-2" pref="205" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jButtonChangeColorMin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonChangeColorMax" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="labelAreaName10" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="labelAreaName8" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="labelAreaName9" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
-                      <Component id="labelPoint" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="MetricName" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="DifferentFace" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="SimilarFace" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButtonExport" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="point" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <Component id="jButtonExport" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -193,13 +189,6 @@
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.labelAreaName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelPoint">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.labelPoint.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -316,14 +305,6 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="point">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.point.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-        <Property name="horizontalTextPosition" type="int" value="4"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="jButtonExport">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -403,15 +384,14 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonChangeColor">
+    <Component class="javax.swing.JButton" name="jButtonChangeColorMin">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.jButtonChangeColor.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.jButtonChangeColorMin.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonChangeColorActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonChangeColorMinActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonAreaColorChange">
@@ -423,6 +403,23 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAreaColorChangeActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonChangeColorMax">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.jButtonChangeColorMax.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonChangeColorMaxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="cz/fidentis/gui/comparison_batch/Bundle.properties" key="LocalAreasSelectedAreaJPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

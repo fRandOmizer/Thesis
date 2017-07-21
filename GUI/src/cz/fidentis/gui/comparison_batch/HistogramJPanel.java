@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.localAreas.PointsValues;
@@ -16,7 +11,6 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +24,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
     private Color color;
     private int selectedIndex;
     private int highlightedIndex;
-    LocalAreasSelectedAreaJPanel pointer;
+    private LocalAreasSelectedAreaJPanel pointer;
     
     
     /**
@@ -49,29 +43,33 @@ public class HistogramJPanel extends javax.swing.JPanel {
         this.pointer = pointer;
     }
     
+    /**
+     * Keeps track of actual size of canvas for drawing
+     * @param width
+     * @param height 
+     */
+    @Override
     public void setSize(int width, int height){
         this.width = width;
         this.height = height+10;
         this.setPreferredSize(new Dimension(width, height));
-        
-//        if (points == null){
-//            return;
-//        }
-//        if (points.distribution.size() == 0){
-//            return;
-//        }
-//
-//        this.pointer.setColors(points.distribution, points.distributionColor );
-        
-        
+
     }
     
-    public void setColor(Color color){
-        this.color = color;
+    public void setColorMin(Color colorMin){
+        this.points.colorMin = colorMin;
+        this.repaint();
+    }
+    
+    public void setColorMax(Color colorMax){
+        this.points.colorMax = colorMax;
         this.repaint();
     }
             
-    
+    /**
+     * Setting CSV values
+     * @param values 
+     */
     public void setValues(List<Float> values){
         this.points.setValues(values);
         this.points.selectionSort();
@@ -79,28 +77,33 @@ public class HistogramJPanel extends javax.swing.JPanel {
         this.repaint();
     }
     
+    public PointsValues getPoints(){
+        return points;
+    }
+    
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);  
+        
         if (points.values.size() > 0){
             int Ymax = height - 50;
             int Ymin = 35;
             int Xmax = width - 45;
             int Xmin = 45;
-            
-            float differencePoints = Math.abs(points.max - points.min);
-            int sizeOfGraph = Xmax - Xmin;
-            
-            points.calculateDistribution(differencePoints, sizeOfGraph);
-            
-            if(g instanceof Graphics2D)
-            {
+
+            //calculating distribution
+            points.calculateDistribution(Math.abs(points.max - points.min), Xmax - Xmin);
+
+            if(g instanceof Graphics2D){
                 Graphics2D g2 = (Graphics2D)g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
                 
+                //decimal formating
                 DecimalFormat df = new DecimalFormat("#.###");
                 df.setRoundingMode(RoundingMode.CEILING);
                 
+                // <editor-fold desc="Drawing graph">
                 int Xhalf = ((width - 90)/2)+45;
                 int XoneFourth = ((width - 90)/4)+45;
                 int XthreeFourth = 3*((width - 90)/4)+45;
@@ -133,22 +136,24 @@ public class HistogramJPanel extends javax.swing.JPanel {
                 
                 g2.drawString(""+points.maxClusteredPoints,Xmin-25,Ymin);
                 g.drawLine(Xmin, Ymin, Xmin-5, Ymin);
-                g.drawLine(Xmin, Ymin, Xmin, Ymax);    
+                g.drawLine(Xmin, Ymin, Xmin, Ymax);   
+                // </editor-fold>
                 
                 for (int i = 0; i < points.distribution.size(); i++){
+                    // <editor-fold desc="Drawing column">
                     int value = points.distribution.get(points.distribution.size() - i -1).size();
                     int x = 46 + 5*i;
                     int y = 35 + ((height - 85)/points.maxClusteredPoints)*(points.maxClusteredPoints - value);
                     if (value == 0){
                         y = 35 + (height - 85);
                     }
-                            
 
                     int heightRec = height - 50 - y;
                     int widthRec = 5;
 
                     g.setColor(points.distributionColor.get(points.distribution.size() - i -1));
                     g.fillRect(x,y,widthRec,heightRec);
+                    // </editor-fold>
 
                     if (this.selectedIndex == i){
                         float thickness = 2;
@@ -189,15 +194,15 @@ public class HistogramJPanel extends javax.swing.JPanel {
 
             }
             
-        }
-//        
-        
-        
+        } 
     }
-    
-    
-    
-    
+
+    /**
+     * Find chosen point in area
+     * @param mouseX
+     * @param mouseY
+     * @return number or -1 if not found
+     */
     private int getChoosenIndex(int mouseX, int mouseY){
         int result = -1;
         if (points.distribution.isEmpty()){
@@ -265,6 +270,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
         if (points != null){
             this.highlightedIndex = getChoosenIndex(evt.getX(), evt.getY());
             if (this.highlightedIndex != -1){
+                //sending indexes that should be highlighted on model
                 this.pointer.updateSelectedPoints(points.distribution.get(points.distribution.size() - this.selectedIndex - 1));
             }
             this.repaint();

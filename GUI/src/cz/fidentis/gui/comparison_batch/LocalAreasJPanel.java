@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.icp.KdTreeIndexed;
@@ -10,9 +5,10 @@ import cz.fidentis.comparison.localAreas.Area;
 import cz.fidentis.comparison.localAreas.BinTree;
 import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
 import cz.fidentis.comparison.localAreas.LocalAreas;
+import cz.fidentis.comparison.localAreas.PointsValues;
 import cz.fidentis.comparison.localAreas.VertexArea;
-
 import cz.fidentis.model.Model;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -23,12 +19,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import javafx.geometry.Point3D;
-import javax.swing.DefaultListCellRenderer;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -43,15 +39,18 @@ import javax.vecmath.Vector4f;
 public class LocalAreasJPanel extends javax.swing.JPanel {
 
     // <editor-fold desc="Workers">
+    /**
+     * Calculate areas
+     */
     private class FindAreasWorker extends SwingWorker<String, Object>{
         @Override
         protected String doInBackground() {
             progressBar.setVisible(true);
             progressBar.setIndeterminate(true);
 
-            init();
+            calculateVertexArea();
 
-            SetList(area.getAreas());
+            setAreasJList(vertexArea.getAreas());
 
             return "Done.";
         }
@@ -62,6 +61,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Finding intersection with points on face model
+     */
     private class SelectPointWorker extends SwingWorker<String, Object>{
         @Override
         protected String doInBackground() {
@@ -69,8 +71,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             while (isMouseOnCanvas){
                 int difference = differenceInMiliseconds(timeOfMouseMovement, Calendar.getInstance());
                 
-                if (difference >= 100){
-                    //pointerViewerPanel_Batch.setToolTip(mousePosition.x, mousePosition.y, "Hello!");
+                if (difference >= 300){
                     try {
                         drawHooveredPoint();
                     }
@@ -104,7 +105,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private int SelectedAreas[];
     private Boolean RelativeValues;
     private ArrayList<Float> LocalAreas;
-    private VertexArea area;
+    private VertexArea vertexArea;
     private Model model;
     private Model initialModel;
     private boolean isInicialized;
@@ -117,8 +118,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private Vector2d mousePosition; 
     private boolean isWorkerRunning;
     private boolean isPointSelected;
-    private boolean isAreasSet;
-    private Vector4f choosenPoint;
+    private boolean isLocalAreasSet;
     private boolean isVisible;
     
     
@@ -147,35 +147,40 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         progressBar.setVisible(false);
         
-        SetEnableComponents(false);
+        enableComponents(false);
         
     }
     
+    // <editor-fold defaultstate="collapsed" desc="Getters">
     public boolean isInitialized(){
         return this.isInicialized;
     }
     
-    private void init(){
-        model = pointerBatchComparisonResult.GetAverageModel(); 
-        initialModel = pointerBatchComparisonResult.GetAverageModel(); 
-        
-        BinTree thres = new BinTree(LocalAreas);
-        area = new VertexArea(model, thres);
-        area.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
-        
-        LocalAreaFrame = new JFrame("Area");
-        LocalAreaFrame.setVisible(false);
-        LocalAreaFrame.setMinimumSize(new Dimension(630, 730));
-
-        LocalAreaJPanel = new LocalAreasSelectedAreaJPanel();
-        LocalAreaJPanel.setPointerLocalAreasJPanel(this);
-        
-        LocalAreaFrame.add(LocalAreaJPanel);
-        
-        LocalAreaFrame.pack();
-        isAreasSet = false;
+    public void isVisible(boolean value){
+        this.isVisible = value;
+        if (!value){
+            LocalAreaFrame.setVisible(false);
+        }
+    }
+    
+    public boolean isLocalAreasSet(){
+        return isLocalAreasSet;
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="Public">
+    public void showPointCSVvalue() {
         
     }
+    
+    public void setAreaColors(PointsValues points) {
+        //vyriesit skritie
+    }
+
+    public void updateSelectedPoints(List<Integer> get) {
+        //vyriesit skritie
+    }
+    
     
     public void updateModel(Model model){
         if (!this.isVisible()){
@@ -193,17 +198,22 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                 int index = indexer.nearestIndex(this.initialModel.getVerts().get(areaVertexIndex));
                 tempVertices.add(index);
             }
-            Area deepCopyArea = deepCopy(tempArea);
+            Area deepCopyArea = deepCopyArea(tempArea);
             deepCopyArea.vertices = tempVertices;
             tempAreaList.add(deepCopyArea);
         }  
         this.model = model;
         this.AreasList = tempAreaList;
         
-        RenderSelectedAreas();
+        renderSelectedAreas();
     }
     
-    public void LoadValues(float min, float max) {
+    /**
+     * Set range for local areas
+     * @param min
+     * @param max 
+     */
+    public void loadRangeValues(float min, float max) {
         LocalAreas = new ArrayList(pointerBatchComparisonResult.GetAuxiliaryAverageResults());
         BottomTresh = (double)min;
         TopTresh = (double)max;
@@ -212,48 +222,14 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         TopTextField.setText(TopTresh.toString());
         BottomTextField.setText(BottomTresh.toString());
         isInicialized = true;
-        
-    }
-    
-    public void isVisible(boolean value){
-        this.isVisible = value;
-        if (!value){
-            LocalAreaFrame.setVisible(false);
-        }
-    }
-    
-    public boolean isAreasSet(){
-        return isAreasSet;
-    }
-
-    
-    
-    public void SetPointerBatchComparisonResults(BatchComparisonResults pointer){
-        this.pointerBatchComparisonResult = pointer;
         this.jLabelInitialModel.setText(pointerBatchComparisonResult.GetAverageModel().getName());
     }
     
-    public void SetList(List<Area> areasList){
-        AreasList = areasList;
-        OriginalAreasList = areasList;
-        DefaultListModel listModel = new DefaultListModel();
-        if (areasList.size()>0){
-            for (Area item : areasList){
-                listModel.addElement(item.index+" Area");
-            }
-            SetEnableComponents(true);
-        } else {
-            SetEnableComponents(false);
-            listModel.addElement("No Area was found!");
-        }
-        AreasJList.setModel(listModel);
-        AreasJListRenderer renderer = new AreasJListRenderer();
-        renderer.setAreas(areasList);
-        AreasJList.setCellRenderer(renderer);
-        this.isAreasSet = true;
+    public void setPointerBatchComparisonResults(BatchComparisonResults pointer){
+        this.pointerBatchComparisonResult = pointer;   
     }
 
-    public void setMouseClickPosition(double x, double y){
+    public void setMousePositionToSelectArea(double x, double y){
         if (LocalAreaFrame == null){
             return;
         }
@@ -269,11 +245,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         if (!isVisible){
             return;
         }
-       
-        
-        
-        
-        
         
         LocalAreas localAreas = pointerBatchComparisonResult.getRenderer().getLocalAreas();
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
@@ -295,18 +266,22 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                         pointerBatchComparisonResult.getContext().getModels(),
                         pointerBatchComparisonResult.getContext().getMetricTypeIndex());
                 
-                SetSelectedArea(localAreas.getIndexes()[i]);
+                selectArea(localAreas.getIndexes()[i]);
                 isAreaSelected = true;
-                setMouseOnCanvas(true);
+                startMousePositionDetectionOnCanvas(true);
+                AreasJList.setSelectedIndex(localAreas.getIndexes()[i]);
                 return;
             }
             i++;
         }
-        
-        
+
     }
-    
-    public void setMouseOnCanvas(boolean value){
+
+    /**
+     * Starts Worker if mouse is on canvas
+     * @param value 
+     */
+    public void startMousePositionDetectionOnCanvas(boolean value){
         this.isMouseOnCanvas = value;
         if (value && (!isWorkerRunning) && isAreaSelected){
             new SelectPointWorker().execute();
@@ -320,29 +295,46 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         this.mousePosition = new Vector2d(x, y);
         this.timeOfMouseMovement = time;
     }
+    // </editor-fold>
     
-    public void setPointInfo(){
-        if (isPointSelected){
-            LocalAreaJPanel.SetChoosenPoint(this.choosenPoint);
+    // <editor-fold defaultstate="collapsed" desc="Private methods">
+    /**
+     * Set JList for areas
+     * @param areasList 
+     */
+    private void setAreasJList(List<Area> areasList){
+        AreasList = areasList;
+        OriginalAreasList = areasList;
+        DefaultListModel listModel = new DefaultListModel();
+        if (areasList.size()>0){
+            for (Area item : areasList){
+                listModel.addElement(item.index+" Area");
+            }
+            enableComponents(true);
+        } else {
+            enableComponents(false);
+            listModel.addElement("No Area was found!");
         }
-        
-    }
-    
-    public static int differenceInMiliseconds(Calendar startDate, Calendar endDate) {
-        long end = endDate.getTimeInMillis();
-        long start = startDate.getTimeInMillis();
-        
-        return (int)TimeUnit.MILLISECONDS.toMillis(Math.abs(end - start));
+        AreasJList.setModel(listModel);
+        AreasJListRenderer renderer = new AreasJListRenderer();
+        renderer.setAreas(areasList);
+        AreasJList.setCellRenderer(renderer);
+        this.isLocalAreasSet = true;
     }
 
-    private void SetEnableComponents(Boolean value){
+    private void enableComponents(Boolean value){
         AreasJList.setEnabled(value);
         SelectButton.setEnabled(value);
         AllButton.setEnabled(value);
-        RelativeComboBox.setEnabled(value);
+        jRadButRelativeValuesYes.setEnabled(value);
+        jRadButRelativeValuesNo.setEnabled(value);
+        ExportButton.setEnabled(value);
     }
     
-    public void drawHooveredPoint(){
+    /**
+     * Calculate intersection with points
+     */
+    private void drawHooveredPoint(){
         List<Vector4f> points = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
@@ -350,29 +342,62 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         Vector4f point = LocalAreaLibrary.intersectionWithPoint(mousePosition.x, mousePosition.y, viewPort, modelViewMatrix, projectionMatrix, points);
         
         if (point != null){
-            choosenPoint = point;
-            pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
+
+            float pointCsvValue = getCSVvalue(AreasList, point.w);
+            pointerBatchComparisonResult.getRenderer().setPointToDraw(point, pointCsvValue);
             isPointSelected = true;
             
         }
     }
     
-    public void setColorForArea(Color color){
-
-        List<Float> colorArray = new ArrayList<>();
+    /**
+     * Gets models, calculate areas, sets LocalAreaJPanel
+     */
+    private void calculateVertexArea(){
+        isLocalAreasSet = false;
         
-        colorArray.add(color.getRed()/255f);
-        colorArray.add(color.getGreen()/255f);
-        colorArray.add(color.getBlue()/255f);
+        model = pointerBatchComparisonResult.getCurrentModel(); 
+        initialModel = pointerBatchComparisonResult.getCurrentModel(); 
+        
+        BinTree thres = new BinTree(LocalAreas);
+        vertexArea = new VertexArea(model, thres);
+        vertexArea.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
+        
+        //set LocalAreaFrame
+        LocalAreaFrame = new JFrame("Area");
+        LocalAreaFrame.setVisible(false);
+        LocalAreaFrame.setMinimumSize(new Dimension(630, 730));
 
-        Area tempArea = AreasList.get(SelectedAreas[0]);
-        tempArea.color = colorArray;
-        AreasList.set(SelectedAreas[0], tempArea);
+        LocalAreaJPanel = new LocalAreasSelectedAreaJPanel();
+        LocalAreaJPanel.setPointerLocalAreasJPanel(this);
+        
+        LocalAreaFrame.add(LocalAreaJPanel);
+        
+        LocalAreaFrame.pack();
+    }
 
-        RenderSelectedAreas();
+    /**
+     * Select specific area
+     * @param index index of area
+     */
+    private void selectArea(int index){
+        SelectedAreas = new int[1];
+        
+        SelectedAreas[0]=index;
+       
+        AreasJList.clearSelection();
+        AreasJList.setSelectedIndices(new int[] {index});
+        renderSelectedAreas();
+        
+        if (AreasJList.getSelectedIndices().length>0){
+             isAnyAreaDrawn = true;
+        }
     }
     
-    private void RenderSelectedAreas(){
+    /**
+     * send areas indexes to render
+     */
+    private void renderSelectedAreas(){
         List<Area> tempList = new ArrayList<>();
         for (int i = 0; i < SelectedAreas.length; i++){
             Area selectedArea = AreasList.get(SelectedAreas[i]);
@@ -380,24 +405,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
         
         pointerBatchComparisonResult.SetLocalAreaRender(SelectedAreas, tempList, model);
-
     }
     
-    private void SetSelectedArea(int index){
-        SelectedAreas = new int[1];
-        
-        SelectedAreas[0]=index;
-       
-        AreasJList.clearSelection();
-        AreasJList.setSelectedIndices(new int[] {index});
-        RenderSelectedAreas();
-        
-        if (AreasJList.getSelectedIndices().length>0){
-             isAnyAreaDrawn = true;
-        }
-    }
-    
-    private static Area deepCopy(Area area){
+    private static Area deepCopyArea(Area area){
         Area result = new Area();
         
         result.ariMean = area.ariMean;
@@ -414,7 +424,25 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
         return result;
     }
+    
+    private static float getCSVvalue(List<Area> areasList, float w){
+        for (Area area : areasList){
+            int index = area.vertices.indexOf((int)w);
+            if (index != -1){
+                return area.csvValues.get(index);
+            }
+        }
 
+        return 0.0f;
+    }
+    
+    private static int differenceInMiliseconds(Calendar startDate, Calendar endDate) {
+        long end = endDate.getTimeInMillis();
+        long start = startDate.getTimeInMillis();
+        
+        return (int)TimeUnit.MILLISECONDS.toMillis(Math.abs(end - start));
+    }
+    // </editor-fold>
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -435,12 +463,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         ApplyButton = new javax.swing.JButton();
         SelectButton = new javax.swing.JButton();
         AllButton = new javax.swing.JButton();
-        RelativeComboBox = new javax.swing.JComboBox<>();
         ExportButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         jLabel5 = new javax.swing.JLabel();
         jLabelInitialModel = new javax.swing.JLabel();
+        jRadButRelativeValuesYes = new javax.swing.JRadioButton();
+        jRadButRelativeValuesNo = new javax.swing.JRadioButton();
 
         setMinimumSize(new java.awt.Dimension(313, 700));
 
@@ -494,13 +523,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             }
         });
 
-        RelativeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "True", "False" }));
-        RelativeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RelativeComboBoxActionPerformed(evt);
-            }
-        });
-
         org.openide.awt.Mnemonics.setLocalizedText(ExportButton, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.ExportButton.text")); // NOI18N
         ExportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -514,6 +536,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelInitialModel, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jLabelInitialModel.text")); // NOI18N
 
+        jRadButRelativeValuesYes.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadButRelativeValuesYes, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jRadButRelativeValuesYes.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jRadButRelativeValuesNo, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jRadButRelativeValuesNo.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -521,17 +548,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(0, 43, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(AllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(SelectButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(RelativeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(ExportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ApplyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -547,7 +563,19 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                             .addComponent(jLabelInitialModel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(AreaTextField)
                             .addComponent(TopTextField)
-                            .addComponent(BottomTextField))))
+                            .addComponent(BottomTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(42, 42, 42)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(AllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SelectButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadButRelativeValuesYes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadButRelativeValuesNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -569,20 +597,27 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(BottomTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
                 .addComponent(ApplyButton)
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(SelectButton)
                         .addGap(18, 18, 18)
-                        .addComponent(AllButton)))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RelativeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
+                        .addComponent(AllButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jRadButRelativeValuesYes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadButRelativeValuesNo)))
+                .addGap(36, 36, 36)
                 .addComponent(ExportButton)
                 .addGap(18, 18, 18)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -590,27 +625,25 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    // <editor-fold desc="Event handlers">
+    // <editor-fold defaultstate="collapsed" desc="Event handlers">
     private void ApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApplyButtonActionPerformed
-        
         new FindAreasWorker().execute();
-        
     }//GEN-LAST:event_ApplyButtonActionPerformed
 
     private void SelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectButtonActionPerformed
         SelectedAreas = new int[AreasJList.getSelectedIndices().length];
         SelectedAreas = AreasJList.getSelectedIndices();
         
-        RenderSelectedAreas();
+        renderSelectedAreas();
         
         if (AreasJList.getSelectedIndices().length>0){
              isAnyAreaDrawn = true;
         }
         
-        if (!pointerBatchComparisonResult.getCurrentModel().getName().equals(this.initialModel.getName()))
-        {
-            this.updateModel(pointerBatchComparisonResult.getCurrentModel());
-        }
+//        if (!pointerBatchComparisonResult.getCurrentModel().getName().equals(this.initialModel.getName()))
+//        {
+//            this.updateModel(pointerBatchComparisonResult.getCurrentModel());
+//        }
     }//GEN-LAST:event_SelectButtonActionPerformed
 
     private void AllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AllButtonActionPerformed
@@ -620,32 +653,25 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
         
         AreasJList.setSelectedIndices(SelectedAreas);
-        RenderSelectedAreas();
+        renderSelectedAreas();
         
         if (AreasJList.getSelectedIndices().length>0){
              isAnyAreaDrawn = true;
         }
         
-        if (!pointerBatchComparisonResult.getCurrentModel().getName().equals(this.initialModel.getName()))
-        {
-            this.updateModel(pointerBatchComparisonResult.getCurrentModel());
-        }
+//        if (!pointerBatchComparisonResult.getCurrentModel().getName().equals(this.initialModel.getName()))
+//        {
+//            this.updateModel(pointerBatchComparisonResult.getCurrentModel());
+//        }
         
     }//GEN-LAST:event_AllButtonActionPerformed
 
-    private void RelativeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RelativeComboBoxActionPerformed
-        if (RelativeComboBox.getSelectedIndex()==0){
-            RelativeValues = true;
-        } else {
-            RelativeValues = false;
-        }
-    }//GEN-LAST:event_RelativeComboBoxActionPerformed
-
     private void ExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExportButtonActionPerformed
-        if(RelativeComboBox.getSelectedIndex() == 0) {
-            area.makeMatrics(true);
-        } else{
-            area.makeMatrics(false);
+        if(jRadButRelativeValuesYes.isSelected()) {
+            vertexArea.makeMatrics(true);
+        } 
+        if(jRadButRelativeValuesNo.isSelected()){
+            vertexArea.makeMatrics(false);
         }
         
         JFileChooser fileChooser = new JFileChooser();
@@ -668,7 +694,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             }
             try {
                 // Writes the content to the file
-                writer.write(area.getAreas().toString());
+                writer.write(vertexArea.getAreas().toString());
             } catch (IOException ex) {
             }
             try {
@@ -724,7 +750,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private javax.swing.JList<String> AreasJList;
     private javax.swing.JTextField BottomTextField;
     private javax.swing.JButton ExportButton;
-    private javax.swing.JComboBox<String> RelativeComboBox;
     private javax.swing.JButton SelectButton;
     private javax.swing.JTextField TopTextField;
     private javax.swing.JLabel jLabel1;
@@ -733,6 +758,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelInitialModel;
+    private javax.swing.JRadioButton jRadButRelativeValuesNo;
+    private javax.swing.JRadioButton jRadButRelativeValuesYes;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables

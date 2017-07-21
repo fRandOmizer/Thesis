@@ -74,7 +74,7 @@ public class LocalAreasRender{
         this.isClearSelection = false;
     }
     
-    public void setPointToDraw(Vector4f pointToDraw){
+    public void setPointToDraw(Vector4f pointToDraw, float csv){
         this.pointToDraw = new float[] {pointToDraw.x, pointToDraw.y, pointToDraw.z};
         isDrawPoint = true;
     }

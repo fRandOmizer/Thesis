@@ -388,7 +388,7 @@ public final class NavigatorTopComponent extends TopComponent {
                         
                         if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel() != null){
                             GUIController.getConfigurationTopComponent().getBatchComparisonResults().setCurrentModel(model);
-                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isAreasSet()
+                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isLocalAreasSet()
                                     && GUIController.getConfigurationTopComponent().getBatchComparisonResults().isVisibleLocalArea()){
                                 GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(model);
                                 
@@ -406,7 +406,7 @@ public final class NavigatorTopComponent extends TopComponent {
                         
                         if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel()!= null){
                             GUIController.getConfigurationTopComponent().getBatchComparisonResults().setCurrentModel(model);
-                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isAreasSet()
+                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isLocalAreasSet()
                                     && GUIController.getConfigurationTopComponent().getBatchComparisonResults().isVisibleLocalArea()){
                                 GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(model);
                                 
@@ -418,7 +418,7 @@ public final class NavigatorTopComponent extends TopComponent {
                         else listener.setModels(batchComparison.getAverageFace());
                         if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel()!= null){
                             GUIController.getConfigurationTopComponent().getBatchComparisonResults().setCurrentModel(batchComparison.getAverageFace());
-                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isAreasSet() 
+                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isLocalAreasSet() 
                                     && GUIController.getConfigurationTopComponent().getBatchComparisonResults().isVisibleLocalArea()){
                                 GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(batchComparison.getAverageFace());
                                 
