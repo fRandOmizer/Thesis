@@ -7,14 +7,18 @@ import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
 import cz.fidentis.comparison.localAreas.LocalAreas;
 import cz.fidentis.comparison.localAreas.PointsValues;
 import cz.fidentis.comparison.localAreas.VertexArea;
+import cz.fidentis.gui.GUIController;
 import cz.fidentis.model.Model;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -169,6 +173,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Public">
+    public void closeSelectedArea(){
+        LocalAreaFrame.dispatchEvent(new WindowEvent(LocalAreaFrame, WindowEvent.WINDOW_CLOSING));
+    }
+    
     public void showPointCSVvalue() {
         
     }
@@ -177,9 +185,15 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         //vyriesit skritie
     }
 
-    public void updateSelectedPoints(List<Integer> get) {
-        //vyriesit skritie
+    public void updateSelectedPoints(List<Integer> indexes) {
+        pointerBatchComparisonResult.getRenderer().setPointsToDraw(indexes);
     }
+    
+    public void hideSelectedAreaInfo() {
+        //vyriesit skritie
+        pointerBatchComparisonResult.getCanvas().showPointValue(false, "", 1, 1);
+    }
+    
     
     
     public void updateModel(Model model){
@@ -269,7 +283,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                 selectArea(localAreas.getIndexes()[i]);
                 isAreaSelected = true;
                 startMousePositionDetectionOnCanvas(true);
-                AreasJList.setSelectedIndex(localAreas.getIndexes()[i]);
+                AreasJList.setSelectedIndex(localAreas.getIndexes()[0]);
                 return;
             }
             i++;
@@ -335,6 +349,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
      * Calculate intersection with points
      */
     private void drawHooveredPoint(){
+        if (!this.isVisible()){
+            pointerBatchComparisonResult.getCanvas().showPointValue(false, "", 1, 1);
+            return;
+        }
+        
         List<Vector4f> points = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
@@ -343,8 +362,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         if (point != null){
 
-            float pointCsvValue = getCSVvalue(AreasList, point.w);
+            DecimalFormat df = new DecimalFormat("#.###");
+            df.setRoundingMode(RoundingMode.CEILING);
+      
+            float pointCsvValue = getCSVvalue(AreasList.get(SelectedAreas[0]), point.w);
             pointerBatchComparisonResult.getRenderer().setPointToDraw(point, pointCsvValue);
+            String message = "["+df.format(point.x)+", "+df.format(point.y)+", "+df.format(point.z)+"]: CSV: "+df.format(pointCsvValue);
+            pointerBatchComparisonResult.getCanvas().showPointValue(true, message, (int)mousePosition.x, (int)mousePosition.y+10);
             isPointSelected = true;
             
         }
@@ -372,6 +396,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         LocalAreaJPanel.setPointerLocalAreasJPanel(this);
         
         LocalAreaFrame.add(LocalAreaJPanel);
+        LocalAreaFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                hideSelectedAreaInfo();
+            }
+        });
         
         LocalAreaFrame.pack();
     }
@@ -404,7 +434,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             tempList.add(selectedArea);
         }
         
-        pointerBatchComparisonResult.SetLocalAreaRender(SelectedAreas, tempList, model);
+        pointerBatchComparisonResult.getRenderer().SetUpLocalAreaRender(SelectedAreas, tempList, model);
     }
     
     private static Area deepCopyArea(Area area){
@@ -425,13 +455,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         return result;
     }
     
-    private static float getCSVvalue(List<Area> areasList, float w){
-        for (Area area : areasList){
-            int index = area.vertices.indexOf((int)w);
-            if (index != -1){
-                return area.csvValues.get(index);
-            }
+    private static float getCSVvalue(Area area, float w){
+        
+        int index = area.vertices.indexOf((int)w);
+        if (index != -1){
+            return area.csvValues.get(index);
         }
+        
 
         return 0.0f;
     }
@@ -443,6 +473,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         return (int)TimeUnit.MILLISECONDS.toMillis(Math.abs(end - start));
     }
     // </editor-fold>
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

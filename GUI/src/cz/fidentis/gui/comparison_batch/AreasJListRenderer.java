@@ -39,7 +39,7 @@ public class AreasJListRenderer extends DefaultListCellRenderer  {
 
 
            if (isSelected) {
-               setBackground(getBackground().darker());
+               setBackground(getBackground().white);
            }
          return c;
     }

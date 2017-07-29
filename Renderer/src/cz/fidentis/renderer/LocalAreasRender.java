@@ -79,6 +79,10 @@ public class LocalAreasRender{
         isDrawPoint = true;
     }
     
+    void setPointsToDraw(List<Integer> pointsIndexes) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+    
     public Boolean IsSetUp(){
         return isSetUp;
     }
@@ -294,6 +298,8 @@ public class LocalAreasRender{
         gl.glVertexAttribPointer(colorAttribLoc, 4, GL_FLOAT, false, 0, 0);
 
         gl.glBindVertexArray(joglArray);
+        
+        
         return gl;
     }
     
@@ -324,5 +330,7 @@ public class LocalAreasRender{
 
         return matrix;
     }
+
+    
 
 }

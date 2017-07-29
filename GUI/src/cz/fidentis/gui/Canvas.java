@@ -7,13 +7,17 @@ import cz.fidentis.model.Model;
 import cz.fidentis.model.ModelLoader;
 import cz.fidentis.renderer.GeneralGLEventListener;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -47,6 +51,7 @@ public class Canvas extends javax.swing.JPanel {
     protected boolean isPrimary = false;
 
     public Canvas() {
+        
         this.isPrimary = false;
         GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2));
         capabilities.setDoubleBuffered(true);
@@ -96,6 +101,8 @@ public class Canvas extends javax.swing.JPanel {
             }
 
         });
+        
+        this.jLabelPointCSVvalue.setVisible(false);
     }
 
     /**
@@ -104,10 +111,12 @@ public class Canvas extends javax.swing.JPanel {
     public Canvas(ProjectTopComponent tc, boolean primary) {
         this(tc);
         this.isPrimary = primary;
+        this.jLabelPointCSVvalue.setVisible(false);
 
     }
 
     public Canvas(ProjectTopComponent tc) {
+        
         this.projectTopComponent = tc;
 
         this.isPrimary = false;
@@ -159,6 +168,7 @@ public class Canvas extends javax.swing.JPanel {
             }
 
         });
+        this.jLabelPointCSVvalue.setVisible(false);
     }
 
     
@@ -252,6 +262,7 @@ public class Canvas extends javax.swing.JPanel {
         jTextArea1 = new javax.swing.JTextArea();
         textPane = new javax.swing.JTextPane();
         jButton1 = new javax.swing.JButton();
+        jLabelPointCSVvalue = new javax.swing.JLabel();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -496,7 +507,7 @@ public class Canvas extends javax.swing.JPanel {
                         .addComponent(zTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         featurePointsPanelLayout.setVerticalGroup(
             featurePointsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -513,7 +524,7 @@ public class Canvas extends javax.swing.JPanel {
                     .addComponent(yTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
+                .addComponent(jScrollPane2))
         );
 
         jLayeredPane.setLayer(featurePointsPanel, javax.swing.JLayeredPane.POPUP_LAYER);
@@ -544,6 +555,13 @@ public class Canvas extends javax.swing.JPanel {
         jLayeredPane.setLayer(jButton1, javax.swing.JLayeredPane.POPUP_LAYER);
         jLayeredPane.add(jButton1);
         jButton1.setBounds(303, 10, 100, 120);
+
+        jLabelPointCSVvalue.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabelPointCSVvalue.setForeground(new java.awt.Color(255, 255, 255));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelPointCSVvalue, org.openide.util.NbBundle.getMessage(Canvas.class, "Canvas.jLabelPointCSVvalue.text")); // NOI18N
+        jLayeredPane.setLayer(jLabelPointCSVvalue, javax.swing.JLayeredPane.MODAL_LAYER);
+        jLayeredPane.add(jLabelPointCSVvalue);
+        jLabelPointCSVvalue.setBounds(290, 200, 110, 16);
 
         add(jLayeredPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -914,6 +932,12 @@ public class Canvas extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    public void showPointValue(boolean visible, String text, int x, int y){
+        jLabelPointCSVvalue.setVisible(visible);
+        jLabelPointCSVvalue.setBounds(x, y, 250, 16);
+        jLabelPointCSVvalue.setText(text);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     protected javax.swing.JButton downNavigationButton;
@@ -927,6 +951,7 @@ public class Canvas extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelPointCSVvalue;
     protected javax.swing.JLayeredPane jLayeredPane;
     protected javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;

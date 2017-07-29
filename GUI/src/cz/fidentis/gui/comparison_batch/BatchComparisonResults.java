@@ -10,6 +10,7 @@ import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.comparison.RegistrationMethod;
 import cz.fidentis.comparison.procrustes.DatabaseWorker;
 import cz.fidentis.controller.BatchComparison;
+import cz.fidentis.gui.Canvas;
 import cz.fidentis.gui.GUIController;
 import cz.fidentis.gui.ProjectTopComponent;
 import cz.fidentis.gui.TableProcessing;
@@ -2387,13 +2388,6 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         LocalAreasFrame.setMinimumSize(new Dimension(340, 700));
         LocalAreasFrame.setMaximumSize(new Dimension(340, 700));
         
-        LocalAreasFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
-            }
-        });
-        
         localAreasJPanel = new LocalAreasJPanel();
         
         localAreasJPanel.setPointerBatchComparisonResults(this);
@@ -2401,6 +2395,14 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         
         LocalAreasFrame.pack();
         GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().setLocalAreasJPanel(localAreasJPanel);
+        
+        LocalAreasFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().HideLocalAreaRender();
+                localAreasJPanel.closeSelectedArea();
+            }
+        });
     }
     
     public void setCurrentModel(Model model){
@@ -2424,11 +2426,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     public List<Float> GetAuxiliaryAverageResults(){
         return getContext().getHd();
     }
-    
-    public void SetLocalAreaRender(int[] areasIndexes, List<Area> area, Model model){
-        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().SetUpLocalAreaRender(areasIndexes, area, model);
-    }
-    
+
     public LocalAreasJPanel getLocalAreasJPanel(){
         return this.localAreasJPanel;
     }
@@ -2451,6 +2449,10 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     
     public BatchComparison getContext(){
         return GUIController.getSelectedProjectTopComponent().getProject().getSelectedBatchComparison();
+    }
+    
+    public Canvas getCanvas(){
+        return GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getCanvas1();
     }
 
     public void setConfiguration() {

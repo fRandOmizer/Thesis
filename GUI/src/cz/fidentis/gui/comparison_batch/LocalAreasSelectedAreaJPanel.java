@@ -523,6 +523,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         if (this.histogram != null && area != null){
             histogram.setSize(this.histogramHolder.getWidth(), this.histogramHolder.getHeight());
             this.histogram.setValues(area.csvValues);
+            this.setColors();
         }
         
     }//GEN-LAST:event_formComponentResized
