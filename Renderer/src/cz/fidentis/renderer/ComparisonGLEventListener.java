@@ -2765,11 +2765,17 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
         return viewport;
     }
     
-    public void setPointToDraw(Vector4f point, float csv){
-        localAreaRender.setPointToDraw(point, csv);
+    public void setPointToDraw(Vector4f point){
+        localAreaRender.setPointToDraw(point);
     }
     
-    public void setPointsToDraw(List<Integer> pointsIndexes){
-        localAreaRender.setPointsToDraw(pointsIndexes);
+    public void setPointsToDraw(List<Vector4f> points){
+        localAreaRender.setPointsToDraw(points);
     }
+
+    public void hideSelectedPoints() {
+        localAreaRender.hideSelectedPoints();
+    }
+
+    
 }

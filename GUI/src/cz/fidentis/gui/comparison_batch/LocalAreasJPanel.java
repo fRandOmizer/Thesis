@@ -186,12 +186,23 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
 
     public void updateSelectedPoints(List<Integer> indexes) {
-        pointerBatchComparisonResult.getRenderer().setPointsToDraw(indexes);
+//        if (indexes.size()==0){
+//            pointerBatchComparisonResult.getRenderer().hideSelectedPoints();
+//        }
+        List<Vector4f> points = new ArrayList<>();
+        List<Vector4f> allPoints = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
+        for (Integer index : indexes){
+            points.add(allPoints.get(index));
+        }
+
+        pointerBatchComparisonResult.getRenderer().setPointsToDraw(points);
+        
     }
     
     public void hideSelectedAreaInfo() {
         //vyriesit skritie
         pointerBatchComparisonResult.getCanvas().showPointValue(false, "", 1, 1);
+        pointerBatchComparisonResult.getRenderer().hideSelectedPoints();
     }
     
     
@@ -366,7 +377,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             df.setRoundingMode(RoundingMode.CEILING);
       
             float pointCsvValue = getCSVvalue(AreasList.get(SelectedAreas[0]), point.w);
-            pointerBatchComparisonResult.getRenderer().setPointToDraw(point, pointCsvValue);
+            pointerBatchComparisonResult.getRenderer().setPointToDraw(point);
             String message = "["+df.format(point.x)+", "+df.format(point.y)+", "+df.format(point.z)+"]: CSV: "+df.format(pointCsvValue);
             pointerBatchComparisonResult.getCanvas().showPointValue(true, message, (int)mousePosition.x, (int)mousePosition.y+10);
             isPointSelected = true;

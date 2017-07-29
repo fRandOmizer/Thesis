@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.libraries">
-    <module_version install_time="1501324349737" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1501344791564" last="true" origin="installer" specification_version="1.0">
         <file crc="4063712247" name="config/Modules/cz-fidentis-libraries.xml"/>
         <file crc="128127365" name="modules/cz-fidentis-libraries.jar"/>
         <file crc="2972908528" name="modules/ext/Jama-1.0.3.jar"/>

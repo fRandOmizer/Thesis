@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Saturday, July 29, 2017 12:30:53 PM CEST
+>Log Session: Saturday, July 29, 2017 6:10:49 PM CEST
 >System Info: 
   Product Version         = Fidentis
   Operating System        = Windows 10 version 10.0 running on amd64
@@ -109,7 +109,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	cz.fidentis.controller [1.0 170722]
 	cz.fidentis.merging [1.0 170712]
 	cz.fidentis.processing [1.0 170722]
-	cz.fidentis.renderer [1.0 170723]
+	cz.fidentis.renderer [1.0 170729]
 	cz.fidentis.ageing [1.0 170722]
 	cz.fidentis.gui [1.0 170729]
 INFO [org.netbeans.core.network.proxy.NetworkProxyReloader]: System network proxy resolver: Windows
@@ -145,9 +145,133 @@ Heap memory usage: initial 126.0MB maximum 1790.5MB
 Non heap memory usage: initial 2.4MB maximum -1b
 Garbage collector: PS Scavenge (Collections=5 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=1 Total time spent=0s)
-Classes: loaded=4997 total loaded=4997 unloaded 0
+Classes: loaded=4999 total loaded=4999 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8,443,035,648
 INFO [null]: Total physical memory 8,443,035,648
 WARNING [org.openide.filesystems.Ordering]: Found same position 100 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener-separatorAfter.instance and Menu/File/cz-fidentis-gui-actions-OpenProject-separatorAfter.instance
 WARNING [org.openide.filesystems.Ordering]: Found same position 75 for both Menu/File/cz-fidentis-gui-actions-AgeingActionListener.shadow and Menu/File/cz-fidentis-gui-actions-OpenProject.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Options/ marked with the position attribute: [cz-fidentis-gui-actions-Textures.shadow], but some are: [cz-fidentis-gui-actions-Background.shadow]
+SEVERE [global]
+java.lang.ArrayIndexOutOfBoundsException: 9
+	at cz.fidentis.renderer.LocalAreasRender.setPointsToDraw(LocalAreasRender.java:98)
+	at cz.fidentis.renderer.ComparisonGLEventListener.setPointsToDraw(ComparisonGLEventListener.java:2773)
+	at cz.fidentis.gui.comparison_batch.LocalAreasJPanel.updateSelectedPoints(LocalAreasJPanel.java:198)
+	at cz.fidentis.gui.comparison_batch.LocalAreasSelectedAreaJPanel.updateSelectedPoints(LocalAreasSelectedAreaJPanel.java:133)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel.formMouseClicked(HistogramJPanel.java:276)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel.access$100(HistogramJPanel.java:20)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel$2.mouseClicked(HistogramJPanel.java:246)
+	at java.awt.Component.processMouseEvent(Component.java:6536)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6298)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4889)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4534)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2746)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
+[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+SEVERE [global]
+java.lang.ArrayIndexOutOfBoundsException: 6
+	at cz.fidentis.renderer.LocalAreasRender.setPointsToDraw(LocalAreasRender.java:92)
+	at cz.fidentis.renderer.ComparisonGLEventListener.setPointsToDraw(ComparisonGLEventListener.java:2773)
+	at cz.fidentis.gui.comparison_batch.LocalAreasJPanel.updateSelectedPoints(LocalAreasJPanel.java:198)
+	at cz.fidentis.gui.comparison_batch.LocalAreasSelectedAreaJPanel.updateSelectedPoints(LocalAreasSelectedAreaJPanel.java:133)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel.formMouseClicked(HistogramJPanel.java:276)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel.access$100(HistogramJPanel.java:20)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel$2.mouseClicked(HistogramJPanel.java:246)
+	at java.awt.Component.processMouseEvent(Component.java:6536)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6298)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4889)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4534)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2746)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
+[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+SEVERE [global]
+java.lang.ArrayIndexOutOfBoundsException: 9
+	at cz.fidentis.renderer.LocalAreasRender.setPointsToDraw(LocalAreasRender.java:98)
+	at cz.fidentis.renderer.ComparisonGLEventListener.setPointsToDraw(ComparisonGLEventListener.java:2773)
+	at cz.fidentis.gui.comparison_batch.LocalAreasJPanel.updateSelectedPoints(LocalAreasJPanel.java:198)
+	at cz.fidentis.gui.comparison_batch.LocalAreasSelectedAreaJPanel.updateSelectedPoints(LocalAreasSelectedAreaJPanel.java:133)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel.formMouseClicked(HistogramJPanel.java:276)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel.access$100(HistogramJPanel.java:20)
+	at cz.fidentis.gui.comparison_batch.HistogramJPanel$2.mouseClicked(HistogramJPanel.java:246)
+	at java.awt.Component.processMouseEvent(Component.java:6536)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3324)
+	at java.awt.Component.processEvent(Component.java:6298)
+	at java.awt.Container.processEvent(Container.java:2236)
+	at java.awt.Component.dispatchEventImpl(Component.java:4889)
+	at java.awt.Container.dispatchEventImpl(Container.java:2294)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4888)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4534)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4466)
+	at java.awt.Container.dispatchEventImpl(Container.java:2280)
+	at java.awt.Window.dispatchEventImpl(Window.java:2746)
+	at java.awt.Component.dispatchEvent(Component.java:4711)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:758)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:159)
+[catch] at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+SEVERE [null]: Last record repeated again.

@@ -57,8 +57,11 @@ public class LocalAreasRender{
     private Mat4 pointTranfMatrix;
     private boolean isDrawPoint;
     private boolean isClearSelection;
+    private boolean isDrawPoints;
     private float[] pointToDraw;
     private float[] colorForArea;
+    private float[] pointsToDraw;
+    private float[] colorPointsToDraw;
 
     
     public LocalAreasRender(){
@@ -74,13 +77,41 @@ public class LocalAreasRender{
         this.isClearSelection = false;
     }
     
-    public void setPointToDraw(Vector4f pointToDraw, float csv){
+    public void setPointToDraw(Vector4f pointToDraw){
         this.pointToDraw = new float[] {pointToDraw.x, pointToDraw.y, pointToDraw.z};
         isDrawPoint = true;
     }
     
-    void setPointsToDraw(List<Integer> pointsIndexes) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public void setPointsToDraw(List<Vector4f> points) {
+        isDrawPoints = true;
+        pointsToDraw = new float[points.size()*6];
+        colorPointsToDraw = new float[points.size()*4];
+        int index = 0;
+        int colorIndex = 0;
+        for (Vector4f point: points){
+            pointsToDraw[index] = point.x;
+            index++;
+            pointsToDraw[index] = point.y;
+            index++;
+            pointsToDraw[index] = point.z;
+            index++;
+            pointsToDraw[index] = 1f;
+            index++;
+            pointsToDraw[index] = 1f;
+            index++;
+            pointsToDraw[index] = 1f;
+            index++;
+
+            colorPointsToDraw[colorIndex] = 0.0f;
+            colorIndex++;
+            colorPointsToDraw[colorIndex] = 0.0f;
+            colorIndex++;
+            colorPointsToDraw[colorIndex] = 1.0f;
+            colorIndex++;
+            colorPointsToDraw[colorIndex] = 1.0f;
+            colorIndex++;
+            
+        }
     }
     
     public Boolean IsSetUp(){
@@ -89,6 +120,10 @@ public class LocalAreasRender{
     
     public void clearSelection(){
         isClearSelection = true;
+    }
+    
+    public void hideSelectedPoints(){
+        this.isDrawPoints = false;
     }
 
     public void HideLocalAreas(){
@@ -219,6 +254,33 @@ public class LocalAreasRender{
         gl.glBindVertexArray(joglArray);
         
         
+        
+        gl.glClear(GL_DEPTH_BUFFER_BIT);
+        gl.glPointSize(5);
+        
+        if (isDrawPoints && pointsToDraw.length>0){
+            
+            gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+            gl.glBufferData(GL_ARRAY_BUFFER, pointsToDraw.length * Buffers.SIZEOF_FLOAT,
+                    Buffers.newDirectFloatBuffer(pointsToDraw), GL_DYNAMIC_DRAW);
+
+            gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+            gl.glBufferData(GL_ARRAY_BUFFER, colorPointsToDraw.length * Buffers.SIZEOF_FLOAT,
+                    Buffers.newDirectFloatBuffer(colorPointsToDraw), GL_DYNAMIC_DRAW);
+
+            gl.glUseProgram(vertexShaderID);
+
+            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+            gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
+
+            gl.glBindVertexArray(vertexArray);
+            
+            
+            gl.glDrawArrays(GL2.GL_POINTS, 0, pointsToDraw.length/6);
+            
+            
+            gl.glBindVertexArray(joglArray);
+        }
         
         gl.glClear(GL_DEPTH_BUFFER_BIT);
         gl.glPointSize(5);
