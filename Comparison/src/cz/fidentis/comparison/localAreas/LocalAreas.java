@@ -30,13 +30,16 @@ public class LocalAreas {
     private List<Vector4f> allAreasPoints;
     private int[] indexesOfAreas;
     private List<Area> areas;
+    private float[] selectedAreaPoints;
+    private float[] selectedAreaPointsColor;
+    private Model model;
 
     public LocalAreas(){
         
     }
 
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
-        
+        this.model = model;
         
         // <editor-fold desc="Point positions">
         this.areas = areas;
@@ -221,20 +224,60 @@ public class LocalAreas {
         // </editor-fold> 
     }
     
-  
-    private static List<Integer> selectionSort(List<Integer> array) {
-        for (int i = 0; i < array.size() - 1; i++) {
-            int maxIndex = i;
-            for (int j = i + 1; j < array.size(); j++) {
-                if (array.get(j) > array.get(maxIndex)) maxIndex = j;
+    public void setColorForChosenArea(PointsValues points, Area area) {
+        List<Float> vertexes = new ArrayList<>();
+        List<Float> vertexColors = new ArrayList<>();
+
+        vertexAreasPoints3D = new ArrayList<>();
+
+        int[] faceIndexes;
+        
+        for (int i = 0; i < model.getFaces().getFacesVertIdxs().size(); i++) {
+            
+            faceIndexes = model.getFaces().getFaceVertIdxs(i);
+            
+            float[] areasColor = getSelectedAreaColor(faceIndexes, points, area);
+            if (areasColor != null){
+                int index = 0;
+                for (int j = 0; j < faceIndexes.length; j++){
+                    int faceIndex = faceIndexes[j]-1;
+
+                    vertexes.add(model.getVerts().get(faceIndex).x);
+                    vertexes.add(model.getVerts().get(faceIndex).y);
+                    vertexes.add(model.getVerts().get(faceIndex).z);
+
+                    vertexes.add(model.getNormals().get(faceIndex).x);
+                    vertexes.add(model.getNormals().get(faceIndex).y);
+                    vertexes.add(model.getNormals().get(faceIndex).z);
+
+                    vertexColors.add(areasColor[index]);
+                    index++;
+                    vertexColors.add(areasColor[index]);
+                    index++;
+                    vertexColors.add(areasColor[index]);
+                    index++;
+                    vertexColors.add(areasColor[index]);
+                    index++;
+
+                }
             }
-            int tmp = array.get(i);
-            array.set(i, array.get(maxIndex))  ;
-            array.set(maxIndex, tmp);
-        } 
-        return array;
+
+        }
+        float[] vertexesArray = new float[vertexes.size()];
+        int i = 0;
+        for (Float f : vertexes) {
+            vertexesArray[i++] = (f != null ? f : Float.NaN); 
+        }
+        
+        float[] vertexColorsArray = new float[vertexColors.size()];
+        i = 0;
+        for (Float f : vertexColors) {
+            vertexColorsArray[i++] = (f != null ? f : Float.NaN); 
+        }
+
+        selectedAreaPoints = vertexesArray;
+        selectedAreaPointsColor = vertexColorsArray;
     }
-    
 
     public float[] getVertexAreas(){
         return vertexAreas;
@@ -271,6 +314,13 @@ public class LocalAreas {
     public List<Vector4f> getAllPointsFromOneArea(){
         return allAreasPoints;
     }
+    
+    public float[] getSelectedAreaPoints(){
+        return selectedAreaPoints;
+    }
+    public float[] getSelectedAreaPointsColor(){
+        return selectedAreaPointsColor;
+    }
 
     private static float[] getColor(int[] indexes, List<Area> areas) {
         
@@ -292,6 +342,88 @@ public class LocalAreas {
                                     areas.get(i).color.get(2)};
             }
         }
+        return null;
+    }
+    
+    private static float[] getSelectedAreaColor(int[] indexes, PointsValues points, Area area) {
+        
+        float[] colors = new float[12];
+        
+        int k = 0;
+        if (area.vertices.contains(indexes[0]-1)) {
+            k++;
+            int index = -1;
+            for (int i = 0; i < points.distribution.size(); i++){
+                int tempIndex = area.vertices.indexOf(indexes[0]-1);
+                if (points.distribution.get(i).contains(tempIndex)){
+                    index = i;
+                }
+            }
+            
+            
+            colors[0] = (float)points.distributionColor.get(index).getRed()/255f;
+            colors[1] = (float)points.distributionColor.get(index).getGreen()/255f;
+            colors[2] = (float)points.distributionColor.get(index).getBlue()/255f;
+            colors[3] = 1f;
+            
+            
+        } else {
+            colors[0] = 0f;
+            colors[1] = 0f;
+            colors[2] = 0f;
+            colors[3] = 0f;
+        }
+        
+        if (area.vertices.contains(indexes[1]-1)) {
+            k++;
+            int index = -1;
+            for (int i = 0; i < points.distribution.size(); i++){
+                int tempIndex = area.vertices.indexOf(indexes[1]-1);
+                if (points.distribution.get(i).contains(tempIndex)){
+                    index = i;
+                }
+            }
+            
+            colors[4] = (float)points.distributionColor.get(index).getRed()/255f;
+            colors[5] = (float)points.distributionColor.get(index).getGreen()/255f;
+            colors[6] = (float)points.distributionColor.get(index).getBlue()/255f;
+            colors[7] = 1f;
+            
+            
+        } else {
+            colors[4] = 0f;
+            colors[5] = 0f;
+            colors[6] = 0f;
+            colors[7] = 0f;
+        }
+        
+        if (area.vertices.contains(indexes[2]-1)) {
+            k++;
+            int index = -1;
+            for (int i = 0; i < points.distribution.size(); i++){
+                int tempIndex = area.vertices.indexOf(indexes[2]-1);
+                if (points.distribution.get(i).contains(tempIndex)){
+                    index = i;
+                }
+            }
+            
+            colors[8] = (float)points.distributionColor.get(index).getRed()/255f;
+            colors[9] = (float)points.distributionColor.get(index).getGreen()/255f;
+            colors[10] = (float)points.distributionColor.get(index).getBlue()/255f;
+            colors[11] = 1f;
+            
+
+        } else {
+            colors[8] = 0f;
+            colors[9] = 0f;
+            colors[10] = 0f;
+            colors[11] = 0f;
+        }
+
+        if( k >= 1){
+            return colors;
+        }
+        
         return null;
     }
     
@@ -377,6 +509,19 @@ public class LocalAreas {
         }
         
         return alreadyAddedLines;
+    }
+
+    private static List<Integer> selectionSort(List<Integer> array) {
+        for (int i = 0; i < array.size() - 1; i++) {
+            int maxIndex = i;
+            for (int j = i + 1; j < array.size(); j++) {
+                if (array.get(j) > array.get(maxIndex)) maxIndex = j;
+            }
+            int tmp = array.get(i);
+            array.set(i, array.get(maxIndex))  ;
+            array.set(maxIndex, tmp);
+        } 
+        return array;
     }
     
     

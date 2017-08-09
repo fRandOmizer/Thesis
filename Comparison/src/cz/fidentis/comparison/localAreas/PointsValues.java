@@ -107,51 +107,32 @@ public class PointsValues {
 
         for (int i = 0; i < numberOfCollumns; i++){
             float upValue = values.get(0)-(i)*clusterIndex;
-            if (i>0){
-                upValue = values.get(0)-(i-1)*clusterIndex;
-            }
-            float downValue = values.get(0)-i*clusterIndex;
-
+            float downValue = values.get(0)-(i+1)*clusterIndex;
+         
             List<Integer> Items = new ArrayList<>();
-
-            boolean condition = true;
-
-            while (condition){
-
-                if (index < values.size() - 1){
-                    if (values.get(0)-i*clusterIndex <= values.get(index)){
-                        index++;
-                        Items.add(indexes.get(index));
-                        
-                    }
-                    else {
-                        condition = false;
-                    }
-                }
-                else {
-                    condition = false;
-                }
-            }
-            if (i+1 == numberOfCollumns){
-                for (; index < indexes.size(); index++){
-                    Items.add(indexes.get(index));
-                    downValue = min;
-                }
+            
+            while ((index < values.size() && upValue >= values.get(index) && downValue <= values.get(index))||(index < values.size() && i == numberOfCollumns-1)){
+                Items.add(indexes.get(index));
+                index++;
+                
             }
 
+            //maximalny pocet prvkov v jednom stlpci
             if (maxClusteredPoints<=Items.size()){
                 maxClusteredPoints = Items.size();
             }
+            
+            //vlozenie dat do stlpca
             distribution.add(Items);
             DecimalFormat df = new DecimalFormat("#.###");
             df.setRoundingMode(RoundingMode.CEILING);
 
             distributionBoundaries.add("<"+df.format(downValue)+";"+df.format(upValue)+")");
         }
-        
+
         if (values.size() == 1){
-            distribution.set(distribution.size()/2, distribution.get(distribution.size()-1));
-            distribution.set(distribution.size()-1, new ArrayList<Integer>());
+            distribution.set(distribution.size()/2, distribution.get(0));
+            distribution.set(0, new ArrayList<Integer>());
         }
 
         this.setColors();

@@ -334,7 +334,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     private void canvas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseClicked
        if (pointer != null){
-            pointer.showPointCSVvalue();
+            //pointer.showPointCSVvalue();
         }
         
     }//GEN-LAST:event_canvas1MouseClicked

@@ -7,6 +7,7 @@ import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
 import com.jogamp.common.nio.Buffers;
+import cz.fidentis.comparison.localAreas.PointsValues;
 import cz.fidentis.model.Model;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class LocalAreasRender{
     private boolean isDrawPoint;
     private boolean isClearSelection;
     private boolean isDrawPoints;
+    private boolean isDrawSelectedArea;
     private float[] pointToDraw;
     private float[] colorForArea;
     private float[] pointsToDraw;
@@ -80,6 +82,16 @@ public class LocalAreasRender{
     public void setPointToDraw(Vector4f pointToDraw){
         this.pointToDraw = new float[] {pointToDraw.x, pointToDraw.y, pointToDraw.z};
         isDrawPoint = true;
+    }
+    
+    public void drawLocalArea(PointsValues points, Area area) {
+        
+        localAreas.setColorForChosenArea(points, area);
+        isDrawSelectedArea = true;
+    }
+
+    public void hideLocalArea() {
+        isDrawSelectedArea = false;
     }
     
     public void setPointsToDraw(List<Vector4f> points) {
@@ -255,6 +267,33 @@ public class LocalAreasRender{
         
         
         
+        //selected are
+        if (this.isDrawSelectedArea){
+            gl.glClear(GL_DEPTH_BUFFER_BIT);
+  
+            gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+            gl.glBufferData(GL_ARRAY_BUFFER,localAreas.getSelectedAreaPoints().length * Buffers.SIZEOF_FLOAT,
+                    Buffers.newDirectFloatBuffer(localAreas.getSelectedAreaPoints()), GL_DYNAMIC_DRAW);
+
+            gl.glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+            gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getSelectedAreaPointsColor().length * Buffers.SIZEOF_FLOAT,
+                    Buffers.newDirectFloatBuffer(localAreas.getSelectedAreaPointsColor()), GL_DYNAMIC_DRAW);
+
+            gl.glUseProgram(vertexShaderID);
+
+            gl.glUniformMatrix4fv(vertMvpUniformLoc, 1, false, pointTranfMatrix.getBuffer());
+            gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
+
+            gl.glBindVertexArray(vertexArray);
+
+
+            gl.glDrawArrays(GL2.GL_TRIANGLES, 0, localAreas.getSelectedAreaPoints().length/6);
+
+            gl.glBindVertexArray(joglArray);
+        }
+        
+        
+        
         gl.glClear(GL_DEPTH_BUFFER_BIT);
         gl.glPointSize(5);
         
@@ -392,6 +431,8 @@ public class LocalAreasRender{
 
         return matrix;
     }
+
+    
 
     
 

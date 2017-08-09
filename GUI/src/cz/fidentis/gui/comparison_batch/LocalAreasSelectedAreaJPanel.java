@@ -134,7 +134,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     }
 
     private void setColors() {
-        pointerLocalAreasJPanel.setAreaColors(histogram.getPoints());
+        pointerLocalAreasJPanel.setAreaColors(histogram.getPoints(), area);
     }
 
     private static List<String> filterModelName(List<File> files){
@@ -523,7 +523,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         if (this.histogram != null && area != null){
             histogram.setSize(this.histogramHolder.getWidth(), this.histogramHolder.getHeight());
             this.histogram.setValues(area.csvValues);
-            this.setColors();
+            //this.setColors();
         }
         
     }//GEN-LAST:event_formComponentResized

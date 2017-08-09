@@ -177,18 +177,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         LocalAreaFrame.dispatchEvent(new WindowEvent(LocalAreaFrame, WindowEvent.WINDOW_CLOSING));
     }
     
-    public void showPointCSVvalue() {
-        
-    }
-    
-    public void setAreaColors(PointsValues points) {
-        //vyriesit skritie
+    public void setAreaColors(PointsValues points, Area area) {
+        pointerBatchComparisonResult.getRenderer().drawSelectedArea(points, area);
     }
 
     public void updateSelectedPoints(List<Integer> indexes) {
-//        if (indexes.size()==0){
-//            pointerBatchComparisonResult.getRenderer().hideSelectedPoints();
-//        }
+
         List<Vector4f> points = new ArrayList<>();
         List<Vector4f> allPoints = pointerBatchComparisonResult.getRenderer().getLocalAreas().getAllPointsFromOneArea();
         for (Integer index : indexes){
@@ -203,6 +197,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         //vyriesit skritie
         pointerBatchComparisonResult.getCanvas().showPointValue(false, "", 1, 1);
         pointerBatchComparisonResult.getRenderer().hideSelectedPoints();
+        pointerBatchComparisonResult.getRenderer().hideSelectedArea();
     }
     
     

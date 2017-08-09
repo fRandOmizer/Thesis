@@ -16,6 +16,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import cz.fidentis.comparison.icp.ICPTransformation;
 import cz.fidentis.comparison.icp.Icp;
 import cz.fidentis.comparison.localAreas.LocalAreas;
+import cz.fidentis.comparison.localAreas.PointsValues;
 import cz.fidentis.comparison.procrustes.ProcrustesAnalysis;
 import cz.fidentis.composite.ModelSelector;
 import cz.fidentis.featurepoints.FacialPoint;
@@ -2775,6 +2776,14 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
 
     public void hideSelectedPoints() {
         localAreaRender.hideSelectedPoints();
+    }
+
+    public void drawSelectedArea(PointsValues points, Area area) {
+        localAreaRender.drawLocalArea(points, area);
+    }
+
+    public void hideSelectedArea() {
+        localAreaRender.hideLocalArea();
     }
 
     
