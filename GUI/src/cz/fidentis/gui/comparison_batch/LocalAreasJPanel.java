@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -32,9 +33,11 @@ import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -478,6 +481,53 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         return (int)TimeUnit.MILLISECONDS.toMillis(Math.abs(end - start));
     }
+    
+    private static FileWriter csvGenerator(FileWriter writer, VertexArea vertexArea) throws IOException{
+        int totalLength = -1;
+        int numberOfAreas = vertexArea.getAreas().size();
+        
+        List<String> values = Arrays.asList(new String[numberOfAreas]);
+        
+        for (int i = 0; i < numberOfAreas; i++){
+            values.set(i, i+" Area");
+            if (totalLength < vertexArea.getAreas().get(i).csvValues.size()){
+                totalLength = vertexArea.getAreas().get(i).csvValues.size();
+            }
+        }
+        
+        writer.write(writeRow(values));
+        
+        for (int j = 0; j < totalLength; j++){
+            List<String> csvValues = Arrays.asList(new String[numberOfAreas]);
+            for (int i = 0; i < numberOfAreas; i++){
+                if (vertexArea.getAreas().get(i).csvValues.size() > j){
+                    csvValues.set(i, vertexArea.getAreas().get(i).csvValues.get(j)+"");
+                } else {
+                    csvValues.set(i, "");
+                }
+                
+            }
+            writer.write(writeRow(csvValues));
+        }
+
+        return writer;
+    }
+    
+    private static String writeRow(List<String> values){
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < values.size(); i++){
+            sb.append(values.get(i));
+            sb.append(',');
+        }
+        sb.append('\n');
+
+        return sb.toString();
+        
+    }
+    
+    
+    
     // </editor-fold>
     
     /**
@@ -575,8 +625,18 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
         jRadButRelativeValuesYes.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(jRadButRelativeValuesYes, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jRadButRelativeValuesYes.text")); // NOI18N
+        jRadButRelativeValuesYes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadButRelativeValuesYesMouseClicked(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jRadButRelativeValuesNo, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jRadButRelativeValuesNo.text")); // NOI18N
+        jRadButRelativeValuesNo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadButRelativeValuesNoMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -711,37 +771,22 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             vertexArea.makeMatrics(false);
         }
         
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
-        fileChooser.setFileFilter(filter);
-        Component modalToComponent = null;
-        if (fileChooser.showSaveDialog(modalToComponent) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            // save to file
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("csv", "csv");
+        jfc.setFileFilter(filter);
+        int returnValue = jfc.showSaveDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = jfc.getSelectedFile();
             try {
-                // creates the file
-                file.createNewFile();
-            } catch (IOException ex) {
-            }
-            // creates a FileWriter Object
-            FileWriter writer = null;
-            try {
-                writer = new FileWriter(file);
-            } catch (IOException ex) {
-            }
-            try {
-                // Writes the content to the file
-                writer.write(vertexArea.getAreas().toString());
-            } catch (IOException ex) {
-            }
-            try {
+                FileWriter writer = new FileWriter(selectedFile.getAbsolutePath()+".csv");
+                writer = csvGenerator(writer, vertexArea);
                 writer.flush();
-            } catch (IOException ex) {
-            }
-            try {
                 writer.close();
             } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
+                
         }
     }//GEN-LAST:event_ExportButtonActionPerformed
 
@@ -778,6 +823,14 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
            BottomTextField.setText(BottomTresh.toString());
         }
     }//GEN-LAST:event_BottomTextFieldFocusLost
+
+    private void jRadButRelativeValuesNoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadButRelativeValuesNoMouseClicked
+        jRadButRelativeValuesYes.setSelected(false);
+    }//GEN-LAST:event_jRadButRelativeValuesNoMouseClicked
+
+    private void jRadButRelativeValuesYesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadButRelativeValuesYesMouseClicked
+        jRadButRelativeValuesNo.setSelected(false);
+    }//GEN-LAST:event_jRadButRelativeValuesYesMouseClicked
     // </editor-fold>
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
