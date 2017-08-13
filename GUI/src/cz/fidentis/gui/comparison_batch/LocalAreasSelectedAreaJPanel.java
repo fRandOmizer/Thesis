@@ -7,6 +7,7 @@ package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.hausdorffDistance.ComparisonMetrics;
 import cz.fidentis.comparison.localAreas.Area;
+import cz.fidentis.comparison.localAreas.VertexArea;
 import static cz.fidentis.processing.comparison.surfaceComparison.SurfaceComparisonProcessing.computeSingleVariation;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -27,9 +28,12 @@ import javax.vecmath.Vector4f;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.abs;
+import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileSystemView;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -48,6 +52,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private List<String> metricName;
     private HistogramJPanel histogram;
     private Color areaColor;
+    private VertexArea exportArea;
     
     /**
      * Creates new form LocalAreasSelectedPointJPanel
@@ -72,7 +77,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         
     }
     
-    public void SetArea(Area area, Boolean relative, ArrayList<ArrayList<Float>> HdVisualResults, List<File> models, int metricIndex){
+    public void SetArea(VertexArea exportArea, Area area, Boolean relative, ArrayList<ArrayList<Float>> HdVisualResults, List<File> models, int metricIndex){
+        this.exportArea = exportArea;
         this.area = area;
         this.metric = ComparisonMetrics.instance();
         this.HdVisualResults = HdVisualResults;
@@ -206,6 +212,38 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         }
         return result;
     }
+    
+    private static FileWriter csvGenerator(FileWriter writer, Area area) throws IOException{
+        int totalLength = totalLength = area.csvValues.size();
+        
+        List<String> values = Arrays.asList(new String[1]);
+        values.set(0, area.index+" Area");
+            
+
+        
+        writer.write(writeRow(values));
+        
+        for (int j = 0; j < totalLength; j++){
+            List<String> csvValues = Arrays.asList(new String[1]);
+            csvValues.set(0, area.csvValues.get(j)+"");
+            writer.write(writeRow(csvValues));
+        }
+
+        return writer;
+    }
+    
+    private static String writeRow(List<String> values){
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < values.size(); i++){
+            sb.append(values.get(i));
+            sb.append(',');
+        }
+        sb.append('\n');
+
+        return sb.toString();
+        
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -245,6 +283,9 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         jButtonAreaColorChange = new javax.swing.JButton();
         jButtonChangeColorMax = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jRadButRelativeValuesYes = new javax.swing.JRadioButton();
+        jRadButRelativeValuesNo = new javax.swing.JRadioButton();
 
         setMinimumSize(new java.awt.Dimension(600, 700));
         setPreferredSize(new java.awt.Dimension(600, 700));
@@ -353,6 +394,23 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.jLabel1.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.jLabel4.text")); // NOI18N
+
+        jRadButRelativeValuesYes.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadButRelativeValuesYes, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.jRadButRelativeValuesYes.text")); // NOI18N
+        jRadButRelativeValuesYes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadButRelativeValuesYesMouseClicked(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jRadButRelativeValuesNo, org.openide.util.NbBundle.getMessage(LocalAreasSelectedAreaJPanel.class, "LocalAreasSelectedAreaJPanel.jRadButRelativeValuesNo.text")); // NOI18N
+        jRadButRelativeValuesNo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadButRelativeValuesNoMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -401,8 +459,14 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                         .addComponent(labelAreaName, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel4)
+                        .addGap(299, 299, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jRadButRelativeValuesYes)
+                                .addGap(18, 18, 18)
+                                .addComponent(jRadButRelativeValuesNo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonChangeColorMin, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -463,7 +527,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonChangeColorMin)
                     .addComponent(jButtonChangeColorMax))
-                .addGap(38, 38, 38)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(labelAreaName10)
@@ -477,45 +541,54 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
                         .addComponent(DifferentFace)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(SimilarFace)))
-                .addGap(31, 31, 31)
-                .addComponent(jButtonExport)
-                .addGap(29, 29, 29))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadButRelativeValuesNo)
+                            .addComponent(jRadButRelativeValuesYes))
+                        .addGap(23, 23, 23)
+                        .addComponent(jButtonExport))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)))
+                .addGap(185, 185, 185))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportActionPerformed
 
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
-        fileChooser.setFileFilter(filter);
-        Component modalToComponent = null;
-        if (fileChooser.showSaveDialog(modalToComponent) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            // save to file
+        if(jRadButRelativeValuesYes.isSelected()) {
+            exportArea.makeMatrics(true);
+        } 
+        if(jRadButRelativeValuesNo.isSelected()){
+            exportArea.makeMatrics(false);
+        }
+        
+        if (jRadButRelativeValuesYes.isSelected() && jRadButRelativeValuesNo.isSelected()){
+            return;
+        }
+        
+        if (!jRadButRelativeValuesYes.isSelected() && !jRadButRelativeValuesNo.isSelected()){
+            return;
+        }
+        
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("csv", "csv");
+        jfc.setFileFilter(filter);
+        int returnValue = jfc.showSaveDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = jfc.getSelectedFile();
             try {
-                // creates the file
-                file.createNewFile();
-            } catch (IOException ex) {
-            }
-            // creates a FileWriter Object
-            FileWriter writer = null;
-            try {
-                writer = new FileWriter(file);
-            } catch (IOException ex) {
-            }
-            try {
-                // Writes the content to the file
-                writer.write(area.toString());
-            } catch (IOException ex) {
-            }
-            try {
+                FileWriter writer = new FileWriter(selectedFile.getAbsolutePath()+".csv");
+                writer = csvGenerator(writer, area);
                 writer.flush();
-            } catch (IOException ex) {
-            }
-            try {
                 writer.close();
             } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
+                
         }
     }//GEN-LAST:event_jButtonExportActionPerformed
 
@@ -544,6 +617,19 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         histogram.setColorMax(areaColor);
     }//GEN-LAST:event_jButtonChangeColorMaxActionPerformed
 
+    private void jRadButRelativeValuesYesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadButRelativeValuesYesMouseClicked
+        if (jRadButRelativeValuesYes.isSelected()){
+            jRadButRelativeValuesNo.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadButRelativeValuesYesMouseClicked
+
+    private void jRadButRelativeValuesNoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadButRelativeValuesNoMouseClicked
+        if (jRadButRelativeValuesNo.isSelected()){
+            jRadButRelativeValuesYes.setSelected(false);
+        }
+
+    }//GEN-LAST:event_jRadButRelativeValuesNoMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AriMean;
@@ -562,7 +648,10 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButtonChangeColorMin;
     private javax.swing.JButton jButtonExport;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton jRadButRelativeValuesNo;
+    private javax.swing.JRadioButton jRadButRelativeValuesYes;
     private javax.swing.JLabel labelAreaName;
     private javax.swing.JLabel labelAreaName1;
     private javax.swing.JLabel labelAreaName10;

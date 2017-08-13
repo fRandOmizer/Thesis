@@ -2,6 +2,7 @@ package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.icp.KdTreeIndexed;
 import cz.fidentis.comparison.localAreas.Area;
+import cz.fidentis.comparison.localAreas.AreaListXML;
 import cz.fidentis.comparison.localAreas.BinTree;
 import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
 import cz.fidentis.comparison.localAreas.LocalAreas;
@@ -37,6 +38,9 @@ import javax.swing.filechooser.FileSystemView;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import org.openide.util.Exceptions;
 
 /**
@@ -283,7 +287,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                     LocalAreaFrame.setAlwaysOnTop(true);
                 }
                 
-                LocalAreaJPanel.SetArea(AreasList.get(localAreas.getIndexes()[i]), 
+                LocalAreaJPanel.SetArea(vertexArea,
+                        AreasList.get(localAreas.getIndexes()[i]), 
                         RelativeValues, 
                         pointerBatchComparisonResult.getContext().getHdVisualResults(), 
                         pointerBatchComparisonResult.getContext().getModels(),
@@ -557,6 +562,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         jLabelInitialModel = new javax.swing.JLabel();
         jRadButRelativeValuesYes = new javax.swing.JRadioButton();
         jRadButRelativeValuesNo = new javax.swing.JRadioButton();
+        jButtonImportAreas = new javax.swing.JButton();
+        jButtonExportAreas = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(313, 700));
 
@@ -638,6 +645,20 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButtonImportAreas, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jButtonImportAreas.text")); // NOI18N
+        jButtonImportAreas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonImportAreasActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButtonExportAreas, org.openide.util.NbBundle.getMessage(LocalAreasJPanel.class, "LocalAreasJPanel.jButtonExportAreas.text")); // NOI18N
+        jButtonExportAreas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExportAreasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -653,7 +674,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel5))
                         .addGap(16, 16, 16)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -668,11 +689,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel4)
                                 .addGap(42, 42, 42)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(AllButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(SelectButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jRadButRelativeValuesYes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jRadButRelativeValuesNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jRadButRelativeValuesNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonImportAreas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonExportAreas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -696,15 +719,17 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
                     .addComponent(BottomTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(ApplyButton)
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonImportAreas)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonExportAreas)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(SelectButton)
                         .addGap(18, 18, 18)
                         .addComponent(AllButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
@@ -771,6 +796,14 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             vertexArea.makeMatrics(false);
         }
         
+        if (jRadButRelativeValuesYes.isSelected() && jRadButRelativeValuesNo.isSelected()){
+            return;
+        }
+        
+        if (!jRadButRelativeValuesYes.isSelected() && !jRadButRelativeValuesNo.isSelected()){
+            return;
+        }
+        
         JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         FileNameExtensionFilter filter = new FileNameExtensionFilter("csv", "csv");
         jfc.setFileFilter(filter);
@@ -825,12 +858,53 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_BottomTextFieldFocusLost
 
     private void jRadButRelativeValuesNoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadButRelativeValuesNoMouseClicked
-        jRadButRelativeValuesYes.setSelected(false);
+        if (jRadButRelativeValuesNo.isSelected()){
+            jRadButRelativeValuesYes.setSelected(false);
+        }
+        
     }//GEN-LAST:event_jRadButRelativeValuesNoMouseClicked
 
     private void jRadButRelativeValuesYesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadButRelativeValuesYesMouseClicked
-        jRadButRelativeValuesNo.setSelected(false);
+        if (jRadButRelativeValuesYes.isSelected()){
+            jRadButRelativeValuesNo.setSelected(false);
+        }
     }//GEN-LAST:event_jRadButRelativeValuesYesMouseClicked
+
+    private void jButtonImportAreasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImportAreasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonImportAreasActionPerformed
+
+    private void jButtonExportAreasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportAreasActionPerformed
+
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("xml", "xml");
+        jfc.setFileFilter(filter);
+        int returnValue = jfc.showSaveDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                AreaListXML areaListXML = new AreaListXML();
+                areaListXML.setAreaList(AreasList);
+                
+                File file = new File(jfc.getSelectedFile().getAbsolutePath()+".xml");
+                JAXBContext jaxbContext = JAXBContext.newInstance(AreaListXML.class);
+                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+                // output pretty printed
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+                jaxbMarshaller.marshal(areaListXML, file);
+                //jaxbMarshaller.marshal(areaListXML, System.out);
+            } catch (JAXBException e) {
+                Exceptions.printStackTrace(e);
+            }
+                
+        }        
+        
+        
+        
+        
+    }//GEN-LAST:event_jButtonExportAreasActionPerformed
     // </editor-fold>
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -842,6 +916,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private javax.swing.JButton ExportButton;
     private javax.swing.JButton SelectButton;
     private javax.swing.JTextField TopTextField;
+    private javax.swing.JButton jButtonExportAreas;
+    private javax.swing.JButton jButtonImportAreas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

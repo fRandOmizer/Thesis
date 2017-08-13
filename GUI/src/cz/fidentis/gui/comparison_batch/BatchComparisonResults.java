@@ -2385,8 +2385,8 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     private void InitLocalAreaPanel(){
         LocalAreasFrame = new JFrame("LocalAreas");
         LocalAreasFrame.setVisible(false);
-        LocalAreasFrame.setMinimumSize(new Dimension(340, 700));
-        LocalAreasFrame.setMaximumSize(new Dimension(340, 700));
+        LocalAreasFrame.setMinimumSize(new Dimension(400, 700));
+        LocalAreasFrame.setMaximumSize(new Dimension(400, 700));
         
         localAreasJPanel = new LocalAreasJPanel();
         
