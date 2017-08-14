@@ -41,6 +41,7 @@ import javax.vecmath.Vector4f;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import org.openide.util.Exceptions;
 
 /**
@@ -531,7 +532,18 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
     }
     
-    
+    private static List<Area> extendAreaList(List<Area> areas, AreaListXML areasXML){
+        
+        for (int i = 0; i < areasXML.getAreaList().size(); i++){
+            Area tempArea = areasXML.getAreaList().get(i);
+            tempArea.index = areas.size();
+            areas.add(tempArea);
+        }
+        
+        
+        
+        return areas;
+    }
     
     // </editor-fold>
     
@@ -871,7 +883,29 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jRadButRelativeValuesYesMouseClicked
 
     private void jButtonImportAreasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImportAreasActionPerformed
-        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("xml", "xml");
+        jfc.setFileFilter(filter);
+        int returnValue = jfc.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                File file = new File(jfc.getSelectedFile().getAbsolutePath());
+                JAXBContext jaxbContext = JAXBContext.newInstance(AreaListXML.class);
+
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		AreaListXML areaListXML = (AreaListXML) jaxbUnmarshaller.unmarshal(file);
+                
+                AreasList = extendAreaList(AreasList, areaListXML);
+                OriginalAreasList = AreasList;
+                
+                setAreasJList(AreasList);
+                
+            } catch (JAXBException e) {
+                Exceptions.printStackTrace(e);
+            }
+                
+        }        
     }//GEN-LAST:event_jButtonImportAreasActionPerformed
 
     private void jButtonExportAreasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportAreasActionPerformed
