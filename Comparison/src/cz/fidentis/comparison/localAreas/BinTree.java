@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Richard Zan
+ * Binary tree
+ * @author Richard
  */
 public class BinTree {
 
@@ -181,11 +181,6 @@ public class BinTree {
         public String toString() {
 
             return "" + key;
-
-            /*
-		 * return name + " has the key " + key + "\nLeft Child: " + leftChild +
-		 * "\nRight Child: " + rightChild + "\n";
-             */
         }
 
     }

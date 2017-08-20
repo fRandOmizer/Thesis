@@ -15,8 +15,8 @@ import javafx.geometry.Point3D;
 import javax.vecmath.Vector4f;
 
 /**
- *
- * @author zanri
+ * Store all data for drawing
+ * @author Richard
  */
 public class LocalAreas {
    
@@ -38,6 +38,57 @@ public class LocalAreas {
         
     }
 
+    // <editor-fold desc="getters and setters" defaultstate="collapsed">
+    public float[] getVertexAreas(){
+        return vertexAreas;
+    }
+    
+    public float[] getVertexAreasColors(){
+        return vertexColorAreas;
+    }
+    
+    public float[] getBorder(){
+        return borderAreas;
+    }
+    
+    public float[] getBorderColor(){
+        return borderColorAreas;
+    }
+
+    public float[] getVertexes(){
+        return vertexes;
+    }
+    
+    public float[] getVertexColors(){
+        return vertexColors;
+    }
+    
+    public List<List<Point3D>> getBoundariesAreasPoints(){
+        return vertexAreasPoints3D;
+    }
+    
+    public int[] getIndexes(){
+        return indexesOfAreas;
+    }
+    
+    public List<Vector4f> getAllPointsFromOneArea(){
+        return allAreasPoints;
+    }
+    
+    public float[] getSelectedAreaPoints(){
+        return selectedAreaPoints;
+    }
+    public float[] getSelectedAreaPointsColor(){
+        return selectedAreaPointsColor;
+    }
+     // </editor-fold >
+    
+    /**
+     * Calculate all needed data for renderer
+     * @param indexesOfAreas 
+     * @param areas
+     * @param model 
+     */
     public void SetAreas(int[] indexesOfAreas, List<Area> areas, Model model){
         this.model = model;
         
@@ -224,6 +275,11 @@ public class LocalAreas {
         // </editor-fold> 
     }
     
+    /**
+     * Set color distribution for selected area
+     * @param points data class with colors for area
+     * @param area selected area
+     */
     public void setColorForChosenArea(PointsValues points, Area area) {
         List<Float> vertexes = new ArrayList<>();
         List<Float> vertexColors = new ArrayList<>();
@@ -279,49 +335,13 @@ public class LocalAreas {
         selectedAreaPointsColor = vertexColorsArray;
     }
 
-    public float[] getVertexAreas(){
-        return vertexAreas;
-    }
-    
-    public float[] getVertexAreasColors(){
-        return vertexColorAreas;
-    }
-    
-    public float[] getBorder(){
-        return borderAreas;
-    }
-    
-    public float[] getBorderColor(){
-        return borderColorAreas;
-    }
-
-    public float[] getVertexes(){
-        return vertexes;
-    }
-    
-    public float[] getVertexColors(){
-        return vertexColors;
-    }
-    
-    public List<List<Point3D>> getBoundariesAreasPoints(){
-        return vertexAreasPoints3D;
-    }
-    
-    public int[] getIndexes(){
-        return indexesOfAreas;
-    }
-    
-    public List<Vector4f> getAllPointsFromOneArea(){
-        return allAreasPoints;
-    }
-    
-    public float[] getSelectedAreaPoints(){
-        return selectedAreaPoints;
-    }
-    public float[] getSelectedAreaPointsColor(){
-        return selectedAreaPointsColor;
-    }
-
+    // <editor-fold desc="Private methods" defaultstate="collapsed">
+    /**
+     * Find color for triangle
+     * @param indexes
+     * @param areas
+     * @return 
+     */
     private static float[] getColor(int[] indexes, List<Area> areas) {
         
         for (int i = 0; i < areas.size(); i++){
@@ -335,7 +355,7 @@ public class LocalAreas {
             if (areas.get(i).vertices.contains(indexes[2]-1)) {
                 k++;
             }
-            
+            //if the triangle has at least one intersection, set the color
             if( k >= 1){
                 return new float[] {areas.get(i).color.get(0), 
                                     areas.get(i).color.get(1), 
@@ -345,14 +365,23 @@ public class LocalAreas {
         return null;
     }
     
+    /**
+     * Give a various colors for various triangles
+     * @param indexes indexes of a given triangle
+     * @param points clustered groups of points with same color
+     * @param area selected area
+     * @return 
+     */
     private static float[] getSelectedAreaColor(int[] indexes, PointsValues points, Area area) {
         
         float[] colors = new float[12];
         
         int k = 0;
+        //area cointains the index
         if (area.vertices.contains(indexes[0]-1)) {
             k++;
             int index = -1;
+            //look for a color in points
             for (int i = 0; i < points.distribution.size(); i++){
                 int tempIndex = area.vertices.indexOf(indexes[0]-1);
                 if (points.distribution.get(i).contains(tempIndex)){
@@ -360,7 +389,7 @@ public class LocalAreas {
                 }
             }
             
-            
+            //asign color
             colors[0] = (float)points.distributionColor.get(index).getRed()/255f;
             colors[1] = (float)points.distributionColor.get(index).getGreen()/255f;
             colors[2] = (float)points.distributionColor.get(index).getBlue()/255f;
@@ -427,9 +456,14 @@ public class LocalAreas {
         return null;
     }
     
+    /**
+     * Get all points indexes surrounding the given area
+     * @param indexes
+     * @param area
+     * @param alreadyAssignedIndexes prevent cycling in code
+     * @return 
+     */
     private static List<Integer> getIndexes(int[] indexes, Area area, List<Integer> alreadyAssignedIndexes) {
-        
-       
         int k = 0;
         if (area.vertices.contains(indexes[0]-1)) {
             k++;
@@ -441,6 +475,7 @@ public class LocalAreas {
             k++;
         }
 
+        //if at least one point belong to the area - add the whole triangle
         if( k >= 1){
             if (!alreadyAssignedIndexes.contains(indexes[0]-1)){
                 alreadyAssignedIndexes.add(indexes[0]-1);
@@ -458,6 +493,12 @@ public class LocalAreas {
         return alreadyAssignedIndexes;
     }
     
+    /**
+     * Looking for border lines of a area in triangle
+     * @param indexes
+     * @param areas
+     * @return 
+     */
     private static List<Integer> getLines(int[] indexes, List<Area> areas) {
         
         for (int i = 0; i < areas.size(); i++){
@@ -479,6 +520,7 @@ public class LocalAreas {
                 result.add(indexes[2]-1);
             }
 
+            //just one point in area, the next two will make a line
             if( k == 1){
                 result.add(areas.get(i).index);
                 
@@ -489,11 +531,13 @@ public class LocalAreas {
         return null;
     }
     
+    /**
+     * Adding unique lines and deleting duplicated lines
+     * @param alreadyAddedLines
+     * @param borderIndexes
+     * @return 
+     */
     private static List<List<Integer>> deleteDuplicates(List<List<Integer>> alreadyAddedLines, List<Integer> borderIndexes){
-        List<Integer> borderIndexesRotated = new ArrayList<>();
-        borderIndexesRotated.add(borderIndexes.get(1));
-        borderIndexesRotated.add(borderIndexes.get(0));
-        borderIndexesRotated.add(borderIndexes.get(2));
         int index = -1;
         for (int i = 0; i < alreadyAddedLines.size(); i++){
             List<Integer> line = alreadyAddedLines.get(i);
@@ -523,6 +567,6 @@ public class LocalAreas {
         } 
         return array;
     }
-    
+    // </editor-fold>
     
 }

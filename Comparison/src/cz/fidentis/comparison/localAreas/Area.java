@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *
- * @author Rasto
+ * XML serialized class
+ * @author Rasto & Richard 
  */
 @XmlRootElement(name="Area")
 @XmlAccessorType(XmlAccessType.FIELD)

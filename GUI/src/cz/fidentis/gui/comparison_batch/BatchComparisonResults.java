@@ -2404,11 +2404,7 @@ public class BatchComparisonResults extends javax.swing.JPanel {
             }
         });
     }
-    
-    public void setCurrentModel(Model model){
-        useModel = model;
-    }
-    
+    // <editor-fold defaultstate="collapsed" desc="Getters">  
     public Model getCurrentModel(){
         return useModel;
     }
@@ -2431,14 +2427,6 @@ public class BatchComparisonResults extends javax.swing.JPanel {
         return this.localAreasJPanel;
     }
     
-    public void setModelForCalculation(Model model){
-        useModel = model;
-    }
-    
-    public boolean isVisibleLocalArea(){
-        return this.LocalAreasFrame.isVisible();
-    }
-    
     public ComparisonGLEventListener getRenderer(){
         return GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener();
     }
@@ -2454,6 +2442,21 @@ public class BatchComparisonResults extends javax.swing.JPanel {
     public Canvas getCanvas(){
         return GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getCanvas1();
     }
+    
+    public boolean isVisibleLocalArea(){
+        return this.LocalAreasFrame.isVisible();
+    }
+    // </editor-fold>  
+    
+    // <editor-fold defaultstate="collapsed" desc="Setters">  
+     public void setCurrentModel(Model model){
+        useModel = model;
+    }
+    
+    public void setModelForCalculation(Model model){
+        useModel = model;
+    }
+    // </editor-fold>  
 
     public void setConfiguration() {
         maxThresholdSpinner.setVisible(false);

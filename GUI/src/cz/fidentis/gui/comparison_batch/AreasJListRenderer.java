@@ -14,7 +14,7 @@ import javax.swing.JList;
 
 /**
  *
- * @author zanri
+ * @author Richard
  */
 public class AreasJListRenderer extends DefaultListCellRenderer  {
     
@@ -36,7 +36,6 @@ public class AreasJListRenderer extends DefaultListCellRenderer  {
                }
 
            }
-
 
            if (isSelected) {
                setBackground(getBackground().white);

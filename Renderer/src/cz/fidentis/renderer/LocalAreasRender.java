@@ -9,28 +9,18 @@ import com.hackoeur.jglm.Vec4;
 import com.jogamp.common.nio.Buffers;
 import cz.fidentis.comparison.localAreas.PointsValues;
 import cz.fidentis.model.Model;
-import java.util.ArrayList;
 import java.util.List;
-import javax.media.opengl.GL;
 import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
 import static javax.media.opengl.GL.GL_BLEND;
-import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DYNAMIC_DRAW;
 import static javax.media.opengl.GL.GL_FLOAT;
-import static javax.media.opengl.GL.GL_FRONT_AND_BACK;
-import static javax.media.opengl.GL.GL_LINES;
-import static javax.media.opengl.GL.GL_LINE_LOOP;
 import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
 import static javax.media.opengl.GL.GL_POINTS;
 import static javax.media.opengl.GL.GL_SRC_ALPHA;
-import static javax.media.opengl.GL.GL_TRIANGLE_FAN;
 import javax.media.opengl.GL2;
-import static javax.media.opengl.GL2GL3.GL_FILL;
-import static javax.media.opengl.GL2GL3.GL_LINE;
 import static javax.media.opengl.GL2GL3.GL_VERTEX_ARRAY_BINDING;
 import javax.vecmath.Matrix3f;
-import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 /**
@@ -47,7 +37,6 @@ public class LocalAreasRender{
     private int joglArray;
     
     private int colorBuffer;
-    //private int indicesBuffer;
     
     // our GLSL resources
     private int positionAttribLoc;
@@ -72,7 +61,21 @@ public class LocalAreasRender{
         isDrawPoint = false;
         isClearSelection = false;
     }
+    // <editor-fold desc="Getters">
+    public Boolean IsSetUp(){
+        return isSetUp;
+    }
     
+    public Mat4 getMatrix(){
+        return this.pointTranfMatrix;
+    }
+    
+    public LocalAreas getLocalAreasBoundary(){
+        return localAreas;
+    }
+    // </editor-fold>
+    
+    // <editor-fold desc="Setters">
     public void SetUp(int[] areasIndexes, List<Area> areas, Model model){
         localAreas.SetAreas(areasIndexes, areas, model);
         this.isSetUp = true;
@@ -82,16 +85,6 @@ public class LocalAreasRender{
     public void setPointToDraw(Vector4f pointToDraw){
         this.pointToDraw = new float[] {pointToDraw.x, pointToDraw.y, pointToDraw.z};
         isDrawPoint = true;
-    }
-    
-    public void drawLocalArea(PointsValues points, Area area) {
-        
-        localAreas.setColorForChosenArea(points, area);
-        isDrawSelectedArea = true;
-    }
-
-    public void hideLocalArea() {
-        isDrawSelectedArea = false;
     }
     
     public void setPointsToDraw(List<Vector4f> points) {
@@ -126,12 +119,18 @@ public class LocalAreasRender{
         }
     }
     
-    public Boolean IsSetUp(){
-        return isSetUp;
+    public void setLocalArea(PointsValues points, Area area) {
+        
+        localAreas.setColorForChosenArea(points, area);
+        isDrawSelectedArea = true;
     }
     
     public void clearSelection(){
         isClearSelection = true;
+    }
+    
+    public void hideLocalArea() {
+        isDrawSelectedArea = false;
     }
     
     public void hideSelectedPoints(){
@@ -142,24 +141,18 @@ public class LocalAreasRender{
         this.isSetUp = false;
         isDrawPoint = false;
     }
-    
-    public Mat4 getMatrix(){
-        return this.pointTranfMatrix;
-    }
-    
-    public LocalAreas getLocalAreasBoundary(){
-        return localAreas;
-    }
+    // </editor-fold>
 
     public GL2 drawLocalAreas(GL2 gl, int vertexShaderID, double[] a, double[] b){
         
         if (isClearSelection){
             return gl;
         }
-        
+
         float[] vertexesAreas = localAreas.getVertexAreas();
         float[] colorAreas = localAreas.getVertexAreasColors();
         
+        // <editor-fold desc="Setting up matrixes">
         pointTranfMatrix = Mat4.MAT4_IDENTITY;
 
         float[] projectionArray = new float[16];
@@ -180,17 +173,15 @@ public class LocalAreasRender{
         
         Mat3 n = invertMatrix(getMat3(pointTranfMatrix));
         n = n.transpose();
+        // </editor-fold>
 
+        // <editor-fold desc="Drawing Areas with triangles">
         gl.glClear(GL_DEPTH_BUFFER_BIT);
         gl.glEnable (GL_BLEND); 
         gl.glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         gl.glLineWidth(2);
-        
 
-
-            
-            
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glBufferData(GL_ARRAY_BUFFER, vertexesAreas.length * Buffers.SIZEOF_FLOAT,
                 Buffers.newDirectFloatBuffer(vertexesAreas), GL_DYNAMIC_DRAW);
@@ -206,20 +197,16 @@ public class LocalAreasRender{
 
         gl.glBindVertexArray(vertexArray);
 
-
         gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexesAreas.length/6);
 
-
-
-
         gl.glBindVertexArray(joglArray);
+        // </editor-fold>
 
-        
+        // <editor-fold desc="Drawing Areas points">
         gl.glClear(GL_DEPTH_BUFFER_BIT);
         
         gl.glPointSize(3);
-            
-            
+
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getVertexes().length * Buffers.SIZEOF_FLOAT,
                 Buffers.newDirectFloatBuffer(localAreas.getVertexes()), GL_DYNAMIC_DRAW);
@@ -235,16 +222,15 @@ public class LocalAreasRender{
 
         gl.glBindVertexArray(vertexArray);
 
-
         gl.glDrawArrays(GL2.GL_POINTS, 0, localAreas.getVertexes().length/6);
 
         gl.glBindVertexArray(joglArray);
+        // </editor-fold>
 
+        // <editor-fold desc="Drawing Areas boundaries">
         gl.glClear(GL_DEPTH_BUFFER_BIT);
-        
         gl.glLineWidth(1f);
-            
-            
+
         gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         gl.glBufferData(GL_ARRAY_BUFFER, localAreas.getBorder().length * Buffers.SIZEOF_FLOAT,
                 Buffers.newDirectFloatBuffer(localAreas.getBorder()), GL_DYNAMIC_DRAW);
@@ -264,11 +250,11 @@ public class LocalAreasRender{
         gl.glDrawArrays(GL2.GL_LINES, 0, localAreas.getBorder().length/6);
 
         gl.glBindVertexArray(joglArray);
-        
-        
-        
+        // </editor-fold>
+
         //selected are
         if (this.isDrawSelectedArea){
+            // <editor-fold desc="Draw selected area">
             gl.glClear(GL_DEPTH_BUFFER_BIT);
   
             gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -286,18 +272,17 @@ public class LocalAreasRender{
 
             gl.glBindVertexArray(vertexArray);
 
-
             gl.glDrawArrays(GL2.GL_TRIANGLES, 0, localAreas.getSelectedAreaPoints().length/6);
 
             gl.glBindVertexArray(joglArray);
+            // </editor-fold>
         }
-        
-        
-        
-        gl.glClear(GL_DEPTH_BUFFER_BIT);
-        gl.glPointSize(5);
-        
+
         if (isDrawPoints && pointsToDraw.length>0){
+            // <editor-fold desc="Draw group of points from selected area">
+            
+            gl.glClear(GL_DEPTH_BUFFER_BIT);
+            gl.glPointSize(5);
             
             gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
             gl.glBufferData(GL_ARRAY_BUFFER, pointsToDraw.length * Buffers.SIZEOF_FLOAT,
@@ -313,18 +298,18 @@ public class LocalAreasRender{
             gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
 
             gl.glBindVertexArray(vertexArray);
-            
-            
+
             gl.glDrawArrays(GL2.GL_POINTS, 0, pointsToDraw.length/6);
             
             
             gl.glBindVertexArray(joglArray);
+            // </editor-fold>
         }
         
-        gl.glClear(GL_DEPTH_BUFFER_BIT);
-        gl.glPointSize(5);
-        
         if (isDrawPoint){
+            // <editor-fold desc="Draw single selected point from mouse hoovering">
+            gl.glClear(GL_DEPTH_BUFFER_BIT);
+            gl.glPointSize(5);
             
             gl.glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
             gl.glBufferData(GL_ARRAY_BUFFER, 6 * Buffers.SIZEOF_FLOAT,
@@ -340,13 +325,11 @@ public class LocalAreasRender{
             gl.glUniformMatrix3fv(normMvpUniformLoc, 1, false, n.getBuffer());
 
             gl.glBindVertexArray(vertexArray);
-            
-            
-            
+
             gl.glDrawArrays(GL_POINTS, 0, 1);
             
-            
             gl.glBindVertexArray(joglArray);
+            // </editor-fold>
         }
         
         return gl;
@@ -399,11 +382,10 @@ public class LocalAreasRender{
         gl.glVertexAttribPointer(colorAttribLoc, 4, GL_FLOAT, false, 0, 0);
 
         gl.glBindVertexArray(joglArray);
-        
-        
         return gl;
     }
     
+    // <editor-fold desc="Private methods">
     private static Mat3 getMat3(Mat4 m) {
         Vec4 col0 = m.getColumn(0);
         Vec4 col1 = m.getColumn(1);
@@ -431,9 +413,7 @@ public class LocalAreasRender{
 
         return matrix;
     }
-
-    
-
+    // </editor-fold>
     
 
 }

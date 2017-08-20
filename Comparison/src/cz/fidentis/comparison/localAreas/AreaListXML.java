@@ -8,14 +8,11 @@ package cz.fidentis.comparison.localAreas;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
- * @author zanri
+ * XML Container for Area class
+ * @author Richard
  */
 @XmlRootElement(name = "AreasList")
 @XmlAccessorType(XmlAccessType.FIELD)

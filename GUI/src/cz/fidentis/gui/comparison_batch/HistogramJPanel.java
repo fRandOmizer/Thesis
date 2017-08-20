@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  *
- * @author zanri
+ * @author Richard
  */
 public class HistogramJPanel extends javax.swing.JPanel {
 
@@ -155,6 +155,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
                     g.fillRect(x,y,widthRec,heightRec);
                     // </editor-fold>
 
+                    // <editor-fold desc="Coloring selected column">
                     if (this.selectedIndex == i){
                         float thickness = 2;
                         Stroke oldStroke = g2.getStroke();
@@ -172,8 +173,10 @@ public class HistogramJPanel extends javax.swing.JPanel {
                         g.drawRect(x,y,widthRec,heightRec);
                         g2.setStroke(oldStroke);
                     } 
+                    // </editor-fold>
                 }
 
+                // <editor-fold desc="Writing text for selected column">
                 if (this.selectedIndex != -1){
                     g.setColor(Color.black);
                     g2.drawString("Count: "+points.distribution.get(points.distribution.size() - this.selectedIndex - 1).size(), 
@@ -191,7 +194,7 @@ public class HistogramJPanel extends javax.swing.JPanel {
                     g2.drawString(points.distributionBoundaries.get(points.distribution.size() - this.highlightedIndex - 1), 
                             10 + 5 * this.highlightedIndex, Ymin - 5); 
                 }
-
+                // </editor-fold>
             }
             
         } 

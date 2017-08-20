@@ -2779,7 +2779,7 @@ public class ComparisonGLEventListener extends GeneralGLEventListener {
     }
 
     public void drawSelectedArea(PointsValues points, Area area) {
-        localAreaRender.drawLocalArea(points, area);
+        localAreaRender.setLocalArea(points, area);
     }
 
     public void hideSelectedArea() {

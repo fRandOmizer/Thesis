@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author zanri
+ * Data class for points distribution in histogram
+ * @author Richard
  */
 public class PointsValues {
     public List<Integer> indexes;
@@ -117,12 +117,12 @@ public class PointsValues {
                 
             }
 
-            //maximalny pocet prvkov v jednom stlpci
+            //maximal number of elements in one collumn
             if (maxClusteredPoints<=Items.size()){
                 maxClusteredPoints = Items.size();
             }
             
-            //vlozenie dat do stlpca
+            //adding to collumn
             distribution.add(Items);
             DecimalFormat df = new DecimalFormat("#.###");
             df.setRoundingMode(RoundingMode.CEILING);

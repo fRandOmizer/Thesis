@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package cz.fidentis.gui.comparison_batch;
 
 import cz.fidentis.comparison.hausdorffDistance.ComparisonMetrics;
@@ -11,33 +7,21 @@ import cz.fidentis.comparison.localAreas.VertexArea;
 import static cz.fidentis.processing.comparison.surfaceComparison.SurfaceComparisonProcessing.computeSingleVariation;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import static java.lang.Math.abs;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.vecmath.Vector4f;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
 import java.util.Arrays;
-import javax.swing.JButton;
 import javax.swing.JColorChooser;
-import javax.swing.JFrame;
 import javax.swing.filechooser.FileSystemView;
 import org.openide.util.Exceptions;
 
 /**
  *
- * @author zanri
+ * @author Richard
  */
 public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
 
@@ -77,6 +61,15 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         
     }
     
+    /**
+     * Sets area data
+     * @param exportArea
+     * @param area
+     * @param relative
+     * @param HdVisualResults
+     * @param models
+     * @param metricIndex 
+     */
     public void SetArea(VertexArea exportArea, Area area, Boolean relative, ArrayList<ArrayList<Float>> HdVisualResults, List<File> models, int metricIndex){
         this.exportArea = exportArea;
         this.area = area;
@@ -117,32 +110,21 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
     public void setPointerLocalAreasJPanel(LocalAreasJPanel pointerLocalAreasJPanel){
         this.pointerLocalAreasJPanel = pointerLocalAreasJPanel;
     }
-    
-//    public void SetChoosenPoint(Vector4f point){
-//        try{
-//            DecimalFormat df = new DecimalFormat("#.###");
-//            df.setRoundingMode(RoundingMode.CEILING);
-//            
-//            double x = (double) point.x;
-//            double y = (double) point.y;
-//            double z = (double) point.z;
-//            
-////            this.labelPoint.setText("Point Value ["+df.format(x)+", "+df.format(y)+", "+df.format(z)+"]:");
-////            this.point.setText(df.format(area.csvValues.get(area.vertices.indexOf((int)point.w)))+"");
-//        } catch(Exception e) {
-//            
-//        }
-//        
-//    }
-    
+        
     public void updateSelectedPoints(List<Integer> get) {
         pointerLocalAreasJPanel.updateSelectedPoints(get);
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Private methods"> 
     private void setColors() {
         pointerLocalAreasJPanel.setAreaColors(histogram.getPoints(), area);
     }
 
+    /**
+     * Gets names of models
+     * @param files
+     * @return 
+     */
     private static List<String> filterModelName(List<File> files){
         List<String> result = new ArrayList<>();
         
@@ -155,7 +137,14 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return result;
     }
     
-    
+    /**
+     * Calculate most and least similar face
+     * @param HdVisualResults 
+     * @param area
+     * @param metricIndex minimal size of area
+     * @param relative 
+     * @return sorted array of similar faces
+     */
     private static List<Integer> calculateFaceComparison(ArrayList<ArrayList<Float>> HdVisualResults, Area area, int metricIndex, boolean relative) {
         ComparisonMetrics metric = ComparisonMetrics.instance();
         List<Integer> result = new ArrayList<>();
@@ -163,6 +152,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         
         List<List<Float>> filteredArays = filterArrays(HdVisualResults, area);
         
+        //calculate average distance
         for (int i = 0; i < filteredArays.size(); i++){
             float average = computeSingleVariation(filteredArays.get(i), metricIndex, relative);
   
@@ -173,6 +163,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
             result.add(i);
         }
         
+        //selection sort
         for (int i = 0; i < averageDistance.size() - 1; i++) {
             int maxIndex = i;
             for (int j = i + 1; j < averageDistance.size(); j++) {
@@ -193,7 +184,12 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return result;
     }
 
-    
+    /**
+     * Get CSV values from areas
+     * @param arrays
+     * @param area
+     * @return CSV values
+     */
     private static List<List<Float>> filterArrays(ArrayList<ArrayList<Float>> arrays, Area area){
         List<List<Float>> result = new ArrayList<>();
         for (int i = 0; i < arrays.size(); i++){
@@ -204,6 +200,12 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return result;
     }
     
+    /**
+     * Filtering area vertices
+     * @param x list of CSV values
+     * @param area given area
+     * @return list of CSV values
+     */
     private static List<Float> filterItems(ArrayList<Float> x, Area area){
         List<Float> result = new ArrayList<>();
         for (int i = 0; i < area.vertices.size(); i++){
@@ -213,14 +215,19 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return result;
     }
     
+    /**
+     * CSV generator
+     * @param writer
+     * @param area
+     * @return
+     * @throws IOException 
+     */
     private static FileWriter csvGenerator(FileWriter writer, Area area) throws IOException{
         int totalLength = totalLength = area.csvValues.size();
         
         List<String> values = Arrays.asList(new String[1]);
         values.set(0, area.index+" Area");
-            
 
-        
         writer.write(writeRow(values));
         
         for (int j = 0; j < totalLength; j++){
@@ -232,6 +239,11 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return writer;
     }
     
+    /**
+     * CSV
+     * @param values
+     * @return 
+     */
     private static String writeRow(List<String> values){
         StringBuilder sb = new StringBuilder();
 
@@ -244,7 +256,8 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         return sb.toString();
         
     }
-
+    // </editor-fold> 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -556,6 +569,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // <editor-fold defaultstate="collapsed" desc="Event handlers">   
     private void jButtonExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportActionPerformed
 
         if(jRadButRelativeValuesYes.isSelected()) {
@@ -605,7 +619,6 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
 
         areaColor = JColorChooser.showDialog(null, "Change Area Color", areaColor);
         histogram.setColorMin(areaColor);
-        //pointerLocalAreasJPanel.setColorForArea(areaColor);
     }//GEN-LAST:event_jButtonChangeColorMinActionPerformed
 
     private void jButtonAreaColorChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAreaColorChangeActionPerformed
@@ -629,7 +642,7 @@ public class LocalAreasSelectedAreaJPanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_jRadButRelativeValuesNoMouseClicked
-
+    // </editor-fold>   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AriMean;

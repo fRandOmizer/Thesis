@@ -8,11 +8,8 @@ import cz.fidentis.comparison.localAreas.LocalAreaLibrary;
 import cz.fidentis.comparison.localAreas.LocalAreas;
 import cz.fidentis.comparison.localAreas.PointsValues;
 import cz.fidentis.comparison.localAreas.VertexArea;
-import cz.fidentis.gui.GUIController;
 import cz.fidentis.model.Model;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -42,11 +39,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.openide.util.Exceptions;
 
 /**
- *
- * @author zanri
+ * 
+ * @author Richard
  */
 public class LocalAreasJPanel extends javax.swing.JPanel {
 
@@ -79,7 +77,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private class SelectPointWorker extends SwingWorker<String, Object>{
         @Override
         protected String doInBackground() {
-
+            
             while (isMouseOnCanvas){
                 int difference = differenceInMiliseconds(timeOfMouseMovement, Calendar.getInstance());
                 
@@ -132,6 +130,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private boolean isPointSelected;
     private boolean isLocalAreasSet;
     private boolean isVisible;
+    
     
     
     /**
@@ -202,14 +201,15 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     }
     
     public void hideSelectedAreaInfo() {
-        //vyriesit skritie
         pointerBatchComparisonResult.getCanvas().showPointValue(false, "", 1, 1);
         pointerBatchComparisonResult.getRenderer().hideSelectedPoints();
         pointerBatchComparisonResult.getRenderer().hideSelectedArea();
     }
-    
-    
-    
+
+    /**
+     * When model is changed, the data are send to renderer
+     * @param model 
+     */
     public void updateModel(Model model){
         if (!this.isVisible()){
             return;
@@ -217,15 +217,17 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         KdTreeIndexed indexer = new KdTreeIndexed(model.getVerts());
         List<Area> tempAreaList = new ArrayList<>();
+        
         for (int i = 0; i < OriginalAreasList.size(); i++){
-            
             Area tempArea = OriginalAreasList.get(i);
             List<Integer> tempVertices = new ArrayList<>();
+            
             for (int j = 0; j < tempArea.vertices.size(); j++){
                 int areaVertexIndex = tempArea.vertices.get(j);
                 int index = indexer.nearestIndex(this.initialModel.getVerts().get(areaVertexIndex));
                 tempVertices.add(index);
             }
+            
             Area deepCopyArea = deepCopyArea(tempArea);
             deepCopyArea.vertices = tempVertices;
             tempAreaList.add(deepCopyArea);
@@ -257,6 +259,11 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         this.pointerBatchComparisonResult = pointer;   
     }
 
+    /**
+     * Find a selected area
+     * @param x X mouse position on screen
+     * @param y Y mouse position on screen
+     */
     public void setMousePositionToSelectArea(double x, double y){
         if (LocalAreaFrame == null){
             return;
@@ -278,10 +285,13 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
         int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
+        
         int i = 0;
+        //looking through all areas
         for (List<Point3D> points : localAreas.getBoundariesAreasPoints()){
             Vector3f point = LocalAreaLibrary.intersectionWithArea(x, y, viewPort, modelViewMatrix, projectionMatrix, points);
 
+            //if there is an intersection
             if (point != null){
                 if (!LocalAreaFrame.isVisible()){
                     LocalAreaFrame.setVisible(true);
@@ -320,6 +330,12 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Used only for worker
+     * @param x
+     * @param y
+     * @param time 
+     */
     public void setMousePosition(double x, double y, Calendar time){
         this.mousePosition = new Vector2d(x, y);
         this.timeOfMouseMovement = time;
@@ -373,8 +389,10 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         double[] modelViewMatrix = pointerBatchComparisonResult.getRenderer().getModelViewMatrix();
         double[] projectionMatrix = pointerBatchComparisonResult.getRenderer().getProjectionMatrix();
         int[] viewPort = pointerBatchComparisonResult.getRenderer().getViewPort();
+        
         Vector4f point = LocalAreaLibrary.intersectionWithPoint(mousePosition.x, mousePosition.y, viewPort, modelViewMatrix, projectionMatrix, points);
         
+        //check for intersection
         if (point != null){
 
             DecimalFormat df = new DecimalFormat("#.###");
@@ -385,7 +403,6 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             String message = "["+df.format(point.x)+", "+df.format(point.y)+", "+df.format(point.z)+"]: CSV: "+df.format(pointCsvValue);
             pointerBatchComparisonResult.getCanvas().showPointValue(true, message, (int)mousePosition.x, (int)mousePosition.y+10);
             isPointSelected = true;
-            
         }
     }
     
@@ -539,12 +556,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
             tempArea.index = areas.size();
             areas.add(tempArea);
         }
-        
-        
-        
+
         return areas;
     }
-    
     // </editor-fold>
     
     /**
@@ -761,7 +775,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
 
     // <editor-fold defaultstate="collapsed" desc="Event handlers">
     private void ApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApplyButtonActionPerformed
-        new FindAreasWorker().execute();
+       new FindAreasWorker().execute();
     }//GEN-LAST:event_ApplyButtonActionPerformed
 
     private void SelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectButtonActionPerformed
