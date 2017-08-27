@@ -5,11 +5,13 @@
  */
 package cz.fidentis.gui.comparison_batch;
 
-import cz.fidentis.comparison.localAreas.VertexArea;
+import cz.fidentis.featurepoints.FacialPoint;
 import cz.fidentis.gui.Canvas;
 import cz.fidentis.gui.ConfigurationTopComponent;
 import cz.fidentis.gui.GUIController;
 import cz.fidentis.gui.ProjectTopComponent;
+import cz.fidentis.gui.actions.landmarks.EditLandmarkID;
+import cz.fidentis.gui.observer.ObservableMaster;
 import cz.fidentis.model.Model;
 import cz.fidentis.model.ModelLoader;
 import cz.fidentis.renderer.ComparisonGLEventListener;
@@ -17,22 +19,16 @@ import cz.fidentis.utils.IntersectionUtils;
 import cz.fidentis.utils.MathUtils;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
 import static java.io.File.separatorChar;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.JComponent;
 import javax.swing.JSplitPane;
-import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
 import javax.vecmath.Vector3f;
 import org.openide.awt.StatusDisplayer;
 
@@ -61,7 +57,10 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
     private Canvas canvas3;
     private Canvas canvas4;
-    private LocalAreasJPanel pointer;
+    
+    private boolean removePoints = false;
+    private boolean addPoints = false;
+    private ObservableMaster fpExportEnable;        //to check whether FPs can be exported once they are added, removed
 
     /**
      * Creates new form ViewerPanel4
@@ -77,12 +76,10 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         listener.setCameraPosition(0, 0, 300);
         String path = GUIController.getPath() + separatorChar + "models" + separatorChar + "resources" + separatorChar;
 
-        ModelLoader loader = new ModelLoader();
-        Model model = loader.loadModel(new File(path + "xShift.obj"), false, false);
+        Model model = ModelLoader.instance().loadModel(new File(path + "xShift.obj"), false, false);
         listener.setGizmo(model);
 
         canvas1.setImportLabelVisible(true);
-        
     }
 
     public Canvas getCanvas1() {
@@ -92,24 +89,13 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     public ComparisonGLEventListener getListener() {
         return listener;
     }
-
-    public void setToolTip(double x, double y, String text){
-        //this.setToolTip(x, y, text);
-//        JToolTip tooltip = createToolTip();
-//        tooltip.setTipText(text);
-//        tooltip.setActionMap(this.getActionMap());
-//        this.setToolTipText(text);
-//        ToolTipManager.sharedInstance().registerComponent( this);
-//        ToolTipManager.sharedInstance().setInitialDelay(0) ;
-        
-    }
     
+    public void checkFpAvaialable(){
+        fpExportEnable.updateObservers();
+    }
+
     public void setModel(Model model) {
         listener.setModels(model);
-    }
-    
-    public void setLocalAreasJPanel(LocalAreasJPanel localAreasJPanel){
-        this.pointer = localAreasJPanel;
     }
 
     public void setResultButtonVisible(boolean b) {
@@ -119,15 +105,38 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     public void setTextureRendering(Boolean b) {
         listener.setDrawTextures(b);
     }
-    
+
     public void showInfo(boolean show) {
         showInfo = show;
         canvas1.setFeaturePointsPanelVisibility(showInfo && (listener.getIndexOfSelectedPoint() != -1));
 
     }
 
+    public void setFpExportEnable(ObservableMaster fpExportEnable) {
+        this.fpExportEnable = fpExportEnable;
+    }
+
+    public ObservableMaster getFpExportEnable() {
+        return fpExportEnable;
+    }
+    
+
     public void setEditablePoints(boolean b) {
         editablePoints = b;
+        removePoints = false;
+        addPoints = false;
+    }
+
+    public void setRemovePoints(boolean removePoints) {
+        this.removePoints = removePoints;
+        editablePoints = false;
+        addPoints = false;
+    }
+    
+    public void setAddPoints(boolean b){
+        this.addPoints = b;
+        editablePoints = false;
+        removePoints = false;
     }
 
     public void resizeCanvas() {
@@ -168,7 +177,6 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
             canvas4.setPreferredSize(new java.awt.Dimension(300, 0));
             // jSplitPane2.setLeftComponent(canvas3);
             canvas4.addGLEventListener(listener);
-
             canvas3.setMinimumSize(new java.awt.Dimension(300, 0));
             canvas3.setPreferredSize(new java.awt.Dimension(300, 0));
             canvas3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -250,7 +258,6 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         canvas4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 canvas4MousePressed(evt);
-                
             }
 
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -283,13 +290,9 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        
         canvas1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 canvas1MouseDragged(evt);
-            }
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                canvas1MouseMoved(evt);
             }
         });
         canvas1.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -300,12 +303,6 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         canvas1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 canvas1MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                canvas1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                canvas1MouseExited(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 canvas1MousePressed(evt);
@@ -333,10 +330,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void canvas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseClicked
-       if (pointer != null){
-            //pointer.showPointCSVvalue();
-        }
-        
+        // TODO add your handling code here:
     }//GEN-LAST:event_canvas1MouseClicked
 
     public void setSelection(boolean selection) {
@@ -344,8 +338,9 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }
 
     public void clearSelection() {
-        listener.clearSelection();
+        listener.clearSelection();        
         GUIController.getConfigurationTopComponent().getBatchComparisonResults().updateHistograms();
+        GUIController.getConfigurationTopComponent().getBatchComparisonResults().adjustThresholds();
         GUIController.getConfigurationTopComponent().getBatchComparisonResults().getHistogram().resetSlider();
 
     }
@@ -404,37 +399,87 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
     }
 
     private void canvas1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MousePressed
-        if (pointer != null){
-            pointer.setMousePositionToSelectArea((double)evt.getX(), (double)evt.getY());
-        }
-        
-        
+        canvasClicked(evt, listener, canvas1);
+
+    }//GEN-LAST:event_canvas1MousePressed
+
+    private void canvasClicked(MouseEvent evt, ComparisonGLEventListener listener, Canvas canvas) {
         mouseDraggedX = evt.getX();
         mouseDraggedY = evt.getY();
-
+        
         manipulatePoint = listener.selectPoint(evt.getX(), evt.getY());
+        
         if (manipulatePoint) {
-            nextIndexOfSelectedPoint = listener.getIndexOfSelectedPoint();
-            if (indexOfSelectedPoint != nextIndexOfSelectedPoint) {
-                indexOfSelectedPoint = nextIndexOfSelectedPoint;
-            }
-            canvas1.setInfo(listener.getFacialPoint(indexOfSelectedPoint));
-            if (showInfo) {
-                canvas1.setFeaturePointsPanelVisibility(true);
+            //update selected point
+            setPointInfo(canvas, listener);
+          
+            if (editablePoints) {
+                canvas.setInfo(listener.getFacialPoint(indexOfSelectedPoint));
+                if (showInfo) {
+                    canvas.setFeaturePointsPanelVisibility(true);
 
+                }
+                
+                if(evt.getButton() == MouseEvent.BUTTON3){   //edit window
+                    EditLandmarkID d = new EditLandmarkID(listener.getFacialPoint(indexOfSelectedPoint), listener.getInfo(), canvas);
+                    d.setVisible(true);
+                }
+            }else if(removePoints){
+                listener.getFacialPoints().remove(nextIndexOfSelectedPoint);
+                listener.setIndexOfSelectedPoint(-1);
+                
+                if (showInfo) {        //no point is selected
+                    canvas.setFeaturePointsPanelVisibility(false);
+
+                }
             }
-        } else if (listener.getModel() != null && listener.checkPointInMesh(evt.getX(), evt.getY()) == null) {
-            listener.setIndexOfSelectedPoint(indexOfSelectedPoint = -1);
-            if (showInfo) {
-                canvas1.setFeaturePointsPanelVisibility(false);
+            
+        } else if (listener.getModel() != null) {        //pick point on the mesh
+            Vector3f pos = listener.checkPointInMesh(evt.getX(), evt.getY());
+
+            if (pos == null) {  //not on mesh, deselect
+                listener.setIndexOfSelectedPoint(indexOfSelectedPoint = -1);
+                if (showInfo) {
+                    canvas.setFeaturePointsPanelVisibility(false);
+                }
+            } else if (addPoints) { //on mesh plus adding points is turned on
+                int id = listener.getInfo().getNextFreeFPID();
+                FacialPoint fp = new FacialPoint(id, pos);
+                listener.getInfo().addFacialPoint(fp);
+                listener.setIndexOfSelectedPoint(listener.getInfo().getFacialPoints().size() - 1);
+
+                if (showInfo) {
+                    canvas.setFeaturePointsPanelVisibility(true);
+                }
+
+                setPointInfo(canvas, listener);
             }
-        } else if (selection && SwingUtilities.isLeftMouseButton(evt)) {
+
+        } 
+        if (selection && SwingUtilities.isLeftMouseButton(evt)) {
             clearSelection();
             listener.setSelectionStart(evt.getPoint());
         }
 
-    }//GEN-LAST:event_canvas1MousePressed
-
+        //update points in data model
+        if(removePoints || addPoints){
+            String modelName = listener.getModel().getName();    
+            GUIController.getSelectedProjectTopComponent().getProject().getSelectedBatchComparison().addFacialPoints(modelName, listener.getFacialPoints());
+            fpExportEnable.updateObservers();
+        }
+        
+    }
+    
+    private void setPointInfo(Canvas canvas, ComparisonGLEventListener listener) {
+        nextIndexOfSelectedPoint = listener.getIndexOfSelectedPoint();
+        
+        //update selected point
+        if (indexOfSelectedPoint != nextIndexOfSelectedPoint) {
+            indexOfSelectedPoint = nextIndexOfSelectedPoint;
+        }
+        canvas.setInfo(listener.getFacialPoint(indexOfSelectedPoint));
+    }
+    
     private void canvas1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseReleased
         if (dragging && SwingUtilities.isLeftMouseButton(evt)) {
             setPlaneNormal(listener.getPlaneNormal(), true);
@@ -451,7 +496,8 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     tc.getBatchComparisonResults().updateHistograms();
-                    tc.getBatchComparisonResults().getHistogram().resetSlider();
+                    tc.getBatchComparisonResults().adjustThresholds();
+                    tc.getBatchComparisonResults().getHistogram().resetSlider();                    
                 }
             };
             Timer t = new Timer();
@@ -486,6 +532,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
                     setPlaneNormal(n, false);
                     GUIController.getConfigurationTopComponent().getBatchComparisonResults().setValuesModified(true);
                     GUIController.getConfigurationTopComponent().getBatchComparisonResults().setPlaneNormal(n);
+                    GUIController.getConfigurationTopComponent().getBatchComparisonResults().enableArbitraryNormal();
                     GUIController.getConfigurationTopComponent().getBatchComparisonResults().setValuesModified(false);
                 } else {
                     listener.rotate(-thetaX, -thetaY);
@@ -536,6 +583,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
         setPlanePoint(p, true);
         GUIController.getConfigurationTopComponent().getBatchComparisonResults().setValuesModified(true);
         GUIController.getConfigurationTopComponent().getBatchComparisonResults().setPlanePoint(p);
+        GUIController.getConfigurationTopComponent().getBatchComparisonResults().enableArbitraryNormal();
         GUIController.getConfigurationTopComponent().getBatchComparisonResults().setValuesModified(false);
     }
 
@@ -614,6 +662,7 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
                     n.normalize();
                     setPlaneNormal(n, true);
                     GUIController.getConfigurationTopComponent().getBatchComparisonResults().setPlaneNormal(n);
+                    GUIController.getConfigurationTopComponent().getBatchComparisonResults().enableArbitraryNormal();
                 } else {
                     listener.rotate(-thetaX, -thetaY);
                 }
@@ -664,27 +713,6 @@ public class ViewerPanel_Batch extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_canvas1MouseWheelMoved
-
-    private void canvas1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseMoved
-        if (pointer != null){
-            pointer.setMousePosition(evt.getX(), evt.getY(), Calendar.getInstance());
-        }
-        
-    }//GEN-LAST:event_canvas1MouseMoved
-
-    private void canvas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseEntered
-        if (pointer != null) {
-            pointer.startMousePositionDetectionOnCanvas(true);
-        }
-        
-    }//GEN-LAST:event_canvas1MouseEntered
-
-    private void canvas1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvas1MouseExited
-        if (pointer != null) {
-            pointer.startMousePositionDetectionOnCanvas(false);
-        }
-        
-    }//GEN-LAST:event_canvas1MouseExited
 
     // private JSplitPane jSplitPane1;
     // private Canvas canvas2;

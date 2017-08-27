@@ -1,8 +1,6 @@
 package cz.fidentis.comparison.hausdorffDistance;
 
-import cz.fidentis.comparison.icp.KdTree;
-import cz.fidentis.utils.MathUtils;
-import cz.fidentis.utils.SortUtils;
+import cz.fidentis.comparison.kdTree.KdTree;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +20,7 @@ import javax.vecmath.Vector3f;
 public class HausdorffDistance {
 
     private static HausdorffDistance unique;
-    private static final int USED_THREADS = 1;
+    private static final int USED_THREADS = Runtime.getRuntime().availableProcessors();
 
     public static HausdorffDistance instance() {
         if (unique == null) {
@@ -74,6 +72,8 @@ public class HausdorffDistance {
             distance.add(new Float(sign * MathUtils.instance().distancePoints(comparedF.get(i), neighbour)));*/
         }
         
+         executor.shutdown();
+        
         for(Future<Float> f : computeDist){
             try {
                 distance.add(f.get());
@@ -82,7 +82,7 @@ public class HausdorffDistance {
             }
         }
         
-        executor.shutdown();
+       
 
         return distance;
     }

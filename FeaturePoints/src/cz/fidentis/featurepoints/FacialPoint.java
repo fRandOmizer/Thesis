@@ -23,12 +23,22 @@ import jv.vecmath.PdVector;
 public class FacialPoint implements Serializable {
     
     private Integer type;
-
+    private boolean active = true;
 
     private Vector3f pos;
 
     public FacialPoint() {
         this.pos = new Vector3f();
+    }
+    
+    /**
+     * Copy constructor. Creates an identical copy of given FP.
+     * @param other the facial point to be copied
+     */
+    public FacialPoint(FacialPoint other) {
+        this.pos = new Vector3f(other.pos.x, other.pos.y, other.pos.z);
+        this.active = other.active;
+        this.type = other.type;
     }
     
     public FacialPoint(Integer type, PdVector coords) {        
@@ -53,6 +63,14 @@ public class FacialPoint implements Serializable {
         
         this.type = type;
     }    
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public String getName() {
         return FpTexter.getInstance().getFPname(type);

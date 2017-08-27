@@ -71,14 +71,6 @@ public class histogramPanel extends JComponent {
     public List<Float> getValues() {
         return values;
     }
-    
-    public float getMax(){
-        return maxValue;
-    }
-    
-    public float getMin(){
-        return minValue;
-    }
 
     public void setValues(List<Float> values) {
         this.vl = new ArrayList<>(values);
@@ -389,6 +381,24 @@ public class histogramPanel extends JComponent {
             float thresh = hdp.getMinThreshValue();
             slider2Tip.setLocation(5 + ((thresh - minValue) / (maxValue - minValue)) * (this.width - 10), slider2Tip.y);
         }
+        if(slider2Tip.x<5){
+            slider2Tip.x=5;            
+        }
+        if(slider1Tip.x>this.getWidth() - 5){
+            slider1Tip.x=this.getWidth() - 5;            
+        }
+        
+        
     }
+
+    public boolean isMaxSliderSelected() {
+        return slider1Selected;
+    }
+
+    public boolean isMinSliderSelected() {
+        return slider2Selected;
+    }
+    
+    
 
 }

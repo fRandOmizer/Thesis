@@ -68,10 +68,14 @@ public class GPA implements Serializable {
      * This method moves this all configurations to the center and normalize theirs size
      */
     
-    public void normalizeAll(){
+    public List<ICPTransformation> normalizeAll(){
+        List<ICPTransformation> trans = new LinkedList<>();
+        
         for(int i = 0; i < configs.size(); i++){
-            configs.get(i).normalize(scaling);
+            trans.add(configs.get(i).normalize(scaling));
         }  
+        
+        return trans;
     }
     
     /**
@@ -110,8 +114,10 @@ public class GPA implements Serializable {
         Map<Integer, Integer> timesAdded = new HashMap<>();
         
         for(ProcrustesAnalysis pa : configs){
-            for(Integer ft : pa.getConfig().keySet()){
-                if(ft < 0){
+            Map<Integer, FacialPoint> config = pa.getConfig();
+            
+            for(Integer ft : config.keySet()){
+                if(ft < 0 || !config.get(ft).isActive()){       //points can be set but algorithm doesn't need to work with them
                     continue;
                 }
                 
@@ -167,7 +173,7 @@ public class GPA implements Serializable {
         List<ProcrustesAnalysis> helpList = new ArrayList();
         List<List<ICPTransformation>> trans = new ArrayList<>();
         
-        this.normalizeAll();
+        List<ICPTransformation> normalizationTrans = this.normalizeAll();
         
         ProcrustesAnalysis oldMean = configs.get(0);            //doesn't create copy 
         ProcrustesAnalysis newMean;
@@ -176,11 +182,18 @@ public class GPA implements Serializable {
         
         for(int i = 0; i < configs.size(); i++){
             ICPTransformation tran = configs.get(i).rotate(oldMean);  
+            
+            if(tran == null)
+                return null;        //couldn't rotate
+            
             List<ICPTransformation> t = new ArrayList<>();
+            t.add(normalizationTrans.get(i));
             t.add(tran);
             
             trans.add(t);
         }
+        
+        normalizationTrans = null;
         
         newMean = this.countMeanConfig();
         newDistance = newMean.countDistance(oldMean, scaling);

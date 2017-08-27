@@ -8,6 +8,8 @@ package cz.fidentis.comparison.icp;
 
 import Jama.Matrix;
 import com.jogamp.graph.math.Quaternion;
+import cz.fidentis.comparison.kdTree.KdTree;
+import cz.fidentis.featurepoints.FacialPoint;
 import cz.fidentis.utils.MathUtils;
 import cz.fidentis.utils.MeshUtils;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class Icp {
    // private static int maxIteration = 50;
     private static Icp unique;
     private ProgressHandle p;
-    private static int USED_THREADS = 1;
+    private static int USED_THREADS = Runtime.getRuntime().availableProcessors();
    // private boolean scale = false;
 
 
@@ -208,6 +210,7 @@ public class Icp {
             near.add(nn);       //create corespondence between nearest neighbor and points in compF
             comp2.add(compF1);*/
         }
+        executor.shutdown();
         
         for(int i = 0; i < compF.size();i++){
             try {
@@ -225,8 +228,7 @@ public class Icp {
                 Logger.getLogger(Icp.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        executor.shutdown();
+                
 
         meanX /= compF.size();
         meanY /= compF.size();
@@ -355,12 +357,13 @@ public class Icp {
             Matrix inverse = trans.getTransMatrix().inverse();
 
             for (Vector3f v : verticies) {
-                double[] point = {v.x, v.y, v.z};
+               double[] point = {v.x, v.y, v.z};
                 Matrix p = new Matrix(point, 1);
                 p = p.times(inverse);
                 v.setX((float) p.get(0, 0));
                 v.setY((float) p.get(0, 1));
                 v.setZ((float) p.get(0, 2));
+ 
             }
         } else {
 
@@ -378,6 +381,9 @@ public class Icp {
                 }
             }
 
+            if(trans.getRotation() == null)
+                return;
+            
             //Quaternion reverse = conjugateQ(trans.getRotation());
             //Quaternion reverse = new Quaternion(trans.getRotation().getX(), trans.getRotation().getY(), trans.getRotation().getZ(), trans.getRotation().getW());
             //reverse.inverse();
@@ -414,6 +420,32 @@ public class Icp {
         
         /*ICPTransformation finalTrans = createFinalTrans(trans, scale);
         reverseTransformations(finalTrans, verticies, scale);*/
+    }
+    
+    /**
+     * Creates a copy of given list of FacialPoints reversely transformed by given
+     * transformations to reverse the effect of registration by given transformations.
+     * @param points facial points of a model, transformed by registration
+     * @param trans transformations that were used to register model and its facial points
+     * @param scale whether scaling was used during the registration
+     * @return copy of facial points reversely transformed by transformations.
+     */
+    public List<FacialPoint> reverseFacialPointsRegistration(List<FacialPoint> points, List<ICPTransformation> trans, boolean scale) {
+        ArrayList<FacialPoint> result = new ArrayList<>(points.size());
+        ArrayList<Vector3f> positions = new ArrayList<>(points.size());
+        
+        // make a copy of points and also store their positions
+        for(int i=0;i<points.size();i++) {
+            FacialPoint point = new FacialPoint(points.get(i));
+            
+            result.add(point);
+            positions.add(point.getPosition());
+        }
+        
+        // apply reverse transformations to positions of points
+        reverseAllTransformations(trans, positions, scale);
+        
+        return result;
     }
     
     /**
