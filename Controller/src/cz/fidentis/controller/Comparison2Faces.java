@@ -4,7 +4,7 @@ import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.comparison.ICPmetric;
 import cz.fidentis.comparison.RegistrationMethod;
 import cz.fidentis.comparison.icp.ICPTransformation;
-import cz.fidentis.comparison.icp.KdTree;
+import cz.fidentis.comparison.kdTree.KdTree;
 import cz.fidentis.controller.ProjectTree.Node;
 import cz.fidentis.controller.data.ColormapConfig;
 import cz.fidentis.controller.data.TransparencyConfig;
@@ -50,8 +50,8 @@ public class Comparison2Faces {
     private List<ICPTransformation> compFTransformations;
     
     private ArrayList<List<FacialPoint>> databaseFacialPoints = new ArrayList<List<FacialPoint>>();         //database of FPs is currently not used within the application
-    private List<FacialPoint> mainFp;
-    private List<FacialPoint> secondaryFp;
+    private List<FacialPoint> mainFp = new ArrayList<>();
+    private List<FacialPoint> secondaryFp = new ArrayList<>();
     private boolean editPoints;         //DON'T need to save in project
     private int state = 1; // 1 - registration, 2 - registration results, 3 - comparison
     private boolean continueComparison = false;
@@ -61,7 +61,7 @@ public class Comparison2Faces {
     
     private float lowerHDTreshold;
     private float upperHDTreshold;
-    private boolean fpScaling;          //whether feature points are scaled or not
+    private boolean fpScaling;          //whether feature points are scaled or not  
     private int useDatabase;        //0 - dont use, 1 - default, 2 - data file, 3 - create  -- database currently not used in software
     private ArrayList<File> databaseFiles;      //database of feature points stored on disk -- database currently not used in software 
     private int fpTreshold = 30;            //threshold for feature points (still no clue what it is for)
@@ -85,6 +85,7 @@ public class Comparison2Faces {
     private float value;          //undersampling value
     
     private boolean firstCreated = true;
+    
     
     //comparison results
     private VisualizationType visualization;
@@ -342,7 +343,8 @@ public class Comparison2Faces {
     }
 
     public void setMainFp(List<FacialPoint> mainFp) {
-        this.mainFp = mainFp;
+        this.mainFp.clear();
+        this.mainFp.addAll(mainFp);
     }
     
     public void addMainFp(FacialPoint fp){
@@ -354,7 +356,8 @@ public class Comparison2Faces {
     }
 
     public void setSecondaryFp(List<FacialPoint> secondaryFp) {
-        this.secondaryFp = secondaryFp;
+        this.secondaryFp.clear();
+        this.secondaryFp.addAll(secondaryFp);
     }
     
     public void addSecondaryFp(FacialPoint fp){

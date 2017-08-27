@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.vecmath.Vector3f;
@@ -47,6 +48,9 @@ public class BatchComparison {
     private int state = 1; // 1 - registration, 2 - registration results, 3 - comparison, 4/ results
     
     private List<List<ICPTransformation>> trans;
+    
+    private boolean showBoxplot = false;
+    private boolean showBoxplotFunction = true;
     
     private boolean showPointInfo = true;   //whether to show description of the feature points
     private Color pointColor = Color.red;   //color of displayed feature points
@@ -137,7 +141,22 @@ public class BatchComparison {
         crosscutViz.setShowPlane(showPlane);
     }
     
+    public boolean isShowBoxplot() {
+        return showBoxplot;
+    }
 
+    public void setShowBoxplot(boolean showBoxplot) {
+        this.showBoxplot = showBoxplot;
+    }
+
+    public boolean isShowBoxplotFunction() {
+        return showBoxplotFunction;
+    }
+
+    public void setShowBoxplotFunction(boolean showBoxplotFunction) {
+        this.showBoxplotFunction = showBoxplotFunction;
+    }
+   
     public VisualizationType getVisualization() {
         return visualization;
     }
@@ -158,16 +177,16 @@ public class BatchComparison {
         return crosscutViz.getArbitraryPlanePos();
     }
 
-    public void setArbitraryPlanePos(Vector3f arbitraryPlanePos) {
-        crosscutViz.setArbitraryPlanePos(arbitraryPlanePos);
+    public void setArbitraryPlanePos(float x, float y, float z) {
+        crosscutViz.setArbitraryPlanePos(x, y, z);
     }
 
     public Vector3f getPlanePosition() {
         return crosscutViz.getPlanePosition();
     }
 
-    public void setPlanePosition(Vector3f planePosition) {
-        crosscutViz.setPlanePosition(planePosition);
+    public void setPlanePosition(float x, float y, float z) {
+        crosscutViz.setPlanePosition(x, y, z);
     }
 
     public int getCrosscutSize() {
@@ -417,6 +436,15 @@ public class BatchComparison {
 
     public void setAverageFace(Model averageFace) {
         this.averageFace = averageFace;
+        // add node_average if the average was not set before
+        if(this.averageFace != null && this.node_average == null) {
+            node_average = node.addChild(strings.getString("tree.node.averageModel"));
+        }
+        // remove the node_average if the averageFace was set to null
+        if(this.averageFace == null && this.node_average != null) {
+            this.node.removeChild(this.node.getChildren().indexOf(this.node_average));
+            node_average = null;
+        }
     }
     
 
@@ -430,7 +458,8 @@ public class BatchComparison {
     }
 
     public void setFacialPoints(HashMap<String, List<FacialPoint>> facialPoints) {
-        this.facialPoints = facialPoints;
+        this.facialPoints.clear();
+        this.facialPoints.putAll(facialPoints);
     }
 
     public boolean isShowPointInfo() {
@@ -563,11 +592,19 @@ public class BatchComparison {
     public void setState(int state) {
         this.state = state;
         if (state >= 3) {
+            // add node_result if the state includes results
             if (this.node_result == null) {
                 this.node_result = this.node.addChild(strings.getString("tree.node.results"));
             }
         } else if (this.node_result != null) {
+            // there are no results in states less than 3 - remove the node_result if present
             this.node.removeChild(this.node.getChildren().indexOf(this.node_result));
+            this.node_result = null;
+        }
+        // remove the node_average if the state is before computing of average
+        if (state < 2 && this.node_average != null) {
+            this.node.removeChild(this.node.getChildren().indexOf(this.node_average));
+            this.node_average = null;
         }
         
     }
@@ -597,6 +634,7 @@ public class BatchComparison {
 
     public void addModel(File model){
         models.add(model);
+        facialPoints.put(model.getName(), new LinkedList<FacialPoint>());       //make sure there is a list ready for FPs
         if(node_models == null) {
             node_models = node.addChild(strings.getString("tree.node.comparedModels"));
         }

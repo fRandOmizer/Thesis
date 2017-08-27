@@ -35,6 +35,7 @@ public class ComparisonListenerInfo {
     private int indexOfSelectedPoint = -1;
     private float facialPointRadius = 2;
     private float[] colorOfPoint = new float[]{1f, 0f, 0f, 1.0f};
+    private float[] colorOfInactivePoint = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
     private float[] colorOfCut = new float[]{1f, 1f, 1f, 1.0f};
     private float cutThickness = 1;
     private PApainting paPainting;
@@ -45,8 +46,6 @@ public class ComparisonListenerInfo {
     private boolean showAllCuts;
     private boolean showSamplingRays;
     private boolean showVectors = true;
-    private boolean showBoxplot = false;
-    private boolean showBoxplotFunction = true;
     private boolean render;
     private Vector3f planePoint = new Vector3f(0, 0, 0);
     private Vector3f planeNormal = new Vector3f(1, 0, 0);
@@ -66,6 +65,8 @@ public class ComparisonListenerInfo {
     private float[] primaryColor = {51f / 255f, 153f / 255f, 1f, 1.0f};
     private float[] secondaryColor = {1f, 1f, 0f, 1.0f};
     private float[] fogColor = {0f, 0f, 255f, 1.0f};
+    private boolean showBoxplot = false;
+    private boolean showBoxplotFunction = false;
 
     public ComparisonListenerInfo() {
         models = new ArrayList<>();
@@ -164,7 +165,8 @@ public class ComparisonListenerInfo {
     }
     
     public int getNextFreeFPID(){
-        int i = 0;
+        //Indexing starts from 1
+        int i = 1;
         while(containsFP(i)){
             i++;
         }
@@ -263,6 +265,14 @@ public class ComparisonListenerInfo {
     public void setColorOfPoint(float[] colorOfPoint) {
         this.colorOfPoint = colorOfPoint;
     }
+    
+    public float[] getColorOfInactivePoint() {
+        return colorOfInactivePoint;
+    }
+    
+    public void setColorOfInactivePoint(float[] colorOfInactivePoint) {
+        this.colorOfInactivePoint = colorOfInactivePoint;
+    }
 
     public PApainting getPaPainting() {
         return paPainting;
@@ -319,24 +329,6 @@ public class ComparisonListenerInfo {
     public void setShowVectors(boolean showVectors) {
         this.showVectors = showVectors;
     }
-
-    public boolean isShowBoxplot() {
-        return showBoxplot;
-    }
-
-    public void setShowBoxplot(boolean showBoxplot) {
-        this.showBoxplot = showBoxplot;
-    }
-
-    public boolean isShowBoxplotFunction() {
-        return showBoxplotFunction;
-    }
-
-    public void setShowBoxplotFunction(boolean showBoxplotFunction) {
-        this.showBoxplotFunction = showBoxplotFunction;
-    }
-    
-    
 
     public boolean isRender() {
         return render;
@@ -467,7 +459,21 @@ public class ComparisonListenerInfo {
         this.verticesInfo = verticesInfo;
     }
     
-    
-    
+    public boolean isShowBoxplot() {
+        return showBoxplot;
+    }
+
+    public void setShowBoxplot(boolean showBoxplot) {
+        this.showBoxplot = showBoxplot;
+    }
+
+    public boolean isShowBoxplotFunction() {
+        return showBoxplotFunction;
+    }
+
+    public void setShowBoxplotFunction(boolean showBoxplotFunction) {
+        this.showBoxplotFunction = showBoxplotFunction;
+    }
+   
     
 }

@@ -4,7 +4,6 @@
  */
 package cz.fidentis.gui;
 
-import cz.fidentis.comparison.localAreas.VertexArea;
 import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.controller.Controller;
 import cz.fidentis.controller.Project;
@@ -55,12 +54,9 @@ public final class ProjectTopComponent extends TopComponent {
     private StartingPanel startingPanel;
     private ViewerPanel_1toN oneToManyViewerPanel;
     private AgeingViewerPanel ageingViewerPanel;
-    
-    
 
     public ProjectTopComponent(){
         this(ProjectType.DEFAULT);
-        
     }
     
     public ProjectTopComponent(ProjectType t) {
@@ -101,7 +97,7 @@ public final class ProjectTopComponent extends TopComponent {
                 this.add(startingPanel);
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

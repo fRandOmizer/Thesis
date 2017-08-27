@@ -41,16 +41,26 @@ public class CrosscutConfig {
         return arbitraryPlanePos;
     }
 
-    public void setArbitraryPlanePos(Vector3f arbitraryPlanePos) {
-        this.arbitraryPlanePos = arbitraryPlanePos;
+    public void setArbitraryPlanePos(float x, float y, float z) {
+        if(arbitraryPlanePos == null)
+            arbitraryPlanePos = new Vector3f();
+        
+        this.arbitraryPlanePos.setX(x);
+        this.arbitraryPlanePos.setY(y);
+        this.arbitraryPlanePos.setZ(z);
     }
 
     public Vector3f getPlanePosition() {
         return planePosition;
     }
 
-    public void setPlanePosition(Vector3f planePosition) {
-        this.planePosition = planePosition;
+    public void setPlanePosition(float x, float y, float z) {
+        if(planePosition == null)
+            planePosition = new Vector3f();
+        
+        this.planePosition.setX(x);
+        this.planePosition.setY(y);
+        this.planePosition.setZ(z);        
     }
 
     public int getCrosscutSize() {

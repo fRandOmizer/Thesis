@@ -265,7 +265,6 @@ public final class SaveProject implements ActionListener {
 
         comparisonE.setAttribute("valuesTypeIndex", String.valueOf(comparison.getValuesTypeIndex()));
         comparisonE.setAttribute("continueComparison", String.valueOf(comparison.isContinueComparison()));
-        comparisonE.setAttribute("firstCreated", String.valueOf(comparison.isFirstCreated()));
 
         if (comparison.getTransparencyViz() != null) {
             appendTransparencyData(comparison.getTransparencyViz(), comparisonE);
@@ -361,13 +360,6 @@ public final class SaveProject implements ActionListener {
             appendModelElement(comparison.getPrimaryModel(), primaryE, "primaryModel");
         }
 
-        if (comparison.getPreregiteredModels() != null) {
-            Element preregE = doc.createElement("pre-registered-models");
-            comparisonE.appendChild(preregE);
-            for (Model m : comparison.getPreregiteredModels()) {
-                appendModelElement(m, preregE, "preregistered");
-            }
-        }
 
         if (comparison.getFacialPoints() != null && comparison.getFacialPoints().size() > 0) {
             Element fpE = doc.createElement("facial-points");
@@ -378,7 +370,10 @@ public final class SaveProject implements ActionListener {
             ArrayList<FpModel> fps = new ArrayList<>(comparison.getFacialPoints().size());
             for (String name : comparison.getFacialPoints().keySet()) {
                 FpModel fpmodel = FPImportExport.instance().getFpModelFromFP(comparison.getFacialPoints(name), name);
-                fpmodel.decentralizeToFile(comparison.getModel(name));
+                File modelFile = comparison.getModel(name);
+                if(modelFile != null) {
+                    fpmodel.decentralizeToFile(comparison.getModel(name));
+                }
                 fps.add(fpmodel);
             }
             if (!fpFile.exists()) {
@@ -426,7 +421,6 @@ public final class SaveProject implements ActionListener {
 
         comparisonE.setAttribute("continueComparison", String.valueOf(comparison.isContinueComparison()));
 
-        comparisonE.setAttribute("firstCreated", String.valueOf(comparison.isFirstCreated()));
 
         if (comparison.getVisualization() != null) {
             comparisonE.setAttribute("visualization", String.valueOf(comparison.getVisualization().name()));
@@ -564,7 +558,6 @@ public final class SaveProject implements ActionListener {
 
         comparisonE.setAttribute("continueComparison", String.valueOf(comparison.isContinueComparison()));
 
-        comparisonE.setAttribute("firstCreated", String.valueOf(comparison.isFirstCreated()));
 
         if (comparison.getVisualization() != null) {
             comparisonE.setAttribute("visualization", String.valueOf(comparison.getVisualization().name()));

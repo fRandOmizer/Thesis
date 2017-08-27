@@ -8,24 +8,24 @@
 package cz.fidentis.gui;
 
 import cz.fidentis.comparison.ComparisonMethod;
+import cz.fidentis.comparison.RegistrationMethod;
+import cz.fidentis.comparison.icp.ICPTransformation;
+import cz.fidentis.comparison.icp.Icp;
 import cz.fidentis.controller.BatchComparison;
 import cz.fidentis.controller.Controller;
 import cz.fidentis.controller.OneToManyComparison;
 import cz.fidentis.controller.Project;
 import cz.fidentis.controller.ProjectTree;
 import cz.fidentis.controller.ProjectTree.Node;
-import cz.fidentis.gui.actions.ButtonHelper;
+import cz.fidentis.featurepoints.FacialPoint;
 import cz.fidentis.model.Model;
 import cz.fidentis.model.ModelLoader;
 import cz.fidentis.renderer.ComparisonGLEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
@@ -36,6 +36,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.vecmath.Vector3f;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -382,58 +383,41 @@ public final class NavigatorTopComponent extends TopComponent {
                     
                     if(previousNodeText.equals(strings.getString("tree.node.comparedModels"))) {
                         File file = batchComparison.getModel(lastNodeIndex);
-                        ModelLoader loader = new ModelLoader();
-                        Model model = loader.loadModel(file, true, true);
-                        listener.setModels(model);
                         
-                        if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel() != null){
-                            GUIController.getConfigurationTopComponent().getBatchComparisonResults().setCurrentModel(model, lastNodeIndex);
-                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isLocalAreasSet()
-                                    && GUIController.getConfigurationTopComponent().getBatchComparisonResults().isVisibleLocalArea()){
-                                GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(model);
-                                
+                        Model model = ModelLoader.instance().loadModel(file, true, true);
+                        listener.setModels(model);
+                        if(batchComparison.getRegistrationMethod() == RegistrationMethod.PROCRUSTES)   { //in case procrustes if picked do this
+                            List<FacialPoint> l = batchComparison.getFacialPoints(model.getName());
+                            
+                            // reverse transformations made on facial points if needed
+                            if(batchComparison.getTrans() != null && batchComparison.getTrans().size() > lastNodeIndex) {
+                                l = Icp.instance().reverseFacialPointsRegistration(l, batchComparison.getTrans(lastNodeIndex), batchComparison.isFpScaling());
                             }
                             
+                            listener.setFacialPoints(l);
                         }
                     }
                     if(previousNodeText.equals(strings.getString("tree.node.registeredModels"))) {
                         File file = batchComparison.getRegistrationResults().get(lastNodeIndex);
-                        ModelLoader loader = new ModelLoader();
-                        Model model = loader.loadModel(file, true, true);
+                        
+                        Model model = ModelLoader.instance().loadModel(file, true, false);
                         listener.setModels(model);
                         
-                        listener.setFacialPoints(batchComparison.getFacialPoints(model.getName()));
-                        
-                        if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel()!= null){
-                            GUIController.getConfigurationTopComponent().getBatchComparisonResults().setCurrentModel(model, lastNodeIndex);
-                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isLocalAreasSet()
-                                    && GUIController.getConfigurationTopComponent().getBatchComparisonResults().isVisibleLocalArea()){
-                                GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(model);
-                                
-                            }
-                        }
+                        // display facial points of corresponding model (by index)
+                        listener.setFacialPoints(batchComparison.getFacialPoints(batchComparison.getModel(lastNodeIndex).getName()));
                     }
-                    if(previousNodeText.equals(strings.getString("tree.node.averageModel"))) {
-                        if(batchComparison.getAverageFace() == null) listener.setModels(batchComparison.getAverageFace());
-                        else listener.setModels(batchComparison.getAverageFace());
-                        if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel()!= null){
-                            GUIController.getConfigurationTopComponent().getBatchComparisonResults().setCurrentModel(batchComparison.getAverageFace(), -1);
-                            if (GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().isLocalAreasSet() 
-                                    && GUIController.getConfigurationTopComponent().getBatchComparisonResults().isVisibleLocalArea()){
-                                GUIController.getConfigurationTopComponent().getBatchComparisonResults().getLocalAreasJPanel().updateModel(batchComparison.getAverageFace());
-                                
-                            }
-                        }
+                    if(path.getLastPathComponent().toString().equals(strings.getString("tree.node.averageModel"))) {
+                        listener.setModels(batchComparison.getAverageFace());
                     }
                     if(path.getLastPathComponent().toString().equals(strings.getString("tree.node.results"))) {
                         if(batchComparison.getComparisonMethod() == ComparisonMethod.PROCRUSTES) {
                             listener.setFacialPoints(batchComparison.getFacialPoints(batchComparison.getModel(0).getName()));
                             listener.setProcrustes(true);
                         } else {
+                            listener.setModels(batchComparison.getAverageFace());
                             listener.drawHD(true);
                         }
                     }
-                    
                     break;
                 case "2 faces comparison":
                     project.setSelectedPart(2);
@@ -445,23 +429,32 @@ public final class NavigatorTopComponent extends TopComponent {
                     ComparisonGLEventListener listenerSecondary = tc.getOneToManyViewerPanel().getListener2();
                     
                     if(previousNodeText.equals(strings.getString("tree.node.comparedModels"))) {
-                        if(comparison.getPreregiteredModels() != null) {
-                            Model m = comparison.getPreregiteredModels().get(lastNodeIndex);
-                            listenerSecondary.setModels(m);
-                            listenerSecondary.setFacialPoints(comparison.getFacialPoints(m.getName()));
-                        } else {
-                            File file = comparison.getModel(lastNodeIndex);
-                            ModelLoader loader = new ModelLoader();
-                            Model m = loader.loadModel(file, true, true);
-                            listenerSecondary.setModels(m);
+                      
+                        File file = comparison.getModel(lastNodeIndex);
+                        
+                        Model m = ModelLoader.instance().loadModel(file, true, true);
+                        listenerSecondary.setModels(m);
+
+
+                        if(comparison.getRegistrationMethod() == RegistrationMethod.PROCRUSTES)   { //in case procrustes if picked do this
+                            List<FacialPoint> l = comparison.getFacialPoints(listenerSecondary.getModel().getName());   //there will always be at least empty list
+                            
+                            // reverse transformations made on facial points if needed
+                            if(comparison.getTrans() != null && comparison.getTrans().size() > lastNodeIndex) {
+                                l = Icp.instance().reverseFacialPointsRegistration(l, comparison.getTrans(lastNodeIndex), comparison.isFpScaling());
+                            }
+                            
+                            listenerSecondary.setFacialPoints(l);
                         }
                     }
                     if(previousNodeText.equals(strings.getString("tree.node.registeredModels"))) {
                         File file = comparison.getRegisteredModels().get(lastNodeIndex);
-                        ModelLoader loader = new ModelLoader();
-                        Model model = loader.loadModel(file, true, true);
+                        
+                        Model model = ModelLoader.instance().loadModel(file, true, false);
                         listenerSecondary.setModels(model);
-                        listenerSecondary.setFacialPoints(comparison.getFacialPoints(model.getName()));
+                        
+                        // display facial points of corresponding model (by index)
+                        listenerSecondary.setFacialPoints(comparison.getFacialPoints(comparison.getModel(lastNodeIndex).getName()));
                     }
                     if(path.getLastPathComponent().toString().equals(strings.getString("tree.node.results"))) {
                         if(comparison.getComparisonMethod() == ComparisonMethod.PROCRUSTES) {

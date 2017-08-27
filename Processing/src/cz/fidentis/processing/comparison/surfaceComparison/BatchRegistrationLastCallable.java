@@ -6,11 +6,13 @@
 package cz.fidentis.processing.comparison.surfaceComparison;
 
 import cz.fidentis.comparison.icp.Icp;
-import cz.fidentis.comparison.icp.KdTree;
+import cz.fidentis.comparison.kdTree.KdTree;
 import cz.fidentis.model.Model;
 import cz.fidentis.processing.fileUtils.ProcessingFileUtils;
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.Callable;
+import javax.vecmath.Vector3f;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 
@@ -20,10 +22,11 @@ import org.netbeans.api.progress.ProgressHandleFactory;
  *
  * @author Zuzana Ferkova
  */
-public class BatchRegistrationLastCallable implements Callable<File> {
+public class BatchRegistrationLastCallable{
 
     private final KdTree templateTree;
     private final Model compF;
+    private final List<Vector3f> samples;
     private final float error;
     private final int iterations;
     private final boolean scale;
@@ -46,9 +49,10 @@ public class BatchRegistrationLastCallable implements Callable<File> {
      * @param currentModelNumber - current number of model in list of all models
      * (to generate appropriate name when saving to disk)
      */
-    public BatchRegistrationLastCallable(KdTree templateTree, Model compF, float error, int iterations, boolean scale, File tmpLoc, int batchIteration, int currentModelNumber) {
+    public BatchRegistrationLastCallable(KdTree templateTree, Model compF, List<Vector3f> samples, float error, int iterations, boolean scale, File tmpLoc, int batchIteration, int currentModelNumber) {
         this.templateTree = templateTree;
         this.compF = compF;
+        this.samples = samples;
         this.error = error;
         this.iterations = iterations;
         this.scale = scale;
@@ -63,14 +67,14 @@ public class BatchRegistrationLastCallable implements Callable<File> {
      * @return 0 when compF was aligned
      * @throws Exception
      */
-    @Override
-    public File call() throws Exception {
+  
+    public File call(){
         ProgressHandle p = ProgressHandleFactory.createHandle("Aligning face " + (currentModelNumber + 1) + " to last average face.");
         p.start();
 
         try {
 
-            Icp.instance().icp(templateTree, compF.getVerts(), compF.getVerts(), error, iterations, scale);
+            Icp.instance().icp(templateTree, compF.getVerts(), samples, error, iterations, scale);
 
             p.finish();
         } catch (Exception ex) {

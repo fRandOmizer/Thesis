@@ -72,8 +72,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
         comparisonComboBox = new javax.swing.JComboBox();
         jPanel4 = new javax.swing.JPanel();
         procrustesPanel = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        fpScaleCheckBox = new javax.swing.JCheckBox();
         jLabel12 = new javax.swing.JLabel();
         fpThresholdSlider = new javax.swing.JSlider();
         processComparisonButton = new javax.swing.JButton();
@@ -110,15 +108,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
 
         procrustesPanel.setVisible(false);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(BatchComparisonConfiguration.class, "BatchComparisonConfiguration.jLabel8.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(fpScaleCheckBox, org.openide.util.NbBundle.getMessage(BatchComparisonConfiguration.class, "BatchComparisonConfiguration.fpScaleCheckBox.text")); // NOI18N
-        fpScaleCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fpScaleCheckBoxActionPerformed(evt);
-            }
-        });
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(BatchComparisonConfiguration.class, "BatchComparisonConfiguration.jLabel12.text")); // NOI18N
 
         fpThresholdSlider.setMajorTickSpacing(20);
@@ -140,21 +129,12 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
             .addGroup(procrustesPanelLayout.createSequentialGroup()
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(fpThresholdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-            .addGroup(procrustesPanelLayout.createSequentialGroup()
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(fpScaleCheckBox)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addComponent(fpThresholdSlider, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
         );
         procrustesPanelLayout.setVerticalGroup(
             procrustesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(procrustesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(procrustesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fpScaleCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(procrustesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fpThresholdSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -314,8 +294,8 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
                         
                         //only compute new avg face if models were added
                         if(c.isModelsAdded()){
-                            ModelLoader ml = new ModelLoader();
-                            template = ml.loadModel(models.get(c.getTemplateIndex()), false, false);
+                           
+                            template = ModelLoader.instance().loadModel(models.get(c.getTemplateIndex()), false, false);
                         }else{
                             template = c.getAverageFace();
                         }
@@ -438,10 +418,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
         computeComparison(GUIController.getSelectedProjectTopComponent());
     }//GEN-LAST:event_processComparisonButtonActionPerformed
 
-    private void fpScaleCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fpScaleCheckBoxActionPerformed
-        getContext().setFpScaling(fpScaleCheckBox.isSelected());
-    }//GEN-LAST:event_fpScaleCheckBoxActionPerformed
-
     private void comparisonComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comparisonComboBoxActionPerformed
         ComparisonMethod compM = (ComparisonMethod) comparisonComboBox.getSelectedItem();
         
@@ -467,11 +443,13 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
         //get correct value for selected avg model
         c.setTemplateIndex(c.getTemplateIndex() + 3);
         
-        c.setState(1);
-        GUIController.getConfigurationTopComponent().addBatchRegistrationComponent();
-        ModelLoader ml = new ModelLoader();
-        Model m = ml.loadModel(getContext().getModel(0), false, true);
+        Model m = ModelLoader.instance().loadModel(getContext().getModel(0), false, true);
         GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().setModel(m);
+        GUIController.getSelectedProjectTopComponent().getViewerPanel_Batch().getListener().getFacialPoints().clear();
+        c.getFacialPoints().clear();
+        
+        c.setState(1);
+        GUIController.getConfigurationTopComponent().addBatchRegistrationComponent();  
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -491,10 +469,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
         FPImportExport.instance().exportBatch(tc, getContext());
     }//GEN-LAST:event_exportLandmarksButtonActionPerformed
 
-    public Boolean getScaleEnabled() {
-        return fpScaleCheckBox.isSelected();
-    }
-
     public void setProcessComparisonEnabled(boolean en) {
         processComparisonButton.setEnabled(en);
         getContext().setCompareButtonEnabled(en);
@@ -513,7 +487,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
 
         
         comparisonComboBox.setSelectedItem(c.getComparisonMethod());
-        fpScaleCheckBox.setSelected(c.isFpScaling());
         jButton2.setVisible(reg == RegistrationMethod.HAUSDORFF);
         exportLandmarksButton.setVisible(reg == RegistrationMethod.PROCRUSTES);
         
@@ -533,7 +506,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
     private javax.swing.JComboBox comparisonComboBox;
     private javax.swing.JButton exportLandmarksButton;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JCheckBox fpScaleCheckBox;
     private javax.swing.JSlider fpThresholdSlider;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
@@ -542,7 +514,6 @@ public class BatchComparisonConfiguration extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;

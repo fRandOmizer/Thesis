@@ -114,10 +114,9 @@ public class FPImportExport {
      */
     public void alignPointsToModels(List<FpModel> points, List<File> models) {
         HashMap<String, Model> modelTree = new HashMap<>();     //to be able to pair model and FpModel faster
-        ModelLoader ml = new ModelLoader();
-
+        
         for (File f : models) {
-            Model m = ml.loadModel(f, Boolean.FALSE, Boolean.TRUE);
+            Model m = ModelLoader.instance().loadModel(f, Boolean.FALSE, Boolean.TRUE);
 
             modelTree.put(m.getName(), m);
         }
@@ -155,6 +154,11 @@ public class FPImportExport {
         }
 
         FileExtensions fe = FileUtils.instance().getFileExtension(filePath);
+        
+        if(fe == FileExtensions.NONE){      //if no extension was given, save as .fp
+            fe = FileExtensions.FP;
+            filePath += ".fp";
+        }
 
         if (fe == FileExtensions.CSV) {
             CSVparser.save(points, filePath);
@@ -174,7 +178,7 @@ public class FPImportExport {
             for (FpModel model : points) {
                 PTSparser.save(model, filePath);
             }
-        } else if (fe == FileExtensions.FP || fe == FileExtensions.NONE) {
+        } else if (fe == FileExtensions.FP) {
             for (FpModel model : points) {
                 try {
                     FPparser.save(model, filePath);
@@ -238,6 +242,10 @@ public class FPImportExport {
 
     //creates FpModel and decentralize FPs to model they were computed on
     private FpModel prepareFPforExport(List<FacialPoint> fp, Model m) {
+        if(fp == null || fp.isEmpty() || m == null){
+            return null;        //don't export fps if there are none
+        }
+        
         FpModel model = FPImportExport.instance().getFpModelFromFP(fp, m.getName());
 
         if (model != null) {
@@ -287,6 +295,9 @@ public class FPImportExport {
                         File f = models.get(i);
                         String modelName = f.getName();
                         List<FacialPoint> fp = data.getFacialPoints(modelName);
+                        
+                        if(fp == null || fp.isEmpty())
+                            continue;       //don't export fps if there are none
 
                         FpModel model = prepareFPforExport(fp, f);
 
@@ -341,14 +352,15 @@ public class FPImportExport {
                         File f = models.get(i);
                         String modelName = f.getName();
                         List<FacialPoint> fp = data.getFacialPoints(modelName);
+                        
+                        if(fp == null || fp.isEmpty())
+                            continue;       //don't export fps if they are not there
 
                         FpModel model = prepareFPforExport(fp, f);
 
                         if (model != null) {
                             points.add(model);
                         }
-
-                        points.add(model);
                     }
 
                     FPImportExport.instance().exportPoints(tc, points);

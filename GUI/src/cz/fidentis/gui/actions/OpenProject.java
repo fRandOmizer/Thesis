@@ -8,7 +8,7 @@ import com.jogamp.graph.math.Quaternion;
 import cz.fidentis.comparison.ComparisonMethod;
 import cz.fidentis.comparison.RegistrationMethod;
 import cz.fidentis.comparison.icp.ICPTransformation;
-import cz.fidentis.comparison.icp.KdTreeIndexed;
+import cz.fidentis.comparison.kdTree.KDTreeIndexed;
 import cz.fidentis.comparison.procrustes.GPA;
 import cz.fidentis.composite.FacePartType;
 import cz.fidentis.composite.ModelInfo;
@@ -283,8 +283,19 @@ public final class OpenProject implements ActionListener {
                 ntc.getOneToManyViewerPanel().getCanvas2().setImportLabelVisible(false);
             }
             if (loadedFps != null) {
-                FPImportExport.instance().alignPointsToModels(loadedFps, comparison1N.getModels());
+                List<File> allModelFiles = new ArrayList<>();
+                allModelFiles.addAll(comparison1N.getModels());
+                if (comparison1N.getPrimaryModel() != null) {
+                    allModelFiles.add(comparison1N.getPrimaryModel().getFile());
+                }
+                FPImportExport.instance().alignPointsToModels(loadedFps, allModelFiles);
                 for (FpModel model : loadedFps) {
+                    if (comparison1N.getPrimaryModel() != null
+                            && model.getModelName().equals(comparison1N.getPrimaryModel().getName())) {
+                        ntc.getOneToManyViewerPanel().getListener1().setFacialPoints(model.getFacialPoints());
+                        ntc.getOneToManyViewerPanel().getListener1().initFpUniverse(model.getFacialPoints());
+
+                    }
                     comparison1N.addFacialPoints(model.getModelName(), model.getFacialPoints());
                 }
             }
@@ -498,12 +509,6 @@ public final class OpenProject implements ActionListener {
             comparison.setContinueComparison(Boolean.parseBoolean(attr));
         }
         
-        attr = projectE.getAttribute("firstCreated");
-        if(attr != null && !attr.isEmpty()){
-            comparison.setFirstCreated(Boolean.parseBoolean(attr));
-        }
-        
-        
         attr = projectE.getAttribute("visualization");
         if(attr != null && !attr.isEmpty()){
             comparison.setVisualization(VisualizationType.valueOf(attr));
@@ -513,17 +518,17 @@ public final class OpenProject implements ActionListener {
         if (primaryE != null) {
             Element modelE = (Element) primaryE.getElementsByTagName("model").item(0);
             File modelFile = new File(tempFile.getAbsolutePath() + File.separator + modelE.getAttribute("name"));
-            ModelLoader loader = new ModelLoader();
-            Model model = loader.loadModel(modelFile, true, true);
+            
+            Model model = ModelLoader.instance().loadModel(modelFile, true, true);
             comparison.setModel1(model);
-            comparison.setMainFace(new KdTreeIndexed(model.getVerts()));
+            comparison.setMainFace(new KDTreeIndexed(model.getVerts()));
         }
 
         if (secondaryE != null) {
             Element modelE = (Element) secondaryE.getElementsByTagName("model").item(0);
             File modelFile = new File(tempFile.getAbsolutePath() + File.separator + modelE.getAttribute("name"));
-            ModelLoader loader = new ModelLoader();
-            Model model = loader.loadModel(modelFile, true, true);
+            
+            Model model = ModelLoader.instance().loadModel(modelFile, true, true);
             comparison.setModel2(model);
         }
 
@@ -717,10 +722,6 @@ public final class OpenProject implements ActionListener {
         if (attr != null && !attr.isEmpty()) {
             comparison.setContinueComparison(Boolean.parseBoolean(attr));
         }
-        attr = projectE.getAttribute("firstCreated");
-        if (attr != null && !attr.isEmpty()) {
-            comparison.setFirstCreated(Boolean.parseBoolean(attr));
-        }
         
         attr = projectE.getAttribute("visualization");
         if (attr != null && !attr.isEmpty()) {
@@ -730,9 +731,9 @@ public final class OpenProject implements ActionListener {
 
         if (primaryE != null) {
             Element modelE = (Element) primaryE.getElementsByTagName("model").item(0);
-            ModelLoader loader = new ModelLoader();
+            
             File modelFile = new File(tempFile.getAbsolutePath() + File.separator + modelE.getAttribute("name"));
-            comparison.setPrimaryModel(loader.loadModel(modelFile, true, true));
+            comparison.setPrimaryModel(ModelLoader.instance().loadModel(modelFile, true, true));
         }
 
         if (modelsE != null) {
@@ -740,23 +741,6 @@ public final class OpenProject implements ActionListener {
             for (File f : files) {
                 comparison.addModel(f);
             }
-        }
-
-        if (preregE != null) {
-            NodeList ch = preregE.getChildNodes();
-            ArrayList<Model> models = new ArrayList<>();
-            for (int i = 0; i < ch.getLength(); i++) {
-                Node n = ch.item(i);
-                if (n.getNodeType() != Node.ELEMENT_NODE) {
-                    continue;
-                }
-                Element modelE = (Element) n;
-                ModelLoader loader = new ModelLoader();
-                File modelFile = new File(tempFile.getAbsolutePath() + File.separator + modelE.getAttribute("name"));
-                Model m = loader.loadModel(modelFile, true, true);
-                models.add(m);
-            }
-            comparison.setPreregiteredModels(models);
         }
 
         if (fpE != null) {
@@ -999,11 +983,6 @@ public final class OpenProject implements ActionListener {
             comparison.setContinueComparison(Boolean.parseBoolean(attr));
         }
         
-        attr = projectE.getAttribute("firstCreated");
-        if(attr != null && !attr.isEmpty()){
-            comparison.setFirstCreated(Boolean.parseBoolean(attr));
-        }
-        
         attr = projectE.getAttribute("visualization");
         if (attr != null && !attr.isEmpty()) {
             comparison.setVisualization(VisualizationType.valueOf(attr));
@@ -1046,9 +1025,9 @@ public final class OpenProject implements ActionListener {
 
         if (averageE != null) {
             Element modelE = (Element) averageE.getElementsByTagName("model").item(0);
-            ModelLoader loader = new ModelLoader();
+            
             File modelFile = new File(tempFile.getAbsolutePath() + File.separator + modelE.getAttribute("name"));
-            Model m = loader.loadModel(modelFile, true, true);
+            Model m = ModelLoader.instance().loadModel(modelFile, true, true);
             comparison.setAverageFace(m);
         }
 
@@ -1208,7 +1187,7 @@ public final class OpenProject implements ActionListener {
         if(attr != null && !attr.isEmpty())
             arbitraryPlane.z = Float.parseFloat(attr);
         
-        crossViz.setArbitraryPlanePos(arbitraryPlane);
+        crossViz.setArbitraryPlanePos(arbitraryPlane.x, arbitraryPlane.y, arbitraryPlane.z);
         
         Vector3f planePos = new Vector3f();
         attr = crossE.getAttribute("planePosX");
@@ -1220,7 +1199,7 @@ public final class OpenProject implements ActionListener {
         attr = crossE.getAttribute("planePosZ");
         if(attr != null && !attr.isEmpty())
             planePos.z = Float.parseFloat(attr);
-        crossViz.setPlanePosition(planePos);
+        crossViz.setPlanePosition(planePos.x, planePos.y, planePos.z);
         
         crossViz.setCrosscutSize(Integer.parseInt(crossE.getAttribute("crosscutSize")));
         crossViz.setCrosscutThickness(Integer.parseInt(crossE.getAttribute("crosscutThickness")));
