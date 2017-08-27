@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><module codename="cz.fidentis.visualisation">
-    <module_version install_time="1503219496850" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1503858763140" last="true" origin="installer" specification_version="1.0">
         <file crc="1498404303" name="config/Modules/cz-fidentis-visualisation.xml"/>
-        <file crc="1336617310" name="modules/cz-fidentis-visualisation.jar"/>
+        <file crc="80647574" name="modules/cz-fidentis-visualisation.jar"/>
     </module_version>
 </module>

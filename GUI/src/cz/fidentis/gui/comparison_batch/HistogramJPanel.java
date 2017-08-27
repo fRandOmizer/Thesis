@@ -276,8 +276,9 @@ public class HistogramJPanel extends javax.swing.JPanel {
                 //sending indexes that should be highlighted on model
                 List<Integer> pointsToSend = points.distribution.get(points.distribution.size() - this.selectedIndex - 1);
                 
-                this.pointer.updateSelectedPoints(pointsToSend);
-                
+                if (this.pointer != null){
+                    this.pointer.updateSelectedPoints(pointsToSend);
+                }
             }
             this.repaint();
         }

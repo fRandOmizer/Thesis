@@ -114,7 +114,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     private List<Area> OriginalAreasList;
     private int SelectedAreas[];
     private Boolean RelativeValues;
-    private ArrayList<Float> LocalAreas;
+    private ArrayList<Float> areaList;
     private VertexArea vertexArea;
     private Model model;
     private Model initialModel;
@@ -146,7 +146,7 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         OriginalAreasList = new ArrayList<>();
         SelectedAreas = new int[10];
         RelativeValues = true;
-        LocalAreas = null;
+        areaList = null;
         model = null;
         isInicialized = false;
         isAnyAreaDrawn = false;
@@ -181,7 +181,9 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
     
     // <editor-fold defaultstate="collapsed" desc="Public">
     public void closeSelectedArea(){
-        LocalAreaFrame.dispatchEvent(new WindowEvent(LocalAreaFrame, WindowEvent.WINDOW_CLOSING));
+        if (LocalAreaFrame != null){
+            LocalAreaFrame.dispatchEvent(new WindowEvent(LocalAreaFrame, WindowEvent.WINDOW_CLOSING));
+        }
     }
     
     public void setAreaColors(PointsValues points, Area area) {
@@ -244,7 +246,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
      * @param max 
      */
     public void loadRangeValues(float min, float max) {
-        LocalAreas = new ArrayList(pointerBatchComparisonResult.GetAuxiliaryAverageResults());
+        areaList = new ArrayList(pointerBatchComparisonResult.GetAuxiliaryAverageResults());
+        pointerBatchComparisonResult.GetAuxiliaryResults();
         BottomTresh = (double)min;
         TopTresh = (double)max;
         this.max = (double)max;
@@ -414,8 +417,8 @@ public class LocalAreasJPanel extends javax.swing.JPanel {
         
         model = pointerBatchComparisonResult.getCurrentModel(); 
         initialModel = pointerBatchComparisonResult.getCurrentModel(); 
-        
-        BinTree thres = new BinTree(LocalAreas);
+        areaList = new ArrayList(pointerBatchComparisonResult.GetAuxiliaryAverageResults());
+        BinTree thres = new BinTree(areaList);
         vertexArea = new VertexArea(model, thres);
         vertexArea.createAreas(SizeOfArea.intValue(), BottomTresh.floatValue(), TopTresh.floatValue());
         
